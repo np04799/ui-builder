@@ -88,6 +88,14 @@ function AccordionElement({
     }
   }
 
+  if (items.length === 0) {
+    return (
+      <div style={{ padding: '20px', border: '1px dashed var(--color-border)', borderRadius: 8, color: 'var(--color-text-secondary)', fontSize: '0.875rem', textAlign: 'center', ...style }}>
+        No sections yet — add items in the properties panel.
+      </div>
+    )
+  }
+
   return (
     <div style={{ fontFamily: 'inherit', ...style }}>
       {items.map((item, idx) => {

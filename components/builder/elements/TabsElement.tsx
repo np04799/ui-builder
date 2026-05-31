@@ -118,6 +118,14 @@ function TabsElement({
           minHeight: 80,
         }
 
+  if (tabs.length === 0) {
+    return (
+      <div style={{ padding: '20px', border: '1px dashed var(--color-border)', borderRadius: 8, color: 'var(--color-text-secondary)', fontSize: '0.875rem', textAlign: 'center', ...style }}>
+        No tabs yet — add tabs in the properties panel.
+      </div>
+    )
+  }
+
   return (
     <div style={{ fontFamily: 'inherit', ...style }}>
       <div style={barStyle}>

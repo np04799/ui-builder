@@ -615,7 +615,7 @@ function TailwindForm({ fields, submitLabel, style }: { fields: FormField[]; sub
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export default function FormElement({ fields, submitLabel = 'Submit', formStyle = 'default', style }: Props) {
+export default function FormElement({ fields = [], submitLabel = 'Submit', formStyle = 'default', style }: Props) {
   const framework = useFramework()
   const cfg = getConfig(formStyle)
 

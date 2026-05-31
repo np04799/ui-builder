@@ -3,6 +3,7 @@
 import { memo, useState, useEffect, useCallback, useId } from 'react'
 import type { NavItem, NavbarCta } from '@/types/builder.types'
 import { useFramework } from '@/hooks/useFramework'
+import { usePreviewState } from '@/components/builder/elements/PreviewStateContext'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -399,16 +400,22 @@ const NavbarElement = memo(function NavbarElement({
 }: Props) {
   const uid = useId().replace(/:/g, '')
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
+  const [_isMobile, setIsMobile] = useState(false)
   const framework = useFramework()
+  const previewState = usePreviewState()
+  // In builder canvas (not preview), always show desktop layout so nav links
+  // are visible regardless of the canvas panel width.
+  const isPreview = previewState !== null
+  const effectiveIsMobile = isPreview ? _isMobile : false
 
   useEffect(() => {
+    if (!isPreview) return
     const mq = window.matchMedia(`(max-width: ${mobileBreakpoint}px)`)
     const update = () => setIsMobile(mq.matches)
     update()
     mq.addEventListener('change', update)
     return () => mq.removeEventListener('change', update)
-  }, [mobileBreakpoint])
+  }, [mobileBreakpoint, isPreview])
 
   const closeMobile = useCallback(() => setMobileOpen(false), [])
 
@@ -474,7 +481,7 @@ const NavbarElement = memo(function NavbarElement({
 
   const showLogoOnDesktop = logoVisibility?.desktop !== false
   const showLogoOnMobile = logoVisibility?.mobile !== false
-  const showLogoNow = isMobile ? showLogoOnMobile : showLogoOnDesktop
+  const showLogoNow = effectiveIsMobile ? showLogoOnMobile : showLogoOnDesktop
 
   const navBg = (style?.backgroundColor as string | undefined) ?? '#ffffff'
   const navColor = (style?.color as string | undefined) ?? '#111827'
@@ -505,7 +512,7 @@ const NavbarElement = memo(function NavbarElement({
       {!showLogoNow && <span />}
 
       {/* Desktop links */}
-      {!isMobile && (
+      {!effectiveIsMobile && (
         <div style={{
           display: 'flex',
           alignItems: 'center',
@@ -520,10 +527,10 @@ const NavbarElement = memo(function NavbarElement({
       )}
 
       {/* Desktop CTA */}
-      {!isMobile && cta && <CtaButton cta={cta} />}
+      {!effectiveIsMobile && cta && <CtaButton cta={cta} />}
 
       {/* Mobile hamburger trigger */}
-      {isMobile && (
+      {effectiveIsMobile && (
         <button
           onClick={() => setMobileOpen((v) => !v)}
           aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
@@ -548,7 +555,7 @@ const NavbarElement = memo(function NavbarElement({
       )}
 
       {/* Mobile drawer */}
-      {isMobile && (
+      {effectiveIsMobile && (
         <MobileDrawer
           open={mobileOpen}
           onClose={closeMobile}

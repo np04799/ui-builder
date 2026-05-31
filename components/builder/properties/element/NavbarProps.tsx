@@ -53,12 +53,97 @@ const TARGET_OPTS = [
   { label: 'New tab', value: '_blank' },
 ]
 
+// ─── Presets ──────────────────────────────────────────────────────────────────
+
+interface NavbarPreset {
+  id: string
+  name: string
+  bg: string
+  color: string
+  layout: 'right' | 'center'
+  ctaVariant: 'primary' | 'outline' | 'ghost'
+}
+
+const NAVBAR_PRESETS: NavbarPreset[] = [
+  { id: 'white',    name: 'Clean Light',   bg: '#ffffff',  color: '#111827', layout: 'right',  ctaVariant: 'primary' },
+  { id: 'dark',     name: 'Dark',          bg: '#111827',  color: '#f9fafb', layout: 'right',  ctaVariant: 'primary' },
+  { id: 'indigo',   name: 'Indigo Brand',  bg: '#4f46e5',  color: '#ffffff', layout: 'right',  ctaVariant: 'outline' },
+  { id: 'slate',    name: 'Slate Pro',     bg: '#1e293b',  color: '#e2e8f0', layout: 'right',  ctaVariant: 'ghost'   },
+  { id: 'centered', name: 'Centered',      bg: '#ffffff',  color: '#0f172a', layout: 'center', ctaVariant: 'primary' },
+  { id: 'green',    name: 'Green SaaS',    bg: '#065f46',  color: '#ffffff', layout: 'right',  ctaVariant: 'outline' },
+]
+
+function PresetPicker({ onApply }: { onApply: (p: NavbarPreset) => void }) {
+  return (
+    <div style={{ padding: '12px 0' }}>
+      <p style={{ fontSize: '0.72rem', color: 'var(--color-text-secondary)', margin: '0 0 10px', lineHeight: 1.4 }}>
+        Select a style to apply it instantly. You can customise colors after.
+      </p>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+        {NAVBAR_PRESETS.map((p) => (
+          <button
+            key={p.id}
+            onClick={() => onApply(p)}
+            style={{
+              border: '1.5px solid var(--color-border)',
+              borderRadius: 8,
+              overflow: 'hidden',
+              cursor: 'pointer',
+              padding: 0,
+              background: 'none',
+              textAlign: 'left',
+            }}
+          >
+            {/* Mini navbar preview */}
+            <div style={{
+              background: p.bg,
+              padding: '8px 10px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              justifyContent: 'space-between',
+            }}>
+              <span style={{ fontSize: '0.6rem', fontWeight: 800, color: p.color, letterSpacing: '-0.01em', whiteSpace: 'nowrap' }}>Brand</span>
+              <div style={{ display: 'flex', gap: 4, flex: 1, justifyContent: p.layout === 'center' ? 'center' : 'flex-end' }}>
+                {['Home', 'About', 'Blog'].map((l) => (
+                  <span key={l} style={{ fontSize: '0.48rem', color: p.color, opacity: 0.75, fontWeight: 500 }}>{l}</span>
+                ))}
+              </div>
+              <span style={{
+                fontSize: '0.42rem', fontWeight: 700,
+                padding: '2px 5px',
+                borderRadius: 4,
+                background: p.ctaVariant === 'primary' ? p.color : 'transparent',
+                color: p.ctaVariant === 'primary' ? p.bg : p.color,
+                border: `1px solid ${p.color}`,
+                opacity: 0.9,
+                whiteSpace: 'nowrap',
+              }}>CTA</span>
+            </div>
+            <div style={{
+              padding: '4px 8px',
+              fontSize: '0.65rem',
+              fontWeight: 500,
+              color: 'var(--color-text-primary)',
+              background: 'var(--color-surface)',
+              borderTop: '1px solid var(--color-border)',
+            }}>
+              {p.name}
+            </div>
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 // ─── Tab bar ──────────────────────────────────────────────────────────────────
 
-type Tab = 'brand' | 'links' | 'desktop' | 'mobile'
+type Tab = 'presets' | 'brand' | 'links' | 'desktop' | 'mobile'
 
 function TabBar({ active, onChange }: { active: Tab; onChange: (t: Tab) => void }) {
   const tabs: { id: Tab; label: string }[] = [
+    { id: 'presets', label: 'Presets' },
     { id: 'brand', label: 'Brand' },
     { id: 'links', label: 'Links' },
     { id: 'desktop', label: 'Desktop' },
@@ -120,7 +205,7 @@ interface Props { element: ElementNode }
 
 export default function NavbarProps({ element }: Props) {
   const updateElement = useBuilderStore((s) => s.updateElement)
-  const [tab, setTab] = useState<Tab>('brand')
+  const [tab, setTab] = useState<Tab>('presets')
 
   if (element.content.type !== 'navbar') return null
   const { content, styles } = element
@@ -183,11 +268,34 @@ export default function NavbarProps({ element }: Props) {
     patchContent({ cta: { text: '', href: '#', variant: 'primary', ...content.cta, ...patch } })
   }
 
+  // ── Preset apply ────────────────────────────────────────────────────────────
+
+  function applyPreset(p: NavbarPreset) {
+    updateElement(element.id, {
+      styles: { ...styles, backgroundColor: p.bg, color: p.color },
+      content: {
+        ...content,
+        desktopLayout: p.layout,
+        mobilePanelBg: p.bg,
+        mobileTextColor: p.color,
+        cta: content.cta ? { ...content.cta, variant: p.ctaVariant } : undefined,
+      },
+    })
+    setTab('brand')
+  }
+
   // ── Render ──────────────────────────────────────────────────────────────────
 
   return (
     <>
       <TabBar active={tab} onChange={setTab} />
+
+      {/* ── PRESETS tab ───────────────────────────────────────────── */}
+      {tab === 'presets' && (
+        <PropGroup label="Style presets">
+          <PresetPicker onApply={applyPreset} />
+        </PropGroup>
+      )}
 
       {/* ── BRAND tab ─────────────────────────────────────────────── */}
       {tab === 'brand' && (
