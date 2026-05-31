@@ -112,3 +112,17 @@ Use Firebase:
 # Deployment
 
 - Vercel
+
+---
+
+# Framework-Aware System
+
+## Key Files
+
+- `hooks/useFramework.ts` — reads `mode` from `PreviewStateContext` (preview page) or Zustand store (builder). Always calls both hooks for Rules of Hooks compliance.
+- `components/builder/layout/FrameworkLoader.tsx` — zero-render component; injects Bootstrap CDN link, Tailwind Play CDN script, or inline MUI CSS into `<head>` based on `mode`. Exports `applyFrameworkCSS(mode)`.
+- `components/builder/elements/PreviewStateContext.tsx` — React context holding full serialized `BuilderStoreState` in preview mode only.
+
+## Preview Architecture
+
+`/preview` page reads state from `sessionStorage` (set by Toolbar preview button via `JSON.stringify(useBuilderStore.getState())`). No Zustand store available. Framework CSS and branding CSS vars are applied via `useEffect` from the serialized `state.mode` and `state.projectMeta.branding`.

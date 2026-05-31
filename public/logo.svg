@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 140" fill="none">
+  <defs>
+    <!-- Gradient glow behind solid piece -->
+    <radialGradient id="glow" cx="40%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#c7d9f8" stop-opacity="0.9"/>
+      <stop offset="60%" stop-color="#a5c0f0" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#dbeafe" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Blue stroke gradient for puzzle piece -->
+    <linearGradient id="blueStroke" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#2563EB"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ── Glow / aura behind the left piece ── -->
+  <ellipse cx="58" cy="58" rx="68" ry="64" fill="url(#glow)"/>
+
+  <!-- ── LEFT PIECE (solid blue, rounded square with puzzle tab right + slot bottom) ── -->
+  <!-- Outer rounded square body -->
+  <rect x="10" y="10" width="88" height="88" rx="20" fill="white" stroke="url(#blueStroke)" stroke-width="6"/>
+
+  <!-- Right tab (bump going right): circular knob centered on right edge of the square -->
+  <!-- Clipped so only the outer half shows -->
+  <clipPath id="rightTabClip">
+    <rect x="90" y="44" width="30" height="30"/>
+  </clipPath>
+  <circle cx="98" cy="59" r="17" fill="white" stroke="url(#blueStroke)" stroke-width="6" clip-path="url(#rightTabClip)"/>
+
+  <!-- Bottom slot (notch cut out — dashed ghost piece plugs in here): rectangular indent -->
+  <!-- We draw the slot as a white rectangle over the bottom border + a circle for rounded slot -->
+  <clipPath id="bottomSlotClip">
+    <rect x="44" y="90" width="30" height="30"/>
+  </clipPath>
+  <circle cx="59" cy="98" r="17" fill="white" stroke="url(#blueStroke)" stroke-width="6" clip-path="url(#bottomSlotClip)"/>
+  <!-- Cover the inner part of the slot arc so it looks like an indent not a bump -->
+  <circle cx="59" cy="98" r="11" fill="white"/>
+
+  <!-- "n" letter centered in the left piece -->
+  <text x="54" y="72" font-family="system-ui,-apple-system,Helvetica Neue,sans-serif" font-size="46" font-weight="800" fill="#2563EB" text-anchor="middle" dominant-baseline="auto">n</text>
+
+  <!-- ── RIGHT PIECE (dashed outline ghost, the "slot" waiting to be filled) ── -->
+  <!-- Outer rounded square, dashed -->
+  <rect x="88" y="36" width="68" height="68" rx="14" fill="none" stroke="#1e293b" stroke-width="5" stroke-dasharray="10 7"/>
+
+  <!-- Left tab on ghost piece (mirrors right tab of solid piece) — dashed -->
+  <clipPath id="ghostLeftTabClip">
+    <rect x="70" y="56" width="24" height="24"/>
+  </clipPath>
+  <circle cx="88" cy="68" r="13" fill="none" stroke="#1e293b" stroke-width="5" stroke-dasharray="10 7" clip-path="url(#ghostLeftTabClip)"/>
+
+  <!-- Bottom tab on ghost piece — dashed -->
+  <clipPath id="ghostBottomTabClip">
+    <rect x="110" y="96" width="24" height="24"/>
+  </clipPath>
+  <circle cx="122" cy="104" r="13" fill="none" stroke="#1e293b" stroke-width="5" stroke-dasharray="10 7" clip-path="url(#ghostBottomTabClip)"/>
+
+  <!-- ── WORDMARK ── -->
+  <!-- "UI" in blue -->
+  <text x="182" y="82" font-family="system-ui,-apple-system,Helvetica Neue,sans-serif" font-size="58" font-weight="800" fill="#2563EB" letter-spacing="-1">UI</text>
+  <!-- "Builder" in near-black -->
+  <text x="260" y="82" font-family="system-ui,-apple-system,Helvetica Neue,sans-serif" font-size="58" font-weight="800" fill="#0f172a" letter-spacing="-1"> Builder</text>
+
+  <!-- ── TAGLINE ── -->
+  <text x="182" y="112" font-family="system-ui,-apple-system,Helvetica Neue,sans-serif" font-size="22" font-weight="400" fill="#475569">Connect ideas. Build websites.</text>
+  <!-- Blue dot at end of tagline -->
+  <circle cx="492" cy="106" r="6" fill="#2563EB"/>
+</svg>

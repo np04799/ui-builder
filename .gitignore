@@ -1,41 +1,48 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+# Build output
+.next/
+out/
+build/
+dist/
 
-# testing
-/coverage
+# Environment & secrets — NEVER commit these
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+firebase.json
+.firebaserc
+serviceAccountKey.json
+*-service-account*.json
+google-services.json
+GoogleService-Info.plist
 
-# next.js
-/.next/
-/out/
+# Uploads (user-generated content)
+public/uploads/
 
-# production
-/build
+# Testing artifacts
+playwright-report/
+test-results/
+coverage/
 
-# misc
+# OS / editor
 .DS_Store
-*.pem
+Thumbs.db
+.vscode/settings.json
+.idea/
 
-# debug
+# Logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
-.vercel
-
-# typescript
+# TypeScript
 *.tsbuildinfo
 next-env.d.ts

@@ -363,3 +363,45 @@ DO NOT:
 - Allow overflow by default
 - Allow broken responsive layouts
 - Allow invisible text in themes
+
+---
+
+# 🎨 FRAMEWORK-AWARE RENDERING
+
+All elements must render with real framework class names based on `store.mode`.
+
+## Rule
+
+Every element calls `useFramework()` and returns framework-specific JSX via early returns:
+
+```tsx
+const framework = useFramework()
+if (framework === 'bootstrap') return <bootstrapJSX />
+if (framework === 'mui') return <muiJSX />
+if (framework === 'tailwind') return <tailwindJSX />
+// custom: original inline-styles render
+```
+
+## Framework CSS Injection
+
+`FrameworkLoader` (mounted in `BuilderLayout`) injects the active framework's CSS into `<head>`:
+- Bootstrap: CDN `<link>` tag
+- Tailwind: Play CDN `<script>` tag  
+- MUI: inline `<style>` with MUI-like CSS classes
+- Custom: no injection
+
+`applyFrameworkCSS(mode)` is the shared function — also used by the preview page.
+
+## Preview Page
+
+`/preview` is a separate route with no Zustand store. It reads `mode` from serialized sessionStorage state and calls `applyFrameworkCSS`. `useFramework()` reads from `PreviewStateContext` when in preview.
+
+## Elements Implemented
+
+- ButtonElement — all 4 frameworks
+- CardElement — all 4 frameworks
+- HeroElement — all 4 frameworks
+- HeadingElement — all 4 frameworks
+- NavbarElement — all 4 frameworks
+- FormElement — all 4 frameworks
+- DrawerElement — all 4 frameworks (refactored into BootstrapDrawer / MuiDrawer / TailwindDrawer / CustomDrawer sub-components)
