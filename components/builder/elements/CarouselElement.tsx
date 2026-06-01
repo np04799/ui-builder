@@ -1,6 +1,7 @@
 'use client'
 
 import { memo, useState, useEffect, useCallback } from 'react'
+import { useFramework } from '@/hooks/useFramework'
 
 interface Slide {
   id: string
@@ -35,6 +36,7 @@ function CarouselElement({
   style,
 }: Props) {
   const [current, setCurrent] = useState(0)
+  const framework = useFramework()
   const count = slides.length
 
   const prev = useCallback(() => setCurrent((c) => (c - 1 + count) % count), [count])
@@ -78,8 +80,11 @@ function CarouselElement({
 
   const slide = slides[current]
 
+  // Bootstrap/Tailwind: add framework wrapper class
+  const outerClass = framework === 'bootstrap' ? 'position-relative w-100' : framework === 'tailwind' ? 'relative w-full' : undefined
+
   return (
-    <div style={{ position: 'relative', width: '100%', fontFamily: 'inherit', ...style }}>
+    <div className={outerClass} style={{ position: 'relative', width: '100%', fontFamily: 'inherit', ...style }}>
       {/* Track */}
       <div
         style={{
@@ -206,19 +211,23 @@ function CarouselElement({
 
       {/* Dots */}
       {showDots && count > 1 && (
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginTop: 10 }}>
+        <div
+          className={framework === 'tailwind' ? 'flex justify-center gap-1.5 mt-2.5' : undefined}
+          style={framework === 'tailwind' ? undefined : { display: 'flex', justifyContent: 'center', gap: 6, marginTop: 10 }}
+        >
           {slides.map((_, idx) => (
             <button
               key={idx}
               onClick={() => setCurrent(idx)}
               aria-label={`Go to slide ${idx + 1}`}
+              className={framework === 'bootstrap' ? `btn btn-sm p-0 rounded-pill${idx === current ? ' bg-primary' : ' bg-secondary opacity-50'}` : undefined}
               style={{
                 width: idx === current ? 20 : 8,
                 height: 8,
                 borderRadius: 999,
                 border: 'none',
                 cursor: 'pointer',
-                backgroundColor: idx === current ? 'var(--color-primary)' : 'var(--color-border)',
+                backgroundColor: framework === 'bootstrap' ? undefined : idx === current ? 'var(--color-primary)' : 'var(--color-border)',
                 padding: 0,
                 transition: 'width 200ms, background-color 200ms',
               }}

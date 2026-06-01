@@ -2,6 +2,7 @@
 
 import { memo, useState } from 'react'
 import { useBuilderStore } from '@/store/builder.store'
+import { useFramework } from '@/hooks/useFramework'
 
 interface CheckItem { id: string; text: string; checked?: boolean }
 
@@ -15,6 +16,7 @@ interface Props {
 const ChecklistElement = memo(function ChecklistElement({ elementId, items, checkedColor = '#10b981', style }: Props) {
   const updateElement = useBuilderStore((s) => s.updateElement)
   const [editingId, setEditingId] = useState<string | null>(null)
+  const framework = useFramework()
 
   function patchItems(next: CheckItem[]) {
     if (!elementId) return
@@ -49,7 +51,8 @@ const ChecklistElement = memo(function ChecklistElement({ elementId, items, chec
 
   return (
     <ul
-      style={{
+      className={framework === 'bootstrap' ? 'list-unstyled mb-0' : framework === 'tailwind' ? 'list-none m-0 p-0 flex flex-col gap-2' : undefined}
+      style={framework === 'bootstrap' || framework === 'tailwind' ? style : {
         margin: 0,
         padding: 0,
         listStyle: 'none',
@@ -112,11 +115,12 @@ const ChecklistElement = memo(function ChecklistElement({ elementId, items, chec
           ) : (
             <span
               onDoubleClick={() => elementId && setEditingId(item.id)}
+              className={framework === 'tailwind' ? `text-base leading-relaxed flex-1 transition-all ${item.checked ? 'line-through text-gray-400' : 'text-gray-600'}` : undefined}
               style={{
                 flex: 1,
                 fontSize: '1rem',
                 lineHeight: 1.6,
-                color: 'var(--color-text-secondary)',
+                color: framework === 'bootstrap' ? undefined : 'var(--color-text-secondary)',
                 textDecoration: item.checked ? 'line-through' : 'none',
                 opacity: item.checked ? 0.5 : 1,
                 cursor: elementId ? 'text' : 'default',

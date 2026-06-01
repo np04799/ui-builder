@@ -280,9 +280,7 @@ const ColumnRenderer = memo(function ColumnRenderer({ id, skipIfManaged = true }
             {showPicker && (
               <ElementPickerPopover
                 onSelect={(elementType) => {
-                  const content = defaultContentForType(elementType)
-                  if (content) addElement(id, content)
-                  setShowPicker(false)
+                  handlePickerSelect(elementType)
                 }}
                 onClose={() => setShowPicker(false)}
               />

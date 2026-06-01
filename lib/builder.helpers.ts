@@ -175,7 +175,7 @@ export function createSection(): SectionNode {
   return {
     id: uid(),
     rowIds: [],
-    styles: { maxWidth: '1200px', alignItems: 'center', paddingTop: '20px', paddingBottom: '20px', paddingLeft: '20px', paddingRight: '20px' },
+    styles: { maxWidth: 'none', alignItems: 'center', paddingTop: '0', paddingBottom: '0', paddingLeft: '0', paddingRight: '0' },
     responsive: emptyResponsive(),
   }
 }

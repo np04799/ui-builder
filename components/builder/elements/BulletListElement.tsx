@@ -2,6 +2,7 @@
 
 import { memo, useState } from 'react'
 import { useBuilderStore } from '@/store/builder.store'
+import { useFramework } from '@/hooks/useFramework'
 
 interface ListItem { id: string; text: string }
 
@@ -15,6 +16,7 @@ interface Props {
 const BulletListElement = memo(function BulletListElement({ elementId, items, markerColor = 'currentColor', style }: Props) {
   const updateElement = useBuilderStore((s) => s.updateElement)
   const [editingId, setEditingId] = useState<string | null>(null)
+  const framework = useFramework()
 
   function patchItems(next: ListItem[]) {
     if (!elementId) return
@@ -41,9 +43,13 @@ const BulletListElement = memo(function BulletListElement({ elementId, items, ma
     }
   }
 
+  const bsClass = framework === 'bootstrap' ? 'list-unstyled mb-0' : undefined
+  const twClass = framework === 'tailwind' ? 'list-none m-0 p-0 flex flex-col gap-1.5' : undefined
+
   return (
     <ul
-      style={{
+      className={bsClass ?? twClass}
+      style={framework === 'bootstrap' || framework === 'tailwind' ? style : {
         margin: 0,
         padding: 0,
         listStyle: 'none',
@@ -91,11 +97,12 @@ const BulletListElement = memo(function BulletListElement({ elementId, items, ma
           ) : (
             <span
               onDoubleClick={() => elementId && setEditingId(item.id)}
+              className={framework === 'tailwind' ? 'text-base text-gray-600 leading-relaxed flex-1' : undefined}
               style={{
                 flex: 1,
                 fontSize: '1rem',
                 lineHeight: 1.6,
-                color: 'var(--color-text-secondary)',
+                color: framework === 'bootstrap' ? undefined : 'var(--color-text-secondary)',
                 cursor: elementId ? 'text' : 'default',
                 minHeight: '1.4em',
               }}

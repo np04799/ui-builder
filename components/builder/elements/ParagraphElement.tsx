@@ -1,4 +1,5 @@
 import { memo } from 'react'
+import { useFramework } from '@/hooks/useFramework'
 
 interface Props {
   text: string
@@ -6,6 +7,21 @@ interface Props {
 }
 
 const ParagraphElement = memo(function ParagraphElement({ text, style }: Props) {
+  const framework = useFramework()
+  const placeholder = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+
+  if (framework === 'bootstrap') {
+    return <p className="lead mb-0" style={style}>{text || placeholder}</p>
+  }
+
+  if (framework === 'mui') {
+    return <p className="MuiTypography-root MuiTypography-body1" style={style}>{text || placeholder}</p>
+  }
+
+  if (framework === 'tailwind') {
+    return <p className="text-base text-gray-600 leading-relaxed" style={style}>{text || placeholder}</p>
+  }
+
   return (
     <p
       style={{
@@ -16,7 +32,7 @@ const ParagraphElement = memo(function ParagraphElement({ text, style }: Props) 
         ...style,
       }}
     >
-      {text || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'}
+      {text || placeholder}
     </p>
   )
 })

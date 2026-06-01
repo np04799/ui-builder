@@ -107,8 +107,19 @@ export type ElementContent =
       items: NavItem[]
       /** CTA button */
       cta?: NavbarCta
-      /** Desktop layout */
+      /**
+       * Structural layout variant — controls the overall navbar architecture.
+       * classic: logo-left links-right cta-far-right (1 row)
+       * centered: logo centered on row1, links centered on row2 (2 rows)
+       * split: logo-left links-center cta-right (3-zone, 1 row)
+       * minimal: logo-left, contact info + hamburger-only on right
+       * brand-hero: large logo+tagline left, stacked nav links right
+       */
+      layoutVariant?: 'classic' | 'centered' | 'split' | 'minimal' | 'brand-hero'
+      /** Desktop layout (legacy, used when layoutVariant === 'classic') */
       desktopLayout?: 'left' | 'center' | 'right'
+      /** Minimal layout: contact text shown beside hamburger icon */
+      contactInfo?: string
       /** Mobile: at what pixel width to switch to hamburger */
       mobileBreakpoint?: number
       /** Mobile menu open style */
@@ -124,7 +135,19 @@ export type ElementContent =
       heading: string
       paragraph: string
       cta: { text: string; href: string }
+      ctaSecondary?: { text: string; href: string }
+      badge?: string
       backgroundImage?: string
+      /**
+       * Layout structure variant:
+       * centered: full-width centered text + CTA
+       * split-left: text left, image/graphic right
+       * split-right: image left, text right
+       * gradient-dark: dark gradient bg, large headline
+       * minimal: clean white, badge above heading
+       */
+      layoutVariant?: 'centered' | 'split-left' | 'split-right' | 'gradient-dark' | 'minimal'
+      textAlign?: 'left' | 'center' | 'right'
     }
   | {
       type: 'card'
@@ -132,8 +155,44 @@ export type ElementContent =
       title: string
       description: string
       button?: { text: string; href: string }
+      /**
+       * Layout structure variant:
+       * image-top: image above text (default)
+       * horizontal: image left, text right
+       * pricing: price + feature list, no image
+       * feature: large icon top, text below
+       * testimonial: avatar, quote, author
+       */
+      layoutVariant?: 'image-top' | 'horizontal' | 'pricing' | 'feature' | 'testimonial'
+      /** Pricing layout extras */
+      price?: string
+      priceUnit?: string
+      features?: string[]
+      /** Feature layout extras */
+      icon?: string
+      /** Testimonial extras */
+      author?: string
+      authorRole?: string
+      avatarSrc?: string
+      rating?: number
     }
-  | { type: 'footer'; links: NavItem[]; copyright: string; socials?: NavItem[] }
+  | {
+      type: 'footer'
+      links: NavItem[]
+      copyright: string
+      socials?: NavItem[]
+      /**
+       * Layout structure variant:
+       * simple: single row — links center, copyright below
+       * columns: 3-column links + logo + copyright
+       * minimal: dark strip, copyright only
+       * centered-brand: logo + tagline + links centered
+       * mega: 4-column links + social icons + bottom bar
+       */
+      layoutVariant?: 'simple' | 'columns' | 'minimal' | 'centered-brand' | 'mega'
+      brand?: { name: string; tagline?: string; logoSrc?: string }
+      columnLinks?: { heading: string; items: NavItem[] }[]
+    }
   | {
       type: 'banner-3d'
       heading: string

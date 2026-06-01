@@ -1,5 +1,7 @@
 'use client'
 
+import { useFramework } from '@/hooks/useFramework'
+
 interface Props {
   name?: string
   size?: string
@@ -43,7 +45,27 @@ const ICONS: Record<string, React.ReactNode> = {
 }
 
 export default function IconElement({ name = 'star', size = '24px', color = 'currentColor', style }: Props) {
+  const framework = useFramework()
   const icon = ICONS[name] ?? ICONS.star
+
+  // Bootstrap: use text-* utilities for color if color maps to a token
+  if (framework === 'bootstrap') {
+    return (
+      <span className="d-inline-flex" style={{ width: size, height: size, color, flexShrink: 0, ...style }}>
+        {icon}
+      </span>
+    )
+  }
+
+  if (framework === 'tailwind') {
+    return (
+      <span className="inline-flex flex-shrink-0" style={{ width: size, height: size, color, ...style }}>
+        {icon}
+      </span>
+    )
+  }
+
+  // mui + custom
   return (
     <span
       style={{
@@ -51,6 +73,7 @@ export default function IconElement({ name = 'star', size = '24px', color = 'cur
         width: size,
         height: size,
         color,
+        flexShrink: 0,
         ...style,
       }}
     >

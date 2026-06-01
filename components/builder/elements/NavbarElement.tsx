@@ -14,7 +14,9 @@ interface Props {
   logoVisibility?: { desktop?: boolean; tablet?: boolean; mobile?: boolean }
   items?: NavItem[]
   cta?: NavbarCta
+  layoutVariant?: 'classic' | 'centered' | 'split' | 'minimal' | 'brand-hero'
   desktopLayout?: 'left' | 'center' | 'right'
+  contactInfo?: string
   mobileBreakpoint?: number
   mobileMenuStyle?: 'drawer-left' | 'drawer-right' | 'fullscreen'
   mobilePanelBg?: string
@@ -55,25 +57,54 @@ function CtaButton({ cta, small }: { cta: NavbarCta; small?: boolean }) {
 
 // ─── Logo ─────────────────────────────────────────────────────────────────────
 
-function Logo({ logoType, logoText, logoSrc }: { logoType: string; logoText: string; logoSrc?: string }) {
+function Logo({
+  logoType,
+  logoText,
+  logoSrc,
+  tagline,
+  large,
+}: {
+  logoType: string
+  logoText: string
+  logoSrc?: string
+  tagline?: string
+  large?: boolean
+}) {
   if (logoType === 'image' && logoSrc) {
     return (
       <a href="#" style={{ display: 'flex', alignItems: 'center', flexShrink: 0, textDecoration: 'none' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={logoSrc} alt={logoText || 'Logo'} style={{ height: 32, width: 'auto', objectFit: 'contain', display: 'block' }} />
+        <img src={logoSrc} alt={logoText || 'Logo'} style={{ height: large ? 48 : 32, width: 'auto', objectFit: 'contain', display: 'block' }} />
       </a>
     )
   }
   return (
-    <a href="#" style={{ fontWeight: 800, fontSize: '1.125rem', color: 'inherit', textDecoration: 'none', flexShrink: 0, letterSpacing: '-0.02em' }}>
-      {logoText || 'Brand'}
+    <a
+      href="#"
+      style={{
+        display: 'flex',
+        flexDirection: tagline ? 'column' : 'row',
+        alignItems: tagline ? 'flex-start' : 'center',
+        textDecoration: 'none',
+        flexShrink: 0,
+        gap: 2,
+      }}
+    >
+      <span style={{ fontWeight: 800, fontSize: large ? '1.5rem' : '1.125rem', color: 'inherit', letterSpacing: '-0.02em', lineHeight: 1.1 }}>
+        {logoText || 'Brand'}
+      </span>
+      {tagline && (
+        <span style={{ fontSize: '0.7rem', fontWeight: 400, opacity: 0.6, letterSpacing: '0.02em', color: 'inherit' }}>
+          {tagline}
+        </span>
+      )}
     </a>
   )
 }
 
 // ─── Desktop nav item with optional submenu ───────────────────────────────────
 
-function DesktopNavItem({ item }: { item: NavItem }) {
+function DesktopNavItem({ item, navColor }: { item: NavItem; navColor?: string }) {
   const [open, setOpen] = useState(false)
   const hasSub = (item.children?.length ?? 0) > 0
 
@@ -266,7 +297,6 @@ function MobileDrawer({
 
   return (
     <>
-      {/* Overlay */}
       {!isFullscreen && (
         <div
           onClick={onClose}
@@ -283,7 +313,6 @@ function MobileDrawer({
       )}
 
       <div style={panelStyle} role="dialog" aria-modal="true">
-        {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 }}>
           <Logo logoType={logoType} logoText={logoText} logoSrc={logoSrc} />
           <button
@@ -297,7 +326,6 @@ function MobileDrawer({
           </button>
         </div>
 
-        {/* Links */}
         <nav style={{ flex: 1 }}>
           {items.map((item, i) => {
             const hasSub = (item.children?.length ?? 0) > 0
@@ -315,15 +343,7 @@ function MobileDrawer({
                     target={item.target}
                     rel={item.target === '_blank' ? 'noopener noreferrer' : undefined}
                     onClick={hasSub ? undefined : onClose}
-                    style={{
-                      flex: 1,
-                      display: 'block',
-                      padding: '13px 0',
-                      color: textColor,
-                      textDecoration: 'none',
-                      fontSize: '1rem',
-                      fontWeight: 500,
-                    }}
+                    style={{ flex: 1, display: 'block', padding: '13px 0', color: textColor, textDecoration: 'none', fontSize: '1rem', fontWeight: 500 }}
                   >
                     {item.label}
                   </a>
@@ -338,7 +358,6 @@ function MobileDrawer({
                     </button>
                   )}
                 </div>
-                {/* Submenu */}
                 {hasSub && isExpanded && (
                   <div style={{ paddingLeft: 14, borderLeft: `2px solid ${textColor}22`, marginBottom: 4 }}>
                     {item.children!.map((child) => (
@@ -346,15 +365,7 @@ function MobileDrawer({
                         key={child.id}
                         href={child.href}
                         onClick={onClose}
-                        style={{
-                          display: 'block',
-                          padding: '9px 0',
-                          color: textColor,
-                          textDecoration: 'none',
-                          fontSize: '0.875rem',
-                          fontWeight: 400,
-                          opacity: 0.75,
-                        }}
+                        style={{ display: 'block', padding: '9px 0', color: textColor, textDecoration: 'none', fontSize: '0.875rem', fontWeight: 400, opacity: 0.75 }}
                       >
                         {child.label}
                       </a>
@@ -366,7 +377,6 @@ function MobileDrawer({
           })}
         </nav>
 
-        {/* CTA */}
         {showCta && cta && (
           <div style={{ marginTop: 24 }}>
             <CtaButton cta={cta} small />
@@ -377,20 +387,238 @@ function MobileDrawer({
   )
 }
 
+// ─── Hamburger trigger button ─────────────────────────────────────────────────
+
+function HamburgerBtn({ open, color, onClick }: { open: boolean; color: string; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      aria-label={open ? 'Close menu' : 'Open menu'}
+      aria-expanded={open}
+      style={{
+        width: 40,
+        height: 40,
+        border: 'none',
+        background: 'none',
+        cursor: 'pointer',
+        borderRadius: 8,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 0,
+        color,
+        flexShrink: 0,
+      }}
+    >
+      <HamburgerIcon open={open} color={color} />
+    </button>
+  )
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Layout renderers
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Layout 1 — Classic: Logo left | Links right | CTA far right
+function LayoutClassic({
+  items, cta, logoType, logoText, logoSrc, navBg, navColor, isMobile, mobileOpen, setMobileOpen,
+  mobileMenuStyle, mobilePanelBg, mobileTextColor, showCtaMobile, style, desktopLayout,
+}: LayoutSharedProps & { desktopLayout?: 'left' | 'center' | 'right' }) {
+  const closeMobile = useCallback(() => setMobileOpen(false), [setMobileOpen])
+  return (
+    <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', height: 64, backgroundColor: navBg, color: navColor, borderBottom: '1px solid rgba(0,0,0,0.08)', position: 'relative', ...style }}>
+      <Logo logoType={logoType} logoText={logoText} logoSrc={logoSrc} />
+
+      {!isMobile && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 28,
+          flex: desktopLayout === 'center' ? 1 : undefined,
+          justifyContent: desktopLayout === 'center' ? 'center' : 'flex-start',
+          marginLeft: desktopLayout === 'right' ? 'auto' : undefined,
+          marginRight: desktopLayout === 'right' && cta ? 24 : undefined,
+        }}>
+          {items.map((item) => <DesktopNavItem key={item.id} item={item} navColor={navColor} />)}
+        </div>
+      )}
+
+      {!isMobile && cta && <CtaButton cta={cta} />}
+
+      {isMobile && (
+        <>
+          <HamburgerBtn open={mobileOpen} color={navColor} onClick={() => setMobileOpen((v) => !v)} />
+          <MobileDrawer open={mobileOpen} onClose={closeMobile} items={items} cta={cta} showCta={showCtaMobile} logoType={logoType} logoText={logoText} logoSrc={logoSrc} menuStyle={mobileMenuStyle} panelBg={mobilePanelBg} textColor={mobileTextColor} />
+        </>
+      )}
+    </nav>
+  )
+}
+
+// Layout 2 — Centered: Logo top-center, nav links below centered (2-row)
+function LayoutCentered({
+  items, cta, logoType, logoText, logoSrc, navBg, navColor, isMobile, mobileOpen, setMobileOpen,
+  mobileMenuStyle, mobilePanelBg, mobileTextColor, showCtaMobile, style,
+}: LayoutSharedProps) {
+  const closeMobile = useCallback(() => setMobileOpen(false), [setMobileOpen])
+  return (
+    <nav style={{ backgroundColor: navBg, color: navColor, borderBottom: '1px solid rgba(0,0,0,0.08)', overflow: 'hidden', ...style }}>
+      {/* Row 1: logo centered */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '14px 24px 0', position: 'relative', minHeight: 52 }}>
+        <Logo logoType={logoType} logoText={logoText} logoSrc={logoSrc} />
+        {/* Mobile hamburger in corner */}
+        {isMobile && (
+          <div style={{ position: 'absolute', right: 16, top: '50%', transform: 'translateY(-50%)' }}>
+            <HamburgerBtn open={mobileOpen} color={navColor} onClick={() => setMobileOpen((v) => !v)} />
+          </div>
+        )}
+      </div>
+
+      {/* Row 2: links centered (desktop only) */}
+      {!isMobile && (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 28, padding: '8px 24px 14px', borderTop: `1px solid ${navColor}12`, marginTop: 8 }}>
+          {items.map((item) => <DesktopNavItem key={item.id} item={item} navColor={navColor} />)}
+          {cta && <CtaButton cta={cta} />}
+        </div>
+      )}
+
+      {isMobile && (
+        <MobileDrawer open={mobileOpen} onClose={closeMobile} items={items} cta={cta} showCta={showCtaMobile} logoType={logoType} logoText={logoText} logoSrc={logoSrc} menuStyle={mobileMenuStyle} panelBg={mobilePanelBg} textColor={mobileTextColor} />
+      )}
+    </nav>
+  )
+}
+
+// Layout 3 — Split: Logo left | Links absolutely centered | CTA right
+function LayoutSplit({
+  items, cta, logoType, logoText, logoSrc, navBg, navColor, isMobile, mobileOpen, setMobileOpen,
+  mobileMenuStyle, mobilePanelBg, mobileTextColor, showCtaMobile, style,
+}: LayoutSharedProps) {
+  const closeMobile = useCallback(() => setMobileOpen(false), [setMobileOpen])
+  return (
+    <nav style={{ display: 'flex', alignItems: 'center', padding: '0 24px', height: 64, backgroundColor: navBg, color: navColor, borderBottom: '1px solid rgba(0,0,0,0.08)', position: 'relative', ...style }}>
+      {/* Logo — left */}
+      <Logo logoType={logoType} logoText={logoText} logoSrc={logoSrc} />
+
+      {/* Links — absolute center of the bar */}
+      {!isMobile && (
+        <div style={{
+          position: 'absolute',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 28,
+        }}>
+          {items.map((item) => <DesktopNavItem key={item.id} item={item} navColor={navColor} />)}
+        </div>
+      )}
+
+      {/* CTA — right */}
+      <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 12 }}>
+        {!isMobile && cta && <CtaButton cta={cta} />}
+        {isMobile && (
+          <>
+            <HamburgerBtn open={mobileOpen} color={navColor} onClick={() => setMobileOpen((v) => !v)} />
+            <MobileDrawer open={mobileOpen} onClose={closeMobile} items={items} cta={cta} showCta={showCtaMobile} logoType={logoType} logoText={logoText} logoSrc={logoSrc} menuStyle={mobileMenuStyle} panelBg={mobilePanelBg} textColor={mobileTextColor} />
+          </>
+        )}
+      </div>
+    </nav>
+  )
+}
+
+// Layout 4 — Minimal: Logo left | contact info + hamburger right (always mobile-style nav)
+function LayoutMinimal({
+  items, cta, logoType, logoText, logoSrc, navBg, navColor, isMobile, mobileOpen, setMobileOpen,
+  mobileMenuStyle, mobilePanelBg, mobileTextColor, showCtaMobile, style, contactInfo,
+}: LayoutSharedProps & { contactInfo?: string }) {
+  const closeMobile = useCallback(() => setMobileOpen(false), [setMobileOpen])
+  return (
+    <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', height: 64, backgroundColor: navBg, color: navColor, borderBottom: '1px solid rgba(0,0,0,0.08)', position: 'relative', ...style }}>
+      <Logo logoType={logoType} logoText={logoText} logoSrc={logoSrc} />
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        {/* Contact info — hidden on small screens */}
+        {contactInfo && !isMobile && (
+          <a
+            href={contactInfo.includes('@') ? `mailto:${contactInfo}` : contactInfo.startsWith('+') ? `tel:${contactInfo}` : '#'}
+            style={{ fontSize: '0.8rem', color: 'inherit', textDecoration: 'none', opacity: 0.75, fontWeight: 500, whiteSpace: 'nowrap' }}
+          >
+            {contactInfo}
+          </a>
+        )}
+        {/* Always show hamburger for minimal layout */}
+        <HamburgerBtn open={mobileOpen} color={navColor} onClick={() => setMobileOpen((v) => !v)} />
+      </div>
+
+      <MobileDrawer open={mobileOpen} onClose={closeMobile} items={items} cta={cta} showCta={showCtaMobile} logoType={logoType} logoText={logoText} logoSrc={logoSrc} menuStyle={mobileMenuStyle} panelBg={mobilePanelBg} textColor={mobileTextColor} />
+    </nav>
+  )
+}
+
+// Layout 5 — Brand Hero: Large logo + tagline left half | stacked nav links right half
+function LayoutBrandHero({
+  items, cta, logoType, logoText, logoSrc, navBg, navColor, isMobile, mobileOpen, setMobileOpen,
+  mobileMenuStyle, mobilePanelBg, mobileTextColor, showCtaMobile, style,
+}: LayoutSharedProps) {
+  const closeMobile = useCallback(() => setMobileOpen(false), [setMobileOpen])
+  return (
+    <nav style={{ display: 'flex', alignItems: 'stretch', backgroundColor: navBg, color: navColor, overflow: 'hidden', minHeight: 80, borderBottom: '1px solid rgba(0,0,0,0.08)', ...style }}>
+      {/* Left: large logo + tagline */}
+      <div style={{ flex: '0 0 auto', display: 'flex', alignItems: 'center', padding: '12px 28px', borderRight: `1px solid ${navColor}14`, minWidth: 180 }}>
+        <Logo logoType={logoType} logoText={logoText} logoSrc={logoSrc} tagline="Your tagline here" large />
+      </div>
+
+      {/* Right: nav links stacked horizontally (wrapping on mobile) */}
+      {!isMobile ? (
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 28, padding: '0 28px', flexWrap: 'wrap' }}>
+          {items.map((item) => <DesktopNavItem key={item.id} item={item} navColor={navColor} />)}
+          {cta && <div style={{ marginLeft: 'auto' }}><CtaButton cta={cta} /></div>}
+        </div>
+      ) : (
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', padding: '0 16px' }}>
+          <HamburgerBtn open={mobileOpen} color={navColor} onClick={() => setMobileOpen((v) => !v)} />
+          <MobileDrawer open={mobileOpen} onClose={closeMobile} items={items} cta={cta} showCta={showCtaMobile} logoType={logoType} logoText={logoText} logoSrc={logoSrc} menuStyle={mobileMenuStyle} panelBg={mobilePanelBg} textColor={mobileTextColor} />
+        </div>
+      )}
+    </nav>
+  )
+}
+
+// ─── Shared props for layout components ──────────────────────────────────────
+
+interface LayoutSharedProps {
+  items: NavItem[]
+  cta?: NavbarCta
+  logoType: string
+  logoText: string
+  logoSrc?: string
+  navBg: string
+  navColor: string
+  isMobile: boolean
+  mobileOpen: boolean
+  setMobileOpen: React.Dispatch<React.SetStateAction<boolean>>
+  mobileMenuStyle: 'drawer-left' | 'drawer-right' | 'fullscreen'
+  mobilePanelBg: string
+  mobileTextColor: string
+  showCtaMobile?: boolean
+  style?: React.CSSProperties
+}
+
 // ─── Main NavbarElement ───────────────────────────────────────────────────────
 
 const NavbarElement = memo(function NavbarElement({
   logoType = 'text',
   logoText = 'Brand',
   logoSrc,
-  logoVisibility = { desktop: true, tablet: true, mobile: true },
   items = [
     { id: '1', label: 'Home', href: '#' },
     { id: '2', label: 'About', href: '#' },
     { id: '3', label: 'Contact', href: '#' },
   ],
   cta,
+  layoutVariant = 'classic',
   desktopLayout = 'right',
+  contactInfo = 'hello@company.com',
   mobileBreakpoint = 768,
   mobileMenuStyle = 'drawer-left',
   mobilePanelBg = '#ffffff',
@@ -403,40 +631,80 @@ const NavbarElement = memo(function NavbarElement({
   const [_isMobile, setIsMobile] = useState(false)
   const framework = useFramework()
   const previewState = usePreviewState()
-  // In builder canvas (not preview), always show desktop layout so nav links
-  // are visible regardless of the canvas panel width.
   const isPreview = previewState !== null
+  // In builder canvas always show desktop layout so nav links are always visible.
+  // In preview, use the real window matchMedia result.
   const effectiveIsMobile = isPreview ? _isMobile : false
 
   useEffect(() => {
-    if (!isPreview) return
+    // Always run matchMedia so it's ready when isPreview becomes true.
+    // effectiveIsMobile ignores this value in builder context.
     const mq = window.matchMedia(`(max-width: ${mobileBreakpoint}px)`)
     const update = () => setIsMobile(mq.matches)
     update()
     mq.addEventListener('change', update)
     return () => mq.removeEventListener('change', update)
-  }, [mobileBreakpoint, isPreview])
+  }, [mobileBreakpoint])
 
-  const closeMobile = useCallback(() => setMobileOpen(false), [])
+  void uid // suppress unused warning when framework branches don't use it
 
   // ── Bootstrap navbar ───────────────────────────────────────────────────────
   if (framework === 'bootstrap') {
+    const bsNavBg = style?.backgroundColor ?? '#ffffff'
+    const bsNavColor = style?.color ?? '#111827'
+    const isDarkBs = bsNavBg !== '#ffffff' && bsNavBg !== '#fff' && bsNavBg !== 'white'
+    const bsScheme = isDarkBs ? 'navbar-dark' : 'navbar-light'
+    const navBase: React.CSSProperties = { width: '100%', backgroundColor: bsNavBg, color: bsNavColor, borderBottom: '1px solid rgba(0,0,0,0.08)' }
+    // Use px-4 wrapper instead of container-fluid to avoid Bootstrap's gutter padding on nav content
+    if (layoutVariant === 'centered') {
+      return (
+        <nav className={`navbar ${bsScheme}`} style={navBase}>
+          <div className="w-100 d-flex flex-column align-items-center px-4 pb-2 pt-2">
+            <a className="navbar-brand fw-bold mb-1">{logoType === 'image' && logoSrc ? <img src={logoSrc} alt={logoText} height={32} /> : logoText}</a>
+            <div className="d-flex gap-3 align-items-center">
+              {items.map((item) => <a key={item.id} className="nav-link py-0" href={item.href} style={{ color: bsNavColor }}>{item.label}</a>)}
+              {cta && <a href={cta.href} className="btn btn-primary btn-sm">{cta.text}</a>}
+            </div>
+          </div>
+        </nav>
+      )
+    }
+    if (layoutVariant === 'minimal') {
+      return (
+        <nav className={`navbar ${bsScheme}`} style={navBase}>
+          <div className="w-100 d-flex align-items-center px-4" style={{ minHeight: 56 }}>
+            <a className="navbar-brand fw-bold mb-0">{logoType === 'image' && logoSrc ? <img src={logoSrc} alt={logoText} height={32} /> : logoText}</a>
+            <div className="d-flex align-items-center gap-2 ms-auto">
+              {contactInfo && <small className="opacity-75" style={{ color: bsNavColor }}>{contactInfo}</small>}
+              <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target={`#nb-${uid}`} style={{ borderColor: `${bsNavColor}40` }}><span className="navbar-toggler-icon" /></button>
+            </div>
+          </div>
+          <div className="collapse navbar-collapse px-4" id={`nb-${uid}`}>
+            <ul className="navbar-nav ms-auto">
+              {items.map((item) => <li key={item.id} className="nav-item"><a className="nav-link" href={item.href} style={{ color: bsNavColor }}>{item.label}</a></li>)}
+            </ul>
+            {cta && <a href={cta.href} className="btn btn-primary ms-2 my-1">{cta.text}</a>}
+          </div>
+        </nav>
+      )
+    }
+    // classic / split / brand-hero — standard Bootstrap expand-lg, no container gutter
     return (
-      <nav className="navbar navbar-expand-lg" style={{ backgroundColor: style?.backgroundColor ?? '#fff', ...style }}>
-        <div className="container-fluid">
-          <a className="navbar-brand fw-bold" href="#">{logoType === 'image' && logoSrc ? <img src={logoSrc} alt={logoText} height={32} /> : logoText}</a>
-          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target={`#${uid}-nav`}>
+      <nav className={`navbar navbar-expand-lg ${bsScheme}`} style={navBase}>
+        <div className="w-100 d-flex align-items-center px-4" style={{ minHeight: 56 }}>
+          <a className="navbar-brand fw-bold" href="#" style={{ color: bsNavColor }}>{logoType === 'image' && logoSrc ? <img src={logoSrc} alt={logoText} height={32} /> : logoText}</a>
+          <button className="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target={`#nb-${uid}`} style={{ borderColor: `${bsNavColor}40` }}>
             <span className="navbar-toggler-icon" />
           </button>
-          <div className="collapse navbar-collapse" id={`${uid}-nav`}>
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+          <div className="collapse navbar-collapse" id={`nb-${uid}`}>
+            <ul className={`navbar-nav ${layoutVariant === 'split' ? 'mx-auto' : 'me-auto'} mb-2 mb-lg-0`}>
               {items.map((item) => (
                 <li key={item.id} className="nav-item">
-                  <a className="nav-link" href={item.href}>{item.label}</a>
+                  <a className="nav-link" href={item.href} style={{ color: bsNavColor }}>{item.label}</a>
                 </li>
               ))}
             </ul>
-            {cta && <a href={cta.href} className="btn btn-primary ms-2">{cta.text}</a>}
+            {cta && <a href={cta.href} className={`btn btn-${cta.variant === 'outline' ? 'outline-primary' : 'primary'} ms-2`}>{cta.text}</a>}
           </div>
         </div>
       </nav>
@@ -445,18 +713,52 @@ const NavbarElement = memo(function NavbarElement({
 
   // ── MUI AppBar ─────────────────────────────────────────────────────────────
   if (framework === 'mui') {
+    const muiBg = style?.backgroundColor ?? 'var(--color-primary)'
+    const muiColor = style?.color ?? '#fff'
+    if (layoutVariant === 'centered') {
+      return (
+        <header className="mui-root MuiAppBar-root" style={{ backgroundColor: muiBg, color: muiColor }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '10px 16px 6px', width: '100%' }}>
+            <span style={{ fontWeight: 700, fontSize: '1.25rem', color: muiColor, marginBottom: 6 }}>
+              {logoType === 'image' && logoSrc ? <img src={logoSrc} alt={logoText} height={32} style={{ verticalAlign: 'middle' }} /> : logoText}
+            </span>
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
+              {items.map((item) => (
+                <a key={item.id} href={item.href} className="MuiButton-root MuiButton-text" style={{ color: muiColor }}>{item.label}</a>
+              ))}
+              {cta && <a href={cta.href} className="MuiButton-root MuiButton-outlined" style={{ color: muiColor, borderColor: `${muiColor}80` }}>{cta.text}</a>}
+            </div>
+          </div>
+        </header>
+      )
+    }
+    if (layoutVariant === 'minimal') {
+      return (
+        <header className="mui-root MuiAppBar-root" style={{ backgroundColor: muiBg, color: muiColor }}>
+          <div className="MuiToolbar-root" style={{ gap: 16 }}>
+            <span style={{ fontWeight: 700, fontSize: '1.25rem', color: muiColor }}>
+              {logoType === 'image' && logoSrc ? <img src={logoSrc} alt={logoText} height={32} style={{ verticalAlign: 'middle' }} /> : logoText}
+            </span>
+            {contactInfo && <span style={{ fontSize: '0.8rem', opacity: 0.75, color: muiColor }}>{contactInfo}</span>}
+            <div style={{ marginLeft: 'auto' }}>
+              {cta && <a href={cta.href} className="MuiButton-root MuiButton-outlined" style={{ color: muiColor, borderColor: `${muiColor}80` }}>{cta.text}</a>}
+            </div>
+          </div>
+        </header>
+      )
+    }
     return (
-      <header className="mui-root MuiAppBar-root" style={style}>
-        <div className="MuiToolbar-root" style={{ gap: 24 }}>
-          <span style={{ fontWeight: 700, fontSize: '1.25rem', flex: logoType === 'image' && logoSrc ? undefined : undefined }}>
+      <header className="mui-root MuiAppBar-root" style={{ backgroundColor: muiBg, color: muiColor }}>
+        <div className="MuiToolbar-root" style={{ gap: 16 }}>
+          <span style={{ fontWeight: 700, fontSize: '1.25rem', color: muiColor, flexShrink: 0 }}>
             {logoType === 'image' && logoSrc ? <img src={logoSrc} alt={logoText} height={32} style={{ verticalAlign: 'middle' }} /> : logoText}
           </span>
-          <div style={{ display: 'flex', gap: 8, flex: 1 }}>
+          <div style={{ display: 'flex', gap: 8, flex: layoutVariant === 'split' ? 'none' : 1, margin: layoutVariant === 'split' ? '0 auto' : undefined }}>
             {items.map((item) => (
-              <a key={item.id} href={item.href} className="MuiButton-root MuiButton-text" style={{ color: '#fff' }}>{item.label}</a>
+              <a key={item.id} href={item.href} className="MuiButton-root MuiButton-text" style={{ color: muiColor }}>{item.label}</a>
             ))}
           </div>
-          {cta && <a href={cta.href} className="MuiButton-root MuiButton-outlined" style={{ color: '#fff', borderColor: 'rgba(255,255,255,0.5)' }}>{cta.text}</a>}
+          {cta && <a href={cta.href} className="MuiButton-root MuiButton-outlined" style={{ color: muiColor, borderColor: `${muiColor}80`, marginLeft: layoutVariant === 'split' ? 0 : 'auto' }}>{cta.text}</a>}
         </div>
       </header>
     )
@@ -464,114 +766,65 @@ const NavbarElement = memo(function NavbarElement({
 
   // ── Tailwind navbar ────────────────────────────────────────────────────────
   if (framework === 'tailwind') {
+    const twBg = style?.backgroundColor ?? '#ffffff'
+    const twColor = style?.color ?? '#111827'
+    if (layoutVariant === 'centered') {
+      return (
+        <nav className="w-full border-b border-gray-200" style={{ backgroundColor: twBg, color: twColor, ...style }}>
+          <div className="flex justify-center px-6 pt-3 pb-0">
+            <a href="#" className="font-bold text-lg" style={{ color: 'inherit' }}>{logoType === 'image' && logoSrc ? <img src={logoSrc} alt={logoText} className="h-8 w-auto" /> : logoText}</a>
+          </div>
+          <div className="flex items-center justify-center gap-6 px-6 py-2 border-t border-gray-100 mt-2">
+            {items.map((item) => <a key={item.id} href={item.href} className="text-sm font-medium" style={{ color: 'inherit' }}>{item.label}</a>)}
+            {cta && <a href={cta.href} className="inline-block px-4 py-1.5 rounded-md bg-indigo-600 text-white text-sm font-semibold">{cta.text}</a>}
+          </div>
+        </nav>
+      )
+    }
     return (
-      <nav className="flex items-center justify-between px-6 py-3 bg-white border-b border-gray-200 rounded-lg" style={style}>
-        <a href="#" className="font-bold text-lg text-gray-900">
+      <nav className="w-full flex items-center justify-between px-6 py-3 border-b border-gray-200 relative" style={{ backgroundColor: twBg, color: twColor, minHeight: layoutVariant === 'brand-hero' ? 72 : 56, ...style }}>
+        <a href="#" className="font-bold text-lg shrink-0" style={{ color: 'inherit', textDecoration: 'none' }}>
           {logoType === 'image' && logoSrc ? <img src={logoSrc} alt={logoText} className="h-8 w-auto" /> : logoText}
         </a>
-        <div className="flex items-center gap-6">
-          {items.map((item) => (
-            <a key={item.id} href={item.href} className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">{item.label}</a>
-          ))}
+        {layoutVariant !== 'minimal' && (
+          <div className={`flex items-center gap-6 ${layoutVariant === 'split' ? 'absolute left-1/2 -translate-x-1/2' : ''}`}>
+            {items.map((item) => <a key={item.id} href={item.href} className="text-sm font-medium" style={{ color: 'inherit', textDecoration: 'none' }}>{item.label}</a>)}
+          </div>
+        )}
+        <div className="flex items-center gap-3 ml-auto">
+          {layoutVariant === 'minimal' && contactInfo && <span className="text-xs opacity-75">{contactInfo}</span>}
+          {cta && <a href={cta.href} className="inline-block px-4 py-2 rounded-md bg-indigo-600 text-white text-sm font-semibold">{cta.text}</a>}
         </div>
-        {cta && <a href={cta.href} className="inline-block px-4 py-2 rounded-md bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition-colors">{cta.text}</a>}
       </nav>
     )
   }
 
-  const showLogoOnDesktop = logoVisibility?.desktop !== false
-  const showLogoOnMobile = logoVisibility?.mobile !== false
-  const showLogoNow = effectiveIsMobile ? showLogoOnMobile : showLogoOnDesktop
-
   const navBg = (style?.backgroundColor as string | undefined) ?? '#ffffff'
   const navColor = (style?.color as string | undefined) ?? '#111827'
 
-  // ── Desktop layout variants ────────────────────────────────────────────────
-  // 'right': logo left | links center-right | cta right
-  // 'center': logo left | links center | cta right
-  // 'left': links left | logo right | cta right (rare)
+  const sharedProps: LayoutSharedProps = {
+    items,
+    cta,
+    logoType,
+    logoText,
+    logoSrc,
+    navBg,
+    navColor,
+    isMobile: effectiveIsMobile,
+    mobileOpen,
+    setMobileOpen,
+    mobileMenuStyle,
+    mobilePanelBg,
+    mobileTextColor,
+    showCtaMobile,
+    style,
+  }
 
-  return (
-    <nav
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0 24px',
-        height: 60,
-        backgroundColor: navBg,
-        color: navColor,
-        borderBottom: '1px solid #e5e7eb',
-        borderRadius: 8,
-        position: 'relative',
-        ...style,
-      }}
-    >
-      {/* Logo */}
-      {showLogoNow && <Logo logoType={logoType} logoText={logoText} logoSrc={logoSrc} />}
-      {!showLogoNow && <span />}
-
-      {/* Desktop links */}
-      {!effectiveIsMobile && (
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 28,
-          flex: desktopLayout === 'center' ? 1 : undefined,
-          justifyContent: desktopLayout === 'center' ? 'center' : 'flex-start',
-          marginLeft: desktopLayout === 'right' ? 'auto' : undefined,
-          marginRight: desktopLayout === 'right' ? 24 : undefined,
-        }}>
-          {items.map((item) => <DesktopNavItem key={item.id} item={item} />)}
-        </div>
-      )}
-
-      {/* Desktop CTA */}
-      {!effectiveIsMobile && cta && <CtaButton cta={cta} />}
-
-      {/* Mobile hamburger trigger */}
-      {effectiveIsMobile && (
-        <button
-          onClick={() => setMobileOpen((v) => !v)}
-          aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
-          aria-expanded={mobileOpen}
-          style={{
-            width: 40,
-            height: 40,
-            border: 'none',
-            background: 'none',
-            cursor: 'pointer',
-            borderRadius: 8,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: 0,
-            color: navColor,
-            marginLeft: 'auto',
-          }}
-        >
-          <HamburgerIcon open={mobileOpen} color={navColor} />
-        </button>
-      )}
-
-      {/* Mobile drawer */}
-      {effectiveIsMobile && (
-        <MobileDrawer
-          open={mobileOpen}
-          onClose={closeMobile}
-          items={items}
-          cta={cta}
-          showCta={showCtaMobile}
-          logoType={logoType}
-          logoText={logoText}
-          logoSrc={logoSrc}
-          menuStyle={mobileMenuStyle}
-          panelBg={mobilePanelBg}
-          textColor={mobileTextColor}
-        />
-      )}
-    </nav>
-  )
+  if (layoutVariant === 'centered') return <LayoutCentered {...sharedProps} />
+  if (layoutVariant === 'split') return <LayoutSplit {...sharedProps} />
+  if (layoutVariant === 'minimal') return <LayoutMinimal {...sharedProps} contactInfo={contactInfo} />
+  if (layoutVariant === 'brand-hero') return <LayoutBrandHero {...sharedProps} />
+  return <LayoutClassic {...sharedProps} desktopLayout={desktopLayout} />
 })
 
 export default NavbarElement

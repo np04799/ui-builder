@@ -148,7 +148,10 @@ export const ELEMENT_REGISTRY: ElementRegistry = {
         heading={content.heading}
         paragraph={content.paragraph}
         cta={content.cta}
+        ctaSecondary={content.ctaSecondary}
+        badge={content.badge}
         backgroundImage={content.backgroundImage}
+        layoutVariant={content.layoutVariant}
         style={style}
       />
     ),
@@ -161,6 +164,15 @@ export const ELEMENT_REGISTRY: ElementRegistry = {
         title={content.title}
         description={content.description}
         button={content.button}
+        layoutVariant={content.layoutVariant}
+        price={content.price}
+        priceUnit={content.priceUnit}
+        features={content.features}
+        icon={content.icon}
+        author={content.author}
+        authorRole={content.authorRole}
+        avatarSrc={content.avatarSrc}
+        rating={content.rating}
         style={style}
       />
     ),
@@ -175,7 +187,9 @@ export const ELEMENT_REGISTRY: ElementRegistry = {
         logoVisibility={content.logoVisibility}
         items={content.items}
         cta={content.cta}
+        layoutVariant={content.layoutVariant}
         desktopLayout={content.desktopLayout}
+        contactInfo={content.contactInfo}
         mobileBreakpoint={content.mobileBreakpoint}
         mobileMenuStyle={content.mobileMenuStyle}
         mobilePanelBg={content.mobilePanelBg}
@@ -192,6 +206,9 @@ export const ELEMENT_REGISTRY: ElementRegistry = {
         links={content.links}
         copyright={content.copyright}
         socials={content.socials}
+        layoutVariant={content.layoutVariant}
+        brand={content.brand}
+        columnLinks={content.columnLinks}
         style={style}
       />
     ),

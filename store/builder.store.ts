@@ -605,9 +605,12 @@ export const useBuilderStore = create<BuilderStoreState & BuilderActions>()(
     addRow(sectionId) {
       get().pushHistory()
       const row = createRow(sectionId)
+      const col = createColumn(row.id)
+      row.columnIds = [col.id]
       set((state) => {
         if (state.sections[sectionId] === undefined) return
         state.rows[row.id] = row
+        state.columns[col.id] = col
         state.sections[sectionId].rowIds.push(row.id)
       })
       return row.id
@@ -627,10 +630,29 @@ export const useBuilderStore = create<BuilderStoreState & BuilderActions>()(
     addElement(columnId, content) {
       get().pushHistory()
       const element = createElement(columnId, content)
+      const FULL_BLEED_TYPES = new Set(['navbar', 'footer', 'hero', 'banner-3d', 'banner-morph', 'banner-ticker', 'banner-split', 'banner-glass', 'banner-neon', 'banner-aurora', 'banner-retro', 'banner-particle'])
       set((state) => {
         if (state.columns[columnId] === undefined) return
         state.elements[element.id] = element
         state.columns[columnId].elementIds.push(element.id)
+        // Auto-configure section to full-bleed (no padding, no maxWidth cap) for
+        // elements that are designed to span the full viewport width.
+        if (FULL_BLEED_TYPES.has(content.type)) {
+          const col = state.columns[columnId]
+          const row = col ? state.rows[col.rowId] : undefined
+          const sectionId = row?.sectionId
+          if (sectionId && state.sections[sectionId]) {
+            const sec = state.sections[sectionId]
+            sec.styles = {
+              ...sec.styles,
+              maxWidth: 'none',
+              paddingTop: '0',
+              paddingBottom: '0',
+              paddingLeft: '0',
+              paddingRight: '0',
+            }
+          }
+        }
       })
       return element.id
     },

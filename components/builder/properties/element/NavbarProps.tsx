@@ -19,6 +19,14 @@ const LOGO_TYPE_OPTS = [
   { label: 'Image / SVG', value: 'image' },
 ]
 
+const LAYOUT_VARIANT_OPTS = [
+  { label: 'Classic — logo left, links right', value: 'classic' },
+  { label: 'Centered — 2-row, links below logo', value: 'centered' },
+  { label: 'Split — logo · center links · CTA', value: 'split' },
+  { label: 'Minimal — logo + contact + hamburger', value: 'minimal' },
+  { label: 'Brand Hero — large logo + stacked nav', value: 'brand-hero' },
+]
+
 const DESKTOP_LAYOUT_OPTS = [
   { label: 'Links right (default)', value: 'right' },
   { label: 'Links centered', value: 'center' },
@@ -55,31 +63,159 @@ const TARGET_OPTS = [
 
 // ─── Presets ──────────────────────────────────────────────────────────────────
 
+type LayoutVariant = 'classic' | 'centered' | 'split' | 'minimal' | 'brand-hero'
+
 interface NavbarPreset {
   id: string
   name: string
+  description: string
   bg: string
   color: string
-  layout: 'right' | 'center'
+  layoutVariant: LayoutVariant
   ctaVariant: 'primary' | 'outline' | 'ghost'
+  accentColor?: string
 }
 
 const NAVBAR_PRESETS: NavbarPreset[] = [
-  { id: 'white',    name: 'Clean Light',   bg: '#ffffff',  color: '#111827', layout: 'right',  ctaVariant: 'primary' },
-  { id: 'dark',     name: 'Dark',          bg: '#111827',  color: '#f9fafb', layout: 'right',  ctaVariant: 'primary' },
-  { id: 'indigo',   name: 'Indigo Brand',  bg: '#4f46e5',  color: '#ffffff', layout: 'right',  ctaVariant: 'outline' },
-  { id: 'slate',    name: 'Slate Pro',     bg: '#1e293b',  color: '#e2e8f0', layout: 'right',  ctaVariant: 'ghost'   },
-  { id: 'centered', name: 'Centered',      bg: '#ffffff',  color: '#0f172a', layout: 'center', ctaVariant: 'primary' },
-  { id: 'green',    name: 'Green SaaS',    bg: '#065f46',  color: '#ffffff', layout: 'right',  ctaVariant: 'outline' },
+  {
+    id: 'classic-light',
+    name: 'Classic Light',
+    description: 'Logo left · Links right · CTA',
+    bg: '#ffffff',
+    color: '#111827',
+    layoutVariant: 'classic',
+    ctaVariant: 'primary',
+  },
+  {
+    id: 'centered-dark',
+    name: 'Centered',
+    description: 'Logo top-center · Links below',
+    bg: '#0f172a',
+    color: '#f1f5f9',
+    layoutVariant: 'centered',
+    ctaVariant: 'outline',
+  },
+  {
+    id: 'split-indigo',
+    name: 'Split Nav',
+    description: 'Logo · Links center · CTA right',
+    bg: '#4f46e5',
+    color: '#ffffff',
+    layoutVariant: 'split',
+    ctaVariant: 'outline',
+  },
+  {
+    id: 'minimal-slate',
+    name: 'Minimal',
+    description: 'Logo · Email/phone · Hamburger',
+    bg: '#1e293b',
+    color: '#e2e8f0',
+    layoutVariant: 'minimal',
+    ctaVariant: 'ghost',
+  },
+  {
+    id: 'brand-hero-green',
+    name: 'Brand Hero',
+    description: 'Large logo + tagline · Nav right',
+    bg: '#065f46',
+    color: '#ffffff',
+    layoutVariant: 'brand-hero',
+    ctaVariant: 'outline',
+  },
 ]
+
+// Mini SVG previews for each layout structure
+function MiniPreview({ preset }: { preset: NavbarPreset }) {
+  const { bg, color, layoutVariant, ctaVariant } = preset
+  const linkColor = color
+  const ctaBg = ctaVariant === 'primary' ? color : 'transparent'
+  const ctaColor = ctaVariant === 'primary' ? bg : color
+
+  if (layoutVariant === 'centered') {
+    return (
+      <div style={{ background: bg, padding: '6px 8px', minHeight: 46 }}>
+        {/* Row 1: centered logo */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 4 }}>
+          <span style={{ fontSize: '0.58rem', fontWeight: 800, color: linkColor, letterSpacing: '-0.01em' }}>Brand</span>
+        </div>
+        {/* Row 2: centered links */}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 5, borderTop: `1px solid ${color}22`, paddingTop: 4 }}>
+          {['Home', 'About', 'Blog'].map((l) => (
+            <span key={l} style={{ fontSize: '0.44rem', color: linkColor, opacity: 0.75 }}>{l}</span>
+          ))}
+          <span style={{ fontSize: '0.4rem', padding: '1px 4px', borderRadius: 3, background: ctaBg, color: ctaColor, border: `1px solid ${color}`, opacity: 0.9 }}>CTA</span>
+        </div>
+      </div>
+    )
+  }
+
+  if (layoutVariant === 'split') {
+    return (
+      <div style={{ background: bg, padding: '8px 8px', display: 'flex', alignItems: 'center', minHeight: 36 }}>
+        <span style={{ fontSize: '0.58rem', fontWeight: 800, color: linkColor, marginRight: 4 }}>Brand</span>
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'center', gap: 4 }}>
+          {['Home', 'About', 'Blog'].map((l) => (
+            <span key={l} style={{ fontSize: '0.44rem', color: linkColor, opacity: 0.75 }}>{l}</span>
+          ))}
+        </div>
+        <span style={{ fontSize: '0.4rem', padding: '1px 4px', borderRadius: 3, background: ctaBg, color: ctaColor, border: `1px solid ${color}`, opacity: 0.9 }}>CTA</span>
+      </div>
+    )
+  }
+
+  if (layoutVariant === 'minimal') {
+    return (
+      <div style={{ background: bg, padding: '8px 8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', minHeight: 36 }}>
+        <span style={{ fontSize: '0.58rem', fontWeight: 800, color: linkColor }}>Brand</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+          <span style={{ fontSize: '0.42rem', color: linkColor, opacity: 0.65 }}>hello@co.com</span>
+          {/* Hamburger icon */}
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round">
+            <path d="M1 1.5h8M1 4h8M1 6.5h8" />
+          </svg>
+        </div>
+      </div>
+    )
+  }
+
+  if (layoutVariant === 'brand-hero') {
+    return (
+      <div style={{ background: bg, display: 'flex', alignItems: 'stretch', minHeight: 46, overflow: 'hidden' }}>
+        <div style={{ padding: '6px 8px', borderRight: `1px solid ${color}20`, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <span style={{ fontSize: '0.6rem', fontWeight: 800, color: linkColor, lineHeight: 1 }}>Brand</span>
+          <span style={{ fontSize: '0.38rem', color: linkColor, opacity: 0.55, marginTop: 1 }}>tagline</span>
+        </div>
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 4, padding: '0 6px', flexWrap: 'wrap' }}>
+          {['Home', 'About', 'Blog'].map((l) => (
+            <span key={l} style={{ fontSize: '0.44rem', color: linkColor, opacity: 0.75 }}>{l}</span>
+          ))}
+          <span style={{ marginLeft: 'auto', fontSize: '0.4rem', padding: '1px 4px', borderRadius: 3, background: ctaBg, color: ctaColor, border: `1px solid ${color}`, opacity: 0.9 }}>CTA</span>
+        </div>
+      </div>
+    )
+  }
+
+  // classic
+  return (
+    <div style={{ background: bg, padding: '8px 8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', minHeight: 36 }}>
+      <span style={{ fontSize: '0.58rem', fontWeight: 800, color: linkColor }}>Brand</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+        {['Home', 'About', 'Blog'].map((l) => (
+          <span key={l} style={{ fontSize: '0.44rem', color: linkColor, opacity: 0.75 }}>{l}</span>
+        ))}
+        <span style={{ fontSize: '0.4rem', padding: '1px 4px', borderRadius: 3, background: ctaBg, color: ctaColor, border: `1px solid ${color}`, opacity: 0.9 }}>CTA</span>
+      </div>
+    </div>
+  )
+}
 
 function PresetPicker({ onApply }: { onApply: (p: NavbarPreset) => void }) {
   return (
     <div style={{ padding: '12px 0' }}>
       <p style={{ fontSize: '0.72rem', color: 'var(--color-text-secondary)', margin: '0 0 10px', lineHeight: 1.4 }}>
-        Select a style to apply it instantly. You can customise colors after.
+        Each style has a different layout structure. Pick one and customise colors after.
       </p>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {NAVBAR_PRESETS.map((p) => (
           <button
             key={p.id}
@@ -92,43 +228,15 @@ function PresetPicker({ onApply }: { onApply: (p: NavbarPreset) => void }) {
               padding: 0,
               background: 'none',
               textAlign: 'left',
+              transition: 'border-color 150ms',
             }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--color-primary)' }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--color-border)' }}
           >
-            {/* Mini navbar preview */}
-            <div style={{
-              background: p.bg,
-              padding: '8px 10px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-              justifyContent: 'space-between',
-            }}>
-              <span style={{ fontSize: '0.6rem', fontWeight: 800, color: p.color, letterSpacing: '-0.01em', whiteSpace: 'nowrap' }}>Brand</span>
-              <div style={{ display: 'flex', gap: 4, flex: 1, justifyContent: p.layout === 'center' ? 'center' : 'flex-end' }}>
-                {['Home', 'About', 'Blog'].map((l) => (
-                  <span key={l} style={{ fontSize: '0.48rem', color: p.color, opacity: 0.75, fontWeight: 500 }}>{l}</span>
-                ))}
-              </div>
-              <span style={{
-                fontSize: '0.42rem', fontWeight: 700,
-                padding: '2px 5px',
-                borderRadius: 4,
-                background: p.ctaVariant === 'primary' ? p.color : 'transparent',
-                color: p.ctaVariant === 'primary' ? p.bg : p.color,
-                border: `1px solid ${p.color}`,
-                opacity: 0.9,
-                whiteSpace: 'nowrap',
-              }}>CTA</span>
-            </div>
-            <div style={{
-              padding: '4px 8px',
-              fontSize: '0.65rem',
-              fontWeight: 500,
-              color: 'var(--color-text-primary)',
-              background: 'var(--color-surface)',
-              borderTop: '1px solid var(--color-border)',
-            }}>
-              {p.name}
+            <MiniPreview preset={p} />
+            <div style={{ padding: '5px 8px', background: 'var(--color-surface)', borderTop: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.68rem', fontWeight: 600, color: 'var(--color-text-primary)' }}>{p.name}</span>
+              <span style={{ fontSize: '0.6rem', color: 'var(--color-text-secondary)' }}>{p.description}</span>
             </div>
           </button>
         ))}
@@ -275,7 +383,7 @@ export default function NavbarProps({ element }: Props) {
       styles: { ...styles, backgroundColor: p.bg, color: p.color },
       content: {
         ...content,
-        desktopLayout: p.layout,
+        layoutVariant: p.layoutVariant,
         mobilePanelBg: p.bg,
         mobileTextColor: p.color,
         cta: content.cta ? { ...content.cta, variant: p.ctaVariant } : undefined,
@@ -440,18 +548,41 @@ export default function NavbarProps({ element }: Props) {
       {/* ── DESKTOP tab ───────────────────────────────────────────── */}
       {tab === 'desktop' && (
         <>
-          <PropGroup label="Layout">
-            <PropRow label="Links position">
+          <PropGroup label="Layout structure">
+            <PropRow label="Style" stack>
               <SelectInput
-                value={content.desktopLayout ?? 'right'}
-                options={DESKTOP_LAYOUT_OPTS}
-                onChange={(v) => patchContent({ desktopLayout: v as 'right' | 'center' })}
+                value={content.layoutVariant ?? 'classic'}
+                options={LAYOUT_VARIANT_OPTS}
+                onChange={(v) => patchContent({ layoutVariant: v as typeof content.layoutVariant })}
               />
             </PropRow>
+
+            {/* Classic: links position sub-option */}
+            {(content.layoutVariant === 'classic' || !content.layoutVariant) && (
+              <PropRow label="Links align">
+                <SelectInput
+                  value={content.desktopLayout ?? 'right'}
+                  options={DESKTOP_LAYOUT_OPTS}
+                  onChange={(v) => patchContent({ desktopLayout: v as 'right' | 'center' })}
+                />
+              </PropRow>
+            )}
+
+            {/* Minimal: contact info */}
+            {content.layoutVariant === 'minimal' && (
+              <PropRow label="Contact" stack>
+                <TextInput
+                  value={content.contactInfo ?? ''}
+                  onChange={(v) => patchContent({ contactInfo: v })}
+                  placeholder="hello@company.com or +1 555 000"
+                />
+              </PropRow>
+            )}
           </PropGroup>
-          <PropGroup label="Preview note">
-            <p style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.5 }}>
-              The desktop view renders when the canvas is wider than the mobile breakpoint set in the Mobile tab.
+
+          <PropGroup label="Note">
+            <p style={{ fontSize: '0.72rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.5 }}>
+              Desktop view shows when canvas width exceeds the mobile breakpoint (set in Mobile tab). Use the Presets tab to switch layout structure visually.
             </p>
           </PropGroup>
         </>

@@ -2,6 +2,7 @@
 
 import { memo, useState } from 'react'
 import { useBuilderStore } from '@/store/builder.store'
+import { useFramework } from '@/hooks/useFramework'
 
 interface ListItem { id: string; text: string }
 
@@ -23,6 +24,7 @@ function ArrowIcon({ color }: { color: string }) {
 const IconListElement = memo(function IconListElement({ elementId, items, iconColor = 'var(--color-primary)', style }: Props) {
   const updateElement = useBuilderStore((s) => s.updateElement)
   const [editingId, setEditingId] = useState<string | null>(null)
+  const framework = useFramework()
 
   function patchItems(next: ListItem[]) {
     if (!elementId) return
@@ -51,7 +53,8 @@ const IconListElement = memo(function IconListElement({ elementId, items, iconCo
 
   return (
     <ul
-      style={{
+      className={framework === 'bootstrap' ? 'list-unstyled mb-0' : framework === 'tailwind' ? 'list-none m-0 p-0 flex flex-col gap-2.5' : undefined}
+      style={framework === 'bootstrap' || framework === 'tailwind' ? style : {
         margin: 0,
         padding: 0,
         listStyle: 'none',
@@ -91,11 +94,12 @@ const IconListElement = memo(function IconListElement({ elementId, items, iconCo
           ) : (
             <span
               onDoubleClick={() => elementId && setEditingId(item.id)}
+              className={framework === 'tailwind' ? 'text-base text-gray-600 leading-relaxed flex-1' : undefined}
               style={{
                 flex: 1,
                 fontSize: '1rem',
                 lineHeight: 1.6,
-                color: 'var(--color-text-secondary)',
+                color: framework === 'bootstrap' ? undefined : 'var(--color-text-secondary)',
                 cursor: elementId ? 'text' : 'default',
                 minHeight: '1.4em',
               }}

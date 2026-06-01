@@ -318,8 +318,11 @@ export function defaultContentForType(elementType: string): ElementContent | nul
       return {
         type: 'hero',
         heading: 'Welcome to Our Site',
-        paragraph: 'Build something amazing with BuilderPro.',
+        paragraph: 'Build something amazing with BuilderPro. Drag, drop, and customize every element.',
         cta: { text: 'Get Started', href: '#' },
+        ctaSecondary: { text: 'Learn More', href: '#' },
+        badge: 'New',
+        layoutVariant: 'centered',
       }
     case 'card':
       return {
@@ -345,7 +348,9 @@ export function defaultContentForType(elementType: string): ElementContent | nul
           { id: crypto.randomUUID(), label: 'Contact', href: '#' },
         ],
         cta: { text: 'Get Started', href: '#', variant: 'primary' },
+        layoutVariant: 'classic',
         desktopLayout: 'right',
+        contactInfo: 'hello@company.com',
         mobileBreakpoint: 768,
         mobileMenuStyle: 'drawer-left',
         mobilePanelBg: '#ffffff',
