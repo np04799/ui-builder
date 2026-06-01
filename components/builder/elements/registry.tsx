@@ -30,6 +30,14 @@ import CarouselElement from './CarouselElement'
 import HamburgerMenuElement from './HamburgerMenuElement'
 import DrawerElement from './DrawerElement'
 import TopHeaderElement from './TopHeaderElement'
+import AlertElement from './AlertElement'
+import BadgeElement from './BadgeElement'
+import ProgressElement from './ProgressElement'
+import BreadcrumbElement from './BreadcrumbElement'
+import StatCardElement from './StatCardElement'
+import PricingCardElement from './PricingCardElement'
+import TimelineElement from './TimelineElement'
+import AvatarElement from './AvatarElement'
 import BulletListElement from './BulletListElement'
 import OrderedListElement from './OrderedListElement'
 import ChecklistElement from './ChecklistElement'
@@ -467,6 +475,123 @@ export const ELEMENT_REGISTRY: ElementRegistry = {
         profileRole={content.profileRole}
         profileSrc={content.profileSrc}
         profileInitials={content.profileInitials}
+        style={style}
+      />
+    ),
+  },
+
+  'alert': {
+    render: ({ content, style }) => (
+      <AlertElement
+        variant={content.variant}
+        title={content.title}
+        message={content.message}
+        dismissible={content.dismissible}
+        showIcon={content.showIcon}
+        style={style}
+      />
+    ),
+  },
+
+  'badge': {
+    render: ({ content, style }) => (
+      <BadgeElement
+        text={content.text}
+        variant={content.variant}
+        pill={content.pill}
+        size={content.size}
+        style={style}
+      />
+    ),
+  },
+
+  'progress': {
+    render: ({ content, style }) => (
+      <ProgressElement
+        label={content.label}
+        value={content.value}
+        max={content.max}
+        showLabel={content.showLabel}
+        variant={content.variant}
+        striped={content.striped}
+        animated={content.animated}
+        height={content.height}
+        style={style}
+      />
+    ),
+  },
+
+  'breadcrumb': {
+    render: ({ content, style }) => (
+      <BreadcrumbElement
+        items={content.items}
+        separator={content.separator}
+        style={style}
+      />
+    ),
+  },
+
+  'stat-card': {
+    render: ({ content, style }) => (
+      <StatCardElement
+        preset={content.preset}
+        label={content.label}
+        value={content.value}
+        subtext={content.subtext}
+        trend={content.trend}
+        trendValue={content.trendValue}
+        icon={content.icon}
+        iconBg={content.iconBg}
+        iconColor={content.iconColor}
+        accentColor={content.accentColor}
+        style={style}
+      />
+    ),
+  },
+
+  'pricing-card': {
+    render: ({ content, style }) => (
+      <PricingCardElement
+        preset={content.preset}
+        planName={content.planName}
+        price={content.price}
+        period={content.period}
+        description={content.description}
+        features={content.features}
+        ctaText={content.ctaText}
+        ctaHref={content.ctaHref}
+        ctaVariant={content.ctaVariant}
+        badge={content.badge}
+        highlighted={content.highlighted}
+        style={style}
+      />
+    ),
+  },
+
+  'timeline': {
+    render: ({ content, style }) => (
+      <TimelineElement
+        items={content.items}
+        variant={content.variant}
+        style={style}
+      />
+    ),
+  },
+
+  'avatar': {
+    render: ({ content, style }) => (
+      <AvatarElement
+        src={content.src}
+        name={content.name}
+        initials={content.initials}
+        size={content.size}
+        shape={content.shape}
+        status={content.status}
+        group={content.group}
+        groupItems={content.groupItems}
+        groupMax={content.groupMax}
+        bg={content.bg}
+        textColor={content.textColor}
         style={style}
       />
     ),

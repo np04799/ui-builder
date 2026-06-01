@@ -399,6 +399,64 @@ const WEB_GROUPS = [
           </svg>
         ),
       },
+      {
+        label: 'Alert', type: 'alert',
+        icon: (
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="1.5" y="4" width="17" height="12" rx="2.5" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeWidth="1.4" />
+            <circle cx="5.5" cy="10" r="1.5" fill="currentColor" fillOpacity="0.5" />
+            <path d="M8.5 8h7M8.5 12h5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+          </svg>
+        ),
+      },
+      {
+        label: 'Badge', type: 'badge',
+        icon: (
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="4" y="7" width="12" height="6" rx="3" fill="currentColor" fillOpacity="0.15" stroke="currentColor" strokeWidth="1.4" />
+            <path d="M7.5 10h5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+        ),
+      },
+      {
+        label: 'Progress', type: 'progress',
+        icon: (
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="2" y="8" width="16" height="4" rx="2" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeWidth="1.4" />
+            <rect x="2" y="8" width="10" height="4" rx="2" fill="currentColor" fillOpacity="0.6" />
+          </svg>
+        ),
+      },
+      {
+        label: 'Breadcrumb', type: 'breadcrumb',
+        icon: (
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M2 10h4M8 10h4M14 10h4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+            <path d="M6 7l2 3-2 3M12 7l2 3-2 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+      },
+      {
+        label: 'Timeline', type: 'timeline',
+        icon: (
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <circle cx="5" cy="5" r="2" fill="currentColor" fillOpacity="0.7" />
+            <circle cx="5" cy="10" r="2" fill="currentColor" fillOpacity="0.5" />
+            <circle cx="5" cy="15" r="2" fill="currentColor" fillOpacity="0.3" />
+            <path d="M5 7v1M5 12v1" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+            <path d="M9 5h8M9 10h6M9 15h7" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+          </svg>
+        ),
+      },
+      {
+        label: 'Avatar', type: 'avatar',
+        icon: (
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="7" r="3.5" fill="currentColor" fillOpacity="0.15" stroke="currentColor" strokeWidth="1.4" />
+            <path d="M3 18c0-3.866 3.134-7 7-7s7 3.134 7 7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+          </svg>
+        ),
+      },
     ],
   },
 ]
@@ -406,6 +464,32 @@ const WEB_GROUPS = [
 // ─── KPI Dashboard groups ─────────────────────────────────────────────────────
 
 const KPI_GROUPS = [
+  {
+    label: 'SaaS Components',
+    color: '#8b5cf6',
+    items: [
+      {
+        label: 'Stat Card', type: 'stat-card',
+        icon: (
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="1.5" y="3" width="17" height="14" rx="2.5" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeWidth="1.4" />
+            <path d="M5 13l3-3 2.5 2.5L14 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <circle cx="14" cy="8" r="1.5" fill="currentColor" />
+          </svg>
+        ),
+      },
+      {
+        label: 'Pricing Card', type: 'pricing-card',
+        icon: (
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="3" y="1.5" width="14" height="17" rx="2.5" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeWidth="1.4" />
+            <path d="M7 7h6M7 10h4M8 13h4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+            <path d="M7 5h1.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+        ),
+      },
+    ],
+  },
   {
     label: 'Charts',
     color: '#14b8a6',

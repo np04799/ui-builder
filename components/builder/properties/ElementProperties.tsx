@@ -35,6 +35,14 @@ import CarouselProps from './element/CarouselProps'
 import HamburgerMenuProps from './element/HamburgerMenuProps'
 import DrawerProps from './element/DrawerProps'
 import TopHeaderProps from './element/TopHeaderProps'
+import AlertProps from './element/AlertProps'
+import BadgeProps from './element/BadgeProps'
+import ProgressProps from './element/ProgressProps'
+import BreadcrumbProps from './element/BreadcrumbProps'
+import StatCardProps from './element/StatCardProps'
+import PricingCardProps from './element/PricingCardProps'
+import TimelineProps from './element/TimelineProps'
+import AvatarProps from './element/AvatarProps'
 import BarChartProps from './element/charts/BarChartProps'
 import LineChartProps from './element/charts/LineChartProps'
 import AreaChartProps from './element/charts/AreaChartProps'
@@ -89,6 +97,14 @@ export default function ElementProperties({ id }: Props) {
     case 'hamburger-menu':  typeProps = <HamburgerMenuProps element={element} />; break
     case 'drawer':          typeProps = <DrawerProps element={element} />; break
     case 'top-header':      typeProps = <TopHeaderProps element={element} />; break
+    case 'alert':           typeProps = <AlertProps element={element} />; break
+    case 'badge':           typeProps = <BadgeProps element={element} />; break
+    case 'progress':        typeProps = <ProgressProps element={element} />; break
+    case 'breadcrumb':      typeProps = <BreadcrumbProps element={element} />; break
+    case 'stat-card':       typeProps = <StatCardProps element={element} />; break
+    case 'pricing-card':    typeProps = <PricingCardProps element={element} />; break
+    case 'timeline':        typeProps = <TimelineProps element={element} />; break
+    case 'avatar':          typeProps = <AvatarProps element={element} />; break
     case 'chart-bar':       typeProps = <BarChartProps element={element} />; break
     case 'chart-line':      typeProps = <LineChartProps element={element} />; break
     case 'chart-area':      typeProps = <AreaChartProps element={element} />; break

@@ -313,6 +313,109 @@ export function defaultContentForType(elementType: string): ElementContent | nul
         mobileBreakpoint: 768,
       }
 
+    case 'alert':
+      return {
+        type: 'alert',
+        variant: 'info',
+        title: '',
+        message: 'This is an informational alert. You can customise this in the properties panel.',
+        dismissible: true,
+        showIcon: true,
+      }
+
+    case 'badge':
+      return {
+        type: 'badge',
+        text: 'New',
+        variant: 'primary',
+        pill: false,
+        size: 'md',
+      }
+
+    case 'progress':
+      return {
+        type: 'progress',
+        label: 'Progress',
+        value: 65,
+        max: 100,
+        showLabel: true,
+        variant: 'primary',
+        striped: false,
+        animated: false,
+        height: 10,
+      }
+
+    case 'breadcrumb':
+      return {
+        type: 'breadcrumb',
+        items: [
+          { id: '1', label: 'Home', href: '#' },
+          { id: '2', label: 'Projects', href: '#' },
+          { id: '3', label: 'Current Page', href: '#', active: true },
+        ],
+        separator: '/',
+      }
+
+    case 'stat-card':
+      return {
+        type: 'stat-card',
+        preset: 'minimal',
+        label: 'Total Users',
+        value: '24,521',
+        subtext: 'vs last month',
+        trend: 'up',
+        trendValue: '12.5%',
+        icon: '👥',
+        iconBg: '#ede9fe',
+        iconColor: '#7c3aed',
+        accentColor: '#4f46e5',
+      }
+
+    case 'pricing-card':
+      return {
+        type: 'pricing-card',
+        preset: 'simple',
+        planName: 'Pro',
+        price: '$29',
+        period: '/month',
+        description: 'Perfect for growing teams.',
+        features: [
+          { id: '1', text: '10 projects', included: true },
+          { id: '2', text: 'Up to 5 users', included: true },
+          { id: '3', text: 'Basic analytics', included: true },
+          { id: '4', text: 'Priority support', included: false },
+          { id: '5', text: 'Custom domain', included: false },
+        ],
+        ctaText: 'Get started',
+        ctaHref: '#',
+        ctaVariant: 'primary',
+        badge: '',
+        highlighted: false,
+      }
+
+    case 'timeline':
+      return {
+        type: 'timeline',
+        variant: 'default',
+        items: [
+          { id: '1', title: 'Project Started', description: 'Initial planning and setup completed.', date: 'Jan 2024', color: '#4f46e5' },
+          { id: '2', title: 'Design Phase', description: 'Wireframes and prototypes approved.', date: 'Feb 2024', color: '#06b6d4' },
+          { id: '3', title: 'Development', description: 'Core features implemented and tested.', date: 'Mar 2024', color: '#22c55e' },
+          { id: '4', title: 'Launch', description: 'Product successfully launched.', date: 'Apr 2024', color: '#f59e0b' },
+        ],
+      }
+
+    case 'avatar':
+      return {
+        type: 'avatar',
+        name: 'John Doe',
+        size: 'md',
+        shape: 'circle',
+        group: false,
+        groupItems: [],
+        groupMax: 4,
+      }
+
     case 'hamburger-menu':
       return {
         type: 'hamburger-menu',

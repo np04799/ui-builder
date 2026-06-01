@@ -433,6 +433,92 @@ export type ElementContent =
       mobileBreakpoint?: number
     }
 
+  | {
+      type: 'alert'
+      variant: 'info' | 'success' | 'warning' | 'danger'
+      title?: string
+      message: string
+      dismissible: boolean
+      showIcon: boolean
+    }
+  | {
+      type: 'badge'
+      text: string
+      variant: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark'
+      pill: boolean
+      size: 'sm' | 'md' | 'lg'
+    }
+  | {
+      type: 'progress'
+      label?: string
+      value: number
+      max: number
+      showLabel: boolean
+      variant: 'primary' | 'success' | 'danger' | 'warning' | 'info'
+      striped: boolean
+      animated: boolean
+      height?: number
+    }
+  | {
+      type: 'breadcrumb'
+      items: { id: string; label: string; href: string; active?: boolean }[]
+      separator?: string
+    }
+  | {
+      type: 'stat-card'
+      preset: 'minimal' | 'bordered' | 'filled' | 'gradient'
+      label: string
+      value: string
+      subtext?: string
+      trend?: 'up' | 'down' | 'neutral'
+      trendValue?: string
+      icon?: string
+      iconBg?: string
+      iconColor?: string
+      accentColor?: string
+    }
+  | {
+      type: 'pricing-card'
+      preset: 'simple' | 'featured' | 'minimal' | 'bordered'
+      planName: string
+      price: string
+      period: string
+      description?: string
+      features: { id: string; text: string; included: boolean }[]
+      ctaText: string
+      ctaHref: string
+      ctaVariant: 'primary' | 'outline' | 'secondary'
+      badge?: string
+      highlighted: boolean
+    }
+  | {
+      type: 'timeline'
+      items: {
+        id: string
+        title: string
+        description: string
+        date?: string
+        icon?: string
+        color?: string
+      }[]
+      variant: 'default' | 'compact' | 'alternating'
+    }
+  | {
+      type: 'avatar'
+      src?: string
+      name: string
+      initials?: string
+      size: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+      shape: 'circle' | 'rounded' | 'square'
+      status?: 'online' | 'offline' | 'busy' | 'away'
+      /** Group mode: show stacked avatars */
+      group?: boolean
+      groupItems?: { id: string; src?: string; name: string; initials?: string }[]
+      groupMax?: number
+      bg?: string
+      textColor?: string
+    }
+
 /** Derived union of all valid element type strings */
 export type ElementType = ElementContent['type']
 
