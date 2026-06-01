@@ -33,6 +33,18 @@ const WEB_GROUPS = [
         ),
       },
       {
+        label: 'Top Header', type: 'top-header',
+        icon: (
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="1" y="5" width="18" height="10" rx="2.5" stroke="currentColor" strokeWidth="1.4" />
+            <rect x="1" y="5" width="18" height="10" rx="2.5" fill="currentColor" fillOpacity="0.05" />
+            <circle cx="14.5" cy="10" r="2.5" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeWidth="1.2" />
+            <path d="M4 10h5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+            <circle cx="17.5" cy="7.5" r="1.2" fill="#ef4444" />
+          </svg>
+        ),
+      },
+      {
         label: 'Card', type: 'card',
         icon: (
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none">

@@ -393,6 +393,46 @@ export type ElementContent =
       topHeaderProfileInitials?: string
     }
 
+  | {
+      type: 'top-header'
+      /** Visual preset applied */
+      preset?: 'light' | 'dark' | 'indigo' | 'blur' | 'minimal'
+      height?: number
+      /** Background color (overrides preset) */
+      bg?: string
+      borderColor?: string
+      textColor?: string
+      iconColor?: string
+      shadow?: boolean
+      /** Page title shown after breadcrumb separator */
+      pageTitle?: string
+      /** Breadcrumb prefix label */
+      breadcrumbLabel?: string
+      /** Search bar */
+      showSearch?: boolean
+      searchPlaceholder?: string
+      /** Notification bell */
+      showNotifications?: boolean
+      notificationCount?: number
+      /** Messages icon */
+      showMessages?: boolean
+      messageCount?: number
+      /** Settings icon */
+      showSettings?: boolean
+      /** Help / docs icon */
+      showHelp?: boolean
+      /** Theme toggle button */
+      showThemeToggle?: boolean
+      /** User profile pill */
+      showProfile?: boolean
+      profileName?: string
+      profileRole?: string
+      profileSrc?: string
+      profileInitials?: string
+      /** Mobile: collapse all icons to avatar only below this px */
+      mobileBreakpoint?: number
+    }
+
 /** Derived union of all valid element type strings */
 export type ElementType = ElementContent['type']
 

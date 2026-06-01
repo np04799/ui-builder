@@ -291,6 +291,28 @@ export function defaultContentForType(elementType: string): ElementContent | nul
         ],
       }
 
+    case 'top-header':
+      return {
+        type: 'top-header',
+        preset: 'light',
+        height: 60,
+        pageTitle: 'Dashboard',
+        breadcrumbLabel: 'Home',
+        showSearch: true,
+        searchPlaceholder: 'Search…',
+        showNotifications: true,
+        notificationCount: 3,
+        showMessages: false,
+        messageCount: 0,
+        showSettings: false,
+        showHelp: false,
+        showThemeToggle: true,
+        showProfile: true,
+        profileName: 'John Doe',
+        profileRole: 'Administrator',
+        mobileBreakpoint: 768,
+      }
+
     case 'hamburger-menu':
       return {
         type: 'hamburger-menu',

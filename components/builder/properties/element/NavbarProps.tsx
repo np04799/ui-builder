@@ -58,33 +58,89 @@ const TARGET_OPTS = [
 interface NavbarPreset {
   id: string
   name: string
+  description: string
   bg: string
   color: string
   layout: 'right' | 'center'
   ctaVariant: 'primary' | 'outline' | 'ghost'
+  mobileMenuStyle: 'drawer-left' | 'drawer-right' | 'fullscreen'
+  hasCta: boolean
 }
 
 const NAVBAR_PRESETS: NavbarPreset[] = [
-  { id: 'white',    name: 'Clean Light',   bg: '#ffffff',  color: '#111827', layout: 'right',  ctaVariant: 'primary' },
-  { id: 'dark',     name: 'Dark',          bg: '#111827',  color: '#f9fafb', layout: 'right',  ctaVariant: 'primary' },
-  { id: 'indigo',   name: 'Indigo Brand',  bg: '#4f46e5',  color: '#ffffff', layout: 'right',  ctaVariant: 'outline' },
-  { id: 'slate',    name: 'Slate Pro',     bg: '#1e293b',  color: '#e2e8f0', layout: 'right',  ctaVariant: 'ghost'   },
-  { id: 'centered', name: 'Centered',      bg: '#ffffff',  color: '#0f172a', layout: 'center', ctaVariant: 'primary' },
-  { id: 'green',    name: 'Green SaaS',    bg: '#065f46',  color: '#ffffff', layout: 'right',  ctaVariant: 'outline' },
+  {
+    id: 'clean-light',
+    name: 'Clean Light',
+    description: 'White nav, links right, primary CTA',
+    bg: '#ffffff',   color: '#111827', layout: 'right',  ctaVariant: 'primary',
+    mobileMenuStyle: 'drawer-left', hasCta: true,
+  },
+  {
+    id: 'dark',
+    name: 'Dark',
+    description: 'Dark background, ghost CTA',
+    bg: '#111827',   color: '#f9fafb', layout: 'right',  ctaVariant: 'outline',
+    mobileMenuStyle: 'drawer-right', hasCta: true,
+  },
+  {
+    id: 'indigo',
+    name: 'Indigo Brand',
+    description: 'Brand-coloured bar, outline CTA',
+    bg: '#4f46e5',   color: '#ffffff', layout: 'right',  ctaVariant: 'outline',
+    mobileMenuStyle: 'drawer-left', hasCta: true,
+  },
+  {
+    id: 'slate',
+    name: 'Slate Pro',
+    description: 'Slate dark, ghost CTA, links right',
+    bg: '#1e293b',   color: '#e2e8f0', layout: 'right',  ctaVariant: 'ghost',
+    mobileMenuStyle: 'drawer-left', hasCta: true,
+  },
+  {
+    id: 'centered',
+    name: 'Centered',
+    description: 'White, links centered, minimal',
+    bg: '#ffffff',   color: '#0f172a', layout: 'center', ctaVariant: 'primary',
+    mobileMenuStyle: 'fullscreen', hasCta: true,
+  },
+  {
+    id: 'minimal',
+    name: 'Minimal',
+    description: 'No CTA, links only, clean',
+    bg: '#ffffff',   color: '#374151', layout: 'right',  ctaVariant: 'ghost',
+    mobileMenuStyle: 'drawer-left', hasCta: false,
+  },
+  {
+    id: 'green',
+    name: 'Green SaaS',
+    description: 'Deep green, outline CTA',
+    bg: '#065f46',   color: '#ffffff', layout: 'right',  ctaVariant: 'outline',
+    mobileMenuStyle: 'drawer-right', hasCta: true,
+  },
+  {
+    id: 'transparent',
+    name: 'Transparent',
+    description: 'No background, overlay use',
+    bg: 'transparent', color: '#111827', layout: 'right', ctaVariant: 'outline',
+    mobileMenuStyle: 'drawer-left', hasCta: true,
+  },
 ]
 
 function PresetPicker({ onApply }: { onApply: (p: NavbarPreset) => void }) {
   return (
-    <div style={{ padding: '12px 0' }}>
+    <div style={{ padding: '8px 0' }}>
       <p style={{ fontSize: '0.72rem', color: 'var(--color-text-secondary)', margin: '0 0 10px', lineHeight: 1.4 }}>
-        Select a style to apply it instantly. You can customise colors after.
+        Apply a preset to change layout, colours, and CTA style at once.
       </p>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
         {NAVBAR_PRESETS.map((p) => (
           <button
             key={p.id}
             onClick={() => onApply(p)}
             style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
               border: '1.5px solid var(--color-border)',
               borderRadius: 8,
               overflow: 'hidden',
@@ -93,42 +149,47 @@ function PresetPicker({ onApply }: { onApply: (p: NavbarPreset) => void }) {
               background: 'none',
               textAlign: 'left',
             }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--color-primary)' }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--color-border)' }}
           >
             {/* Mini navbar preview */}
             <div style={{
-              background: p.bg,
-              padding: '8px 10px',
+              width: 88,
+              height: 44,
+              flexShrink: 0,
+              background: p.bg === 'transparent' ? 'repeating-linear-gradient(45deg,#e5e7eb 0,#e5e7eb 4px,#f9fafb 4px,#f9fafb 8px)' : p.bg,
+              borderRight: `1px solid ${p.color === '#ffffff' ? 'rgba(255,255,255,0.15)' : '#e5e7eb'}`,
               display: 'flex',
               alignItems: 'center',
-              gap: 6,
               justifyContent: 'space-between',
+              padding: '0 8px',
+              gap: 4,
             }}>
-              <span style={{ fontSize: '0.6rem', fontWeight: 800, color: p.color, letterSpacing: '-0.01em', whiteSpace: 'nowrap' }}>Brand</span>
+              {/* Logo */}
+              <span style={{ fontSize: '0.55rem', fontWeight: 800, color: p.color, letterSpacing: '-0.01em', whiteSpace: 'nowrap', flexShrink: 0 }}>Brand</span>
+              {/* Links */}
               <div style={{ display: 'flex', gap: 4, flex: 1, justifyContent: p.layout === 'center' ? 'center' : 'flex-end' }}>
-                {['Home', 'About', 'Blog'].map((l) => (
-                  <span key={l} style={{ fontSize: '0.48rem', color: p.color, opacity: 0.75, fontWeight: 500 }}>{l}</span>
+                {['Home', 'About'].map((l) => (
+                  <span key={l} style={{ fontSize: '0.42rem', color: p.color, opacity: 0.75, fontWeight: 500 }}>{l}</span>
                 ))}
               </div>
-              <span style={{
-                fontSize: '0.42rem', fontWeight: 700,
-                padding: '2px 5px',
-                borderRadius: 4,
-                background: p.ctaVariant === 'primary' ? p.color : 'transparent',
-                color: p.ctaVariant === 'primary' ? p.bg : p.color,
-                border: `1px solid ${p.color}`,
-                opacity: 0.9,
-                whiteSpace: 'nowrap',
-              }}>CTA</span>
+              {/* CTA */}
+              {p.hasCta && (
+                <span style={{
+                  fontSize: '0.38rem', fontWeight: 700,
+                  padding: '2px 5px', borderRadius: 4, flexShrink: 0,
+                  background: p.ctaVariant === 'primary' ? p.color : 'transparent',
+                  color: p.ctaVariant === 'primary' ? p.bg : p.color,
+                  border: `1px solid ${p.color}${p.ctaVariant === 'ghost' ? '44' : ''}`,
+                  opacity: 0.9,
+                  whiteSpace: 'nowrap',
+                }}>CTA</span>
+              )}
             </div>
-            <div style={{
-              padding: '4px 8px',
-              fontSize: '0.65rem',
-              fontWeight: 500,
-              color: 'var(--color-text-primary)',
-              background: 'var(--color-surface)',
-              borderTop: '1px solid var(--color-border)',
-            }}>
-              {p.name}
+            {/* Label */}
+            <div style={{ flex: 1, padding: '0 10px 0 0' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 500, color: 'var(--color-text-primary)' }}>{p.name}</div>
+              <div style={{ fontSize: '0.65rem', color: 'var(--color-text-secondary)', marginTop: 1 }}>{p.description}</div>
             </div>
           </button>
         ))}
@@ -276,9 +337,12 @@ export default function NavbarProps({ element }: Props) {
       content: {
         ...content,
         desktopLayout: p.layout,
-        mobilePanelBg: p.bg,
-        mobileTextColor: p.color,
-        cta: content.cta ? { ...content.cta, variant: p.ctaVariant } : undefined,
+        mobilePanelBg: p.bg === 'transparent' ? '#ffffff' : p.bg,
+        mobileTextColor: p.color === '#ffffff' ? '#111827' : p.color,
+        mobileMenuStyle: p.mobileMenuStyle,
+        cta: p.hasCta
+          ? { text: content.cta?.text || 'Get Started', href: content.cta?.href || '#', variant: p.ctaVariant }
+          : undefined,
       },
     })
     setTab('brand')

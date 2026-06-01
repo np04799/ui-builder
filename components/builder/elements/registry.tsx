@@ -29,6 +29,7 @@ import ModalElement from './ModalElement'
 import CarouselElement from './CarouselElement'
 import HamburgerMenuElement from './HamburgerMenuElement'
 import DrawerElement from './DrawerElement'
+import TopHeaderElement from './TopHeaderElement'
 import BulletListElement from './BulletListElement'
 import OrderedListElement from './OrderedListElement'
 import ChecklistElement from './ChecklistElement'
@@ -435,6 +436,37 @@ export const ELEMENT_REGISTRY: ElementRegistry = {
         topHeaderProfileRole={content.topHeaderProfileRole}
         topHeaderProfileSrc={content.topHeaderProfileSrc}
         topHeaderProfileInitials={content.topHeaderProfileInitials}
+        style={style}
+      />
+    ),
+  },
+
+  'top-header': {
+    render: ({ content, style }) => (
+      <TopHeaderElement
+        preset={content.preset}
+        height={content.height}
+        bg={content.bg}
+        borderColor={content.borderColor}
+        textColor={content.textColor}
+        iconColor={content.iconColor}
+        shadow={content.shadow}
+        pageTitle={content.pageTitle}
+        breadcrumbLabel={content.breadcrumbLabel}
+        showSearch={content.showSearch}
+        searchPlaceholder={content.searchPlaceholder}
+        showNotifications={content.showNotifications}
+        notificationCount={content.notificationCount}
+        showMessages={content.showMessages}
+        messageCount={content.messageCount}
+        showSettings={content.showSettings}
+        showHelp={content.showHelp}
+        showThemeToggle={content.showThemeToggle}
+        showProfile={content.showProfile}
+        profileName={content.profileName}
+        profileRole={content.profileRole}
+        profileSrc={content.profileSrc}
+        profileInitials={content.profileInitials}
         style={style}
       />
     ),

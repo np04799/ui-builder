@@ -34,6 +34,7 @@ import ModalProps from './element/ModalProps'
 import CarouselProps from './element/CarouselProps'
 import HamburgerMenuProps from './element/HamburgerMenuProps'
 import DrawerProps from './element/DrawerProps'
+import TopHeaderProps from './element/TopHeaderProps'
 import BarChartProps from './element/charts/BarChartProps'
 import LineChartProps from './element/charts/LineChartProps'
 import AreaChartProps from './element/charts/AreaChartProps'
@@ -87,6 +88,7 @@ export default function ElementProperties({ id }: Props) {
     case 'carousel':        typeProps = <CarouselProps element={element} />; break
     case 'hamburger-menu':  typeProps = <HamburgerMenuProps element={element} />; break
     case 'drawer':          typeProps = <DrawerProps element={element} />; break
+    case 'top-header':      typeProps = <TopHeaderProps element={element} />; break
     case 'chart-bar':       typeProps = <BarChartProps element={element} />; break
     case 'chart-line':      typeProps = <LineChartProps element={element} />; break
     case 'chart-area':      typeProps = <AreaChartProps element={element} />; break
