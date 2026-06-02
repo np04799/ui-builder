@@ -43,6 +43,10 @@ import StatCardProps from './element/StatCardProps'
 import PricingCardProps from './element/PricingCardProps'
 import TimelineProps from './element/TimelineProps'
 import AvatarProps from './element/AvatarProps'
+import SectionBlockProps from './element/SectionBlockProps'
+import DivContainerProps from './element/DivContainerProps'
+import TableProps from './element/TableProps'
+import CommonElementMeta from './element/CommonElementMeta'
 import BarChartProps from './element/charts/BarChartProps'
 import LineChartProps from './element/charts/LineChartProps'
 import AreaChartProps from './element/charts/AreaChartProps'
@@ -105,6 +109,9 @@ export default function ElementProperties({ id }: Props) {
     case 'pricing-card':    typeProps = <PricingCardProps element={element} />; break
     case 'timeline':        typeProps = <TimelineProps element={element} />; break
     case 'avatar':          typeProps = <AvatarProps element={element} />; break
+    case 'section-block':   typeProps = <SectionBlockProps element={element} />; break
+    case 'div-container':   typeProps = <DivContainerProps element={element} />; break
+    case 'table':           typeProps = <TableProps element={element} />; break
     case 'chart-bar':       typeProps = <BarChartProps element={element} />; break
     case 'chart-line':      typeProps = <LineChartProps element={element} />; break
     case 'chart-area':      typeProps = <AreaChartProps element={element} />; break
@@ -120,6 +127,7 @@ export default function ElementProperties({ id }: Props) {
   return (
     <>
       {typeProps}
+      <CommonElementMeta element={element} />
       <ResponsiveVisibility
         responsive={element.responsive ?? {}}
         onUpdate={(r: ResponsiveStyles) => updateElement(id, { responsive: r })}

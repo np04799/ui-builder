@@ -127,6 +127,10 @@ const CDN_URLS: Partial<Record<BuilderMode, string>> = {
   tailwind: 'https://cdn.tailwindcss.com',
 }
 
+const JS_CDN_URLS: Partial<Record<BuilderMode, string>> = {
+  bootstrap: 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js',
+}
+
 const INLINE_CSS: Partial<Record<BuilderMode, string>> = {
   mui: MUI_CSS,
 }
@@ -134,9 +138,21 @@ const INLINE_CSS: Partial<Record<BuilderMode, string>> = {
 export function applyFrameworkCSS(mode: BuilderMode) {
   const linkId = 'bp-framework-cdn'
   const styleId = 'bp-framework-inline'
+  const jsId = 'bp-framework-js'
+  const iconsId = 'bp-bootstrap-icons'
 
   document.getElementById(linkId)?.remove()
   document.getElementById(styleId)?.remove()
+  document.getElementById(jsId)?.remove()
+
+  // Bootstrap Icons — always load (Icon element uses these regardless of framework)
+  if (!document.getElementById(iconsId)) {
+    const iconLink = document.createElement('link')
+    iconLink.id = iconsId
+    iconLink.rel = 'stylesheet'
+    iconLink.href = 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css'
+    document.head.appendChild(iconLink)
+  }
 
   const cdnUrl = CDN_URLS[mode]
   if (cdnUrl) {
@@ -154,6 +170,15 @@ export function applyFrameworkCSS(mode: BuilderMode) {
     }
   }
 
+  const jsUrl = JS_CDN_URLS[mode]
+  if (jsUrl) {
+    const script = document.createElement('script')
+    script.id = jsId
+    script.src = jsUrl
+    script.defer = true
+    document.head.appendChild(script)
+  }
+
   const inlineCss = INLINE_CSS[mode]
   if (inlineCss) {
     const style = document.createElement('style')
@@ -165,6 +190,7 @@ export function applyFrameworkCSS(mode: BuilderMode) {
   return () => {
     document.getElementById(linkId)?.remove()
     document.getElementById(styleId)?.remove()
+    document.getElementById(jsId)?.remove()
   }
 }
 

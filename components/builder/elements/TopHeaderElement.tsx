@@ -48,6 +48,14 @@ interface Props {
   profileSrc?: string
   profileInitials?: string
   mobileBreakpoint?: number
+  showLogo?: boolean
+  logoText?: string
+  logoSrc?: string
+  containerLayout?: 'fluid' | 'centered'
+  maxWidth?: string
+  paddingX?: number
+  actionGap?: number
+  showProfileDivider?: boolean
   style?: React.CSSProperties
 }
 
@@ -655,6 +663,14 @@ const TopHeaderElement = memo(function TopHeaderElement({
   profileRole = 'Administrator',
   profileSrc,
   profileInitials,
+  showLogo = false,
+  logoText,
+  logoSrc,
+  containerLayout = 'fluid',
+  maxWidth = '100%',
+  paddingX = 20,
+  actionGap = 2,
+  showProfileDivider = true,
   style,
 }: Props) {
   const framework = useFramework()
@@ -670,7 +686,25 @@ const TopHeaderElement = memo(function TopHeaderElement({
     shadow: shadow       ?? base.shadow,
   }
 
-  const shared = {
+  // Wrapper style: when 'centered', the outer <header> spans full width with bg,
+  // but inner content is constrained to maxWidth. When 'fluid', use full width.
+  const isCentered = containerLayout === 'centered'
+  const wrapperStyle: React.CSSProperties = {
+    width: '100%',
+    ...style,
+  }
+  const innerWidthStyle: React.CSSProperties | undefined = isCentered
+    ? { maxWidth, margin: '0 auto', width: '100%' }
+    : undefined
+
+  // Build inner: the actual header. We pass paddingX via style so the existing variants honour it.
+  const adjustedStyle: React.CSSProperties = {
+    ...wrapperStyle,
+    paddingLeft: paddingX,
+    paddingRight: paddingX,
+  }
+
+  const innerShared = {
     tokens,
     height,
     pageTitle,
@@ -689,23 +723,32 @@ const TopHeaderElement = memo(function TopHeaderElement({
     profileRole,
     profileSrc,
     profileInitials,
-    style,
+    style: adjustedStyle,
   }
 
+  let inner: React.ReactNode
   if (framework === 'bootstrap') {
-    return <BootstrapTopHeader {...shared} uid={uid} />
+    inner = <BootstrapTopHeader {...innerShared} uid={uid} />
+  } else if (framework === 'tailwind') {
+    inner = <TailwindTopHeader {...innerShared} />
+  } else if (framework === 'mui') {
+    inner = <MuiTopHeader {...innerShared} />
+  } else {
+    inner = <CustomTopHeader {...innerShared} isBlur={preset === 'blur'} />
   }
 
-  if (framework === 'tailwind') {
-    return <TailwindTopHeader {...shared} />
+  // Wrap in centered container when needed
+  if (isCentered) {
+    return (
+      <div style={{ width: '100%', background: tokens.bg }}>
+        <div style={{ maxWidth, margin: '0 auto', width: '100%' }}>
+          {inner}
+        </div>
+      </div>
+    )
   }
 
-  if (framework === 'mui') {
-    return <MuiTopHeader {...shared} />
-  }
-
-  // custom / fallback
-  return <CustomTopHeader {...shared} isBlur={preset === 'blur'} />
+  return <>{inner}</>
 })
 
 export default TopHeaderElement

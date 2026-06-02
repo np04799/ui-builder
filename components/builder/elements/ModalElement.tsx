@@ -3,6 +3,7 @@
 import { memo, useState, useId } from 'react'
 import type { ButtonVariant } from '@/types/builder.types'
 import { useFramework } from '@/hooks/useFramework'
+import { usePreviewState } from '@/components/builder/elements/PreviewStateContext'
 
 interface Props {
   triggerText?: string
@@ -17,14 +18,34 @@ interface Props {
 function ModalElement({ triggerText = 'Open Modal', triggerVariant = 'primary', title = 'Modal Title', body = 'Modal body content.', confirmText = 'Confirm', cancelText = 'Cancel', style }: Props) {
   const uid = useId().replace(/:/g, '')
   const framework = useFramework()
+  const isPreview = usePreviewState() !== null
   const [open, setOpen] = useState(false)
+  // In builder mode, the trigger never opens the modal; instead we show a preview tile
+  const handleOpen = isPreview ? () => setOpen(true) : () => {}
 
   // ── Bootstrap ──────────────────────────────────────────────────────────────
   if (framework === 'bootstrap') {
     const btnClass = triggerVariant === 'outline' ? 'btn btn-outline-primary' : triggerVariant === 'secondary' ? 'btn btn-secondary' : triggerVariant === 'ghost' ? 'btn btn-link' : 'btn btn-primary'
     return (
-      <div style={{ display: 'inline-block', ...style }}>
-        <button type="button" className={btnClass} onClick={() => setOpen(true)}>{triggerText}</button>
+      <div style={{ display: 'inline-flex', flexDirection: 'column', gap: 8, ...style }}>
+        <button type="button" className={btnClass} onClick={handleOpen} style={{ alignSelf: 'flex-start' }}>{triggerText}</button>
+        {/* Builder-mode inline preview so user can see / edit the modal content */}
+        {!isPreview && (
+          <div className="card" style={{ maxWidth: 420, marginTop: 4, opacity: 0.95 }}>
+            <div className="card-header d-flex align-items-center justify-content-between py-2 px-3" style={{ fontSize: '0.7rem' }}>
+              <span className="text-body-secondary fw-semibold text-uppercase">Modal preview</span>
+              <span className="badge text-bg-light text-body-secondary">Builder only</span>
+            </div>
+            <div className="card-body p-3">
+              <h6 className="fw-bold mb-2">{title}</h6>
+              <p className="small text-body-secondary mb-3">{body}</p>
+              <div className="d-flex justify-content-end gap-2">
+                <button type="button" className="btn btn-sm btn-secondary" disabled>{cancelText}</button>
+                <button type="button" className="btn btn-sm btn-primary" disabled>{confirmText}</button>
+              </div>
+            </div>
+          </div>
+        )}
         {open && (
           <>
             <div className="modal-backdrop fade show" style={{ zIndex: 1040 }} onClick={() => setOpen(false)} />
@@ -55,8 +76,24 @@ function ModalElement({ triggerText = 'Open Modal', triggerVariant = 'primary', 
       ? 'inline-flex items-center px-4 py-2 text-sm font-medium rounded-md border border-indigo-600 text-indigo-600 hover:bg-indigo-50'
       : 'inline-flex items-center px-4 py-2 text-sm font-medium rounded-md bg-indigo-600 text-white hover:bg-indigo-700'
     return (
-      <div style={{ display: 'inline-block', ...style }}>
-        <button className={btnClass} onClick={() => setOpen(true)}>{triggerText}</button>
+      <div style={{ display: 'inline-flex', flexDirection: 'column', gap: 8, ...style }}>
+        <button className={btnClass} onClick={handleOpen}>{triggerText}</button>
+        {!isPreview && (
+          <div className="bg-white rounded-lg border border-gray-200 shadow-sm" style={{ maxWidth: 420 }}>
+            <div className="flex items-center justify-between border-b border-gray-200 px-3 py-1.5">
+              <span className="text-[0.65rem] font-semibold text-gray-500 uppercase">Modal preview</span>
+              <span className="text-[0.65rem] bg-gray-100 text-gray-600 rounded px-1.5 py-0.5">Builder only</span>
+            </div>
+            <div className="p-3">
+              <h3 className="text-sm font-bold text-gray-900 mb-2">{title}</h3>
+              <p className="text-xs text-gray-500 mb-3">{body}</p>
+              <div className="flex justify-end gap-2">
+                <button disabled className="px-3 py-1 text-xs border border-gray-300 rounded text-gray-500 opacity-60">{cancelText}</button>
+                <button disabled className="px-3 py-1 text-xs bg-indigo-600 text-white rounded opacity-60">{confirmText}</button>
+              </div>
+            </div>
+          </div>
+        )}
         {open && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/50" onClick={() => setOpen(false)} />
@@ -87,8 +124,24 @@ function ModalElement({ triggerText = 'Open Modal', triggerVariant = 'primary', 
   }
 
   return (
-    <div style={{ display: 'inline-block', fontFamily: 'inherit', ...style }}>
-      <button onClick={() => setOpen(true)} style={triggerStyle()}>{triggerText}</button>
+    <div style={{ display: 'inline-flex', flexDirection: 'column', gap: 8, fontFamily: 'inherit', ...style }}>
+      <button onClick={handleOpen} style={{ ...triggerStyle(), alignSelf: 'flex-start' }}>{triggerText}</button>
+      {!isPreview && (
+        <div style={{ maxWidth: 420, backgroundColor: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 8, boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 12px', borderBottom: '1px solid var(--color-border)' }}>
+            <span style={{ fontSize: '0.65rem', fontWeight: 600, textTransform: 'uppercase', color: 'var(--color-text-secondary)' }}>Modal preview</span>
+            <span style={{ fontSize: '0.65rem', backgroundColor: 'var(--color-surface)', color: 'var(--color-text-secondary)', borderRadius: 4, padding: '1px 6px' }}>Builder only</span>
+          </div>
+          <div style={{ padding: 12 }}>
+            <h3 style={{ margin: '0 0 8px', fontSize: '0.95rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>{title}</h3>
+            <p style={{ margin: '0 0 12px', fontSize: '0.8rem', color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>{body}</p>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+              <button disabled style={{ padding: '4px 10px', fontSize: '0.75rem', border: '1px solid var(--color-border)', borderRadius: 4, background: 'transparent', color: 'var(--color-text-secondary)', opacity: 0.6 }}>{cancelText}</button>
+              <button disabled style={{ padding: '4px 10px', fontSize: '0.75rem', border: 'none', borderRadius: 4, background: 'var(--color-primary)', color: '#fff', opacity: 0.6 }}>{confirmText}</button>
+            </div>
+          </div>
+        </div>
+      )}
       {open && (
         <div onClick={() => setOpen(false)} style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
           <div onClick={(e) => e.stopPropagation()} style={{ backgroundColor: 'var(--color-bg)', borderRadius: 12, padding: '28px 28px 24px', width: '100%', maxWidth: 560, boxShadow: '0 20px 60px rgba(0,0,0,0.25)', position: 'relative' }}>

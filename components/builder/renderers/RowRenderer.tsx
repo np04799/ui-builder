@@ -38,6 +38,8 @@ const RowRenderer = memo(function RowRenderer({ id }: Props) {
       ref={rowRef}
       data-row-id={id}
       data-selectable-id={id}
+      id={row.htmlId || undefined}
+      className={row.classNames || undefined}
       style={{
         position: 'relative',
         display: 'flex',

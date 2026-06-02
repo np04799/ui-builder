@@ -2,6 +2,7 @@
 
 import { memo, useState } from 'react'
 import { useFramework } from '@/hooks/useFramework'
+import { usePreviewState } from '@/components/builder/elements/PreviewStateContext'
 
 type AlertVariant = 'info' | 'success' | 'warning' | 'danger'
 
@@ -41,8 +42,11 @@ function AlertIcon({ variant, size = 20 }: { variant: AlertVariant; size?: numbe
 
 const AlertElement = memo(function AlertElement({ variant = 'info', title, message = 'This is an alert message.', dismissible = true, showIcon = true, style }: Props) {
   const framework = useFramework()
+  const isPreview = usePreviewState() !== null
   const [dismissed, setDismissed] = useState(false)
-  if (dismissed) return null
+  if (dismissed && isPreview) return null
+  // In builder: clicks on dismiss button are no-op (preserves the element for editing)
+  const handleDismiss = isPreview ? () => setDismissed(true) : () => {}
 
   // ── Bootstrap ──────────────────────────────────────────────────────────────
   if (framework === 'bootstrap') {
@@ -53,7 +57,7 @@ const AlertElement = memo(function AlertElement({ variant = 'info', title, messa
           {title && <strong className="d-block mb-1">{title}</strong>}
           <span>{message}</span>
         </div>
-        {dismissible && <button type="button" className="btn-close ms-auto" aria-label="Close" onClick={() => setDismissed(true)} />}
+        {dismissible && <button type="button" className="btn-close ms-auto" aria-label="Close" onClick={() => handleDismiss()} />}
       </div>
     )
   }
@@ -73,7 +77,7 @@ const AlertElement = memo(function AlertElement({ variant = 'info', title, messa
           {title && <p className="font-semibold mb-1 text-sm">{title}</p>}
           <p className="text-sm m-0">{message}</p>
         </div>
-        {dismissible && <button onClick={() => setDismissed(true)} className="ml-auto text-current opacity-50 hover:opacity-100 flex-shrink-0 leading-none bg-transparent border-0 cursor-pointer text-lg">✕</button>}
+        {dismissible && <button onClick={() => handleDismiss()} className="ml-auto text-current opacity-50 hover:opacity-100 flex-shrink-0 leading-none bg-transparent border-0 cursor-pointer text-lg">✕</button>}
       </div>
     )
   }
@@ -87,7 +91,7 @@ const AlertElement = memo(function AlertElement({ variant = 'info', title, messa
         {title && <p style={{ fontWeight: 700, margin: '0 0 4px', fontSize: '0.9rem' }}>{title}</p>}
         <p style={{ margin: 0, fontSize: '0.875rem', lineHeight: 1.5 }}>{message}</p>
       </div>
-      {dismissible && <button onClick={() => setDismissed(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: c.text, opacity: 0.6, fontSize: '1rem', lineHeight: 1, padding: 2, flexShrink: 0 }} aria-label="Dismiss">✕</button>}
+      {dismissible && <button onClick={() => handleDismiss()} style={{ background: 'none', border: 'none', cursor: 'pointer', color: c.text, opacity: 0.6, fontSize: '1rem', lineHeight: 1, padding: 2, flexShrink: 0 }} aria-label="Dismiss">✕</button>}
     </div>
   )
 })

@@ -8,6 +8,7 @@ import SelectInput from '@/components/builder/controls/SelectInput'
 import NumberInput from '@/components/builder/controls/NumberInput'
 import SpacingControl from '@/components/builder/controls/SpacingControl'
 import ColorSwatch from '@/components/builder/controls/ColorSwatch'
+import TextInput from '@/components/builder/controls/TextInput'
 import ResponsiveVisibility from '@/components/builder/controls/ResponsiveVisibility'
 import type { ResponsiveStyles } from '@/types/builder.types'
 
@@ -81,6 +82,30 @@ export default function RowProperties({ id }: Props) {
           <SpacingControl
             value={styles.padding ?? '0px'}
             onChange={(v) => patchStyle('padding', v)}
+          />
+        </PropRow>
+      </PropGroup>
+
+      <PropGroup label="Row meta">
+        <PropRow label="Name" stack>
+          <TextInput
+            value={row.name ?? ''}
+            onChange={(v) => updateRow(id, { name: v || undefined })}
+            placeholder="Shown in Layers panel"
+          />
+        </PropRow>
+        <PropRow label="HTML id" stack>
+          <TextInput
+            value={row.htmlId ?? ''}
+            onChange={(v) => updateRow(id, { htmlId: v || undefined })}
+            placeholder="my-row-id"
+          />
+        </PropRow>
+        <PropRow label="CSS class(es)" stack>
+          <TextInput
+            value={row.classNames ?? ''}
+            onChange={(v) => updateRow(id, { classNames: v || undefined })}
+            placeholder="extra-class another"
           />
         </PropRow>
       </PropGroup>

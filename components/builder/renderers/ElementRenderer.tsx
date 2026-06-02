@@ -1,6 +1,6 @@
 'use client'
 
-import { memo } from 'react'
+import { memo, cloneElement, isValidElement } from 'react'
 import { useElement, useResponsiveMode } from '@/hooks/useBuilderSelectors'
 import { renderElement } from '@/components/builder/elements/registry'
 import SelectionWrapper from '@/components/builder/selection/SelectionWrapper'
@@ -24,6 +24,27 @@ const UNREGISTERED_PLACEHOLDER: React.CSSProperties = {
   backgroundColor: 'var(--color-surface)',
 }
 
+/**
+ * Apply user-provided htmlId + classNames to the outer wrapper of a rendered element.
+ * We clone the root element and merge id + className.
+ */
+function applyUserAttrs(node: React.ReactNode, htmlId?: string, classNames?: string): React.ReactNode {
+  if (!isValidElement(node)) return node
+  if (!htmlId && !classNames) return node
+
+  type CloneableProps = { id?: string; className?: string }
+  const existing = node.props as CloneableProps
+  const nextProps: CloneableProps = {}
+
+  if (htmlId) nextProps.id = htmlId
+  if (classNames) {
+    nextProps.className = existing.className
+      ? `${existing.className} ${classNames}`
+      : classNames
+  }
+  return cloneElement(node, nextProps as Partial<typeof node.props>)
+}
+
 const ElementRenderer = memo(function ElementRenderer({ id }: Props) {
   const element = useElement(id)
   const responsiveMode = useResponsiveMode()
@@ -35,7 +56,8 @@ const ElementRenderer = memo(function ElementRenderer({ id }: Props) {
   const breakpointStyles = responsive?.[responsiveMode] ?? {}
   const merged = { ...styles, ...breakpointStyles }
   const style = merged as React.CSSProperties
-  const rendered = renderElement(content, style, id)
+  const rawRendered = renderElement(content, style, id)
+  const rendered = applyUserAttrs(rawRendered, element.htmlId, element.classNames)
 
   // If hidden at this breakpoint, render an invisible placeholder in builder (so it stays selectable)
   if (breakpointStyles.display === 'none') {

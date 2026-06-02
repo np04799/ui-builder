@@ -38,6 +38,9 @@ import StatCardElement from './StatCardElement'
 import PricingCardElement from './PricingCardElement'
 import TimelineElement from './TimelineElement'
 import AvatarElement from './AvatarElement'
+import SectionBlockElement from './SectionBlockElement'
+import DivContainerElement from './DivContainerElement'
+import TableElement from './TableElement'
 import BulletListElement from './BulletListElement'
 import OrderedListElement from './OrderedListElement'
 import ChecklistElement from './ChecklistElement'
@@ -592,6 +595,59 @@ export const ELEMENT_REGISTRY: ElementRegistry = {
         groupMax={content.groupMax}
         bg={content.bg}
         textColor={content.textColor}
+        style={style}
+      />
+    ),
+  },
+
+  'section-block': {
+    render: ({ content, style }) => (
+      <SectionBlockElement
+        preset={content.preset}
+        tag={content.tag}
+        heading={content.heading}
+        subtitle={content.subtitle}
+        content={content.content}
+        bg={content.bg}
+        textColor={content.textColor}
+        paddingY={content.paddingY}
+        paddingX={content.paddingX}
+        maxWidth={content.maxWidth}
+        align={content.align}
+        showBorder={content.showBorder}
+        style={style}
+      />
+    ),
+  },
+
+  'div-container': {
+    render: ({ content, style }) => (
+      <DivContainerElement
+        tag={content.tag}
+        text={content.text}
+        bg={content.bg}
+        textColor={content.textColor}
+        padding={content.padding}
+        borderRadius={content.borderRadius}
+        showBorder={content.showBorder}
+        borderColor={content.borderColor}
+        minHeight={content.minHeight}
+        display={content.display}
+        style={style}
+      />
+    ),
+  },
+
+  'table': {
+    render: ({ content, style }) => (
+      <TableElement
+        headers={content.headers}
+        rows={content.rows}
+        variant={content.variant}
+        size={content.size}
+        responsive={content.responsive}
+        caption={content.caption}
+        headerStyle={content.headerStyle}
         style={style}
       />
     ),

@@ -21,7 +21,8 @@ function selectLayerData(s: BuilderStoreState) {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function elementLabel(content: ElementContent): string {
+function elementLabel(content: ElementContent, customName?: string): string {
+  if (customName && customName.trim()) return customName
   switch (content.type) {
     case 'heading': return `H${content.level} — ${content.text.slice(0, 28) || 'Heading'}`
     case 'paragraph': return `Text — ${content.text.slice(0, 28) || 'Paragraph'}`
@@ -38,6 +39,9 @@ function elementLabel(content: ElementContent): string {
     case 'footer': return `Footer`
     case 'tabs': return `Tabs`
     case 'accordion': return `Accordion`
+    case 'section-block': return `Section — ${content.heading?.slice(0, 24) || content.tag || 'Section'}`
+    case 'div-container': return `<${content.tag || 'div'}>`
+    case 'table': return `Table (${content.rows?.length ?? 0} × ${content.headers?.length ?? 0})`
     default: {
       const t = (content as { type: string }).type
       return t.charAt(0).toUpperCase() + t.slice(1).replace(/-/g, ' ')
@@ -112,7 +116,14 @@ interface RowProps {
   isOpen?: boolean
   onToggle?: () => void
   onClick: () => void
+  onRename?: (name: string) => void
   nodeRef?: React.RefObject<HTMLDivElement | null>
+  draggable?: boolean
+  onDragStart?: (e: React.DragEvent) => void
+  onDragOver?: (e: React.DragEvent) => void
+  onDrop?: (e: React.DragEvent) => void
+  onDragEnd?: () => void
+  isDragOver?: boolean
 }
 
 const DEPTH_COLORS: Record<number, string> = {
@@ -122,14 +133,32 @@ const DEPTH_COLORS: Record<number, string> = {
   3: '#8b5cf6',
 }
 
-function LayerRow({ id: _id, label, icon, depth, isSelected, hasChildren, isOpen, onToggle, onClick, nodeRef }: RowProps) {
+function LayerRow({ id, label, icon, depth, isSelected, hasChildren, isOpen, onToggle, onClick, onRename, nodeRef, draggable, onDragStart, onDragOver, onDrop, onDragEnd, isDragOver }: RowProps) {
   const indent = depth * 14 + 8
   const color = DEPTH_COLORS[depth] ?? 'var(--color-text-secondary)'
+  const [editing, setEditing] = useState(false)
+  const [draft, setDraft] = useState(label)
+
+  function startEdit() {
+    if (!onRename) return
+    setDraft(label)
+    setEditing(true)
+  }
+
+  function commitEdit() {
+    setEditing(false)
+    if (onRename && draft.trim() && draft !== label) onRename(draft.trim())
+  }
 
   return (
     <div
       ref={nodeRef}
       onClick={onClick}
+      draggable={draggable}
+      onDragStart={onDragStart}
+      onDragOver={onDragOver}
+      onDrop={onDrop}
+      onDragEnd={onDragEnd}
       style={{
         display: 'flex',
         alignItems: 'center',
@@ -137,61 +166,100 @@ function LayerRow({ id: _id, label, icon, depth, isSelected, hasChildren, isOpen
         height: 28,
         paddingLeft: indent,
         paddingRight: 8,
-        cursor: 'pointer',
+        cursor: draggable ? 'grab' : 'pointer',
         borderRadius: 5,
         margin: '1px 4px',
-        backgroundColor: isSelected
-          ? 'color-mix(in srgb, var(--color-primary) 12%, transparent)'
-          : 'transparent',
+        backgroundColor: isDragOver
+          ? 'color-mix(in srgb, var(--color-primary) 18%, transparent)'
+          : isSelected
+            ? 'color-mix(in srgb, var(--color-primary) 12%, transparent)'
+            : 'transparent',
         outline: isSelected ? '1px solid color-mix(in srgb, var(--color-primary) 30%, transparent)' : 'none',
         userSelect: 'none',
         flexShrink: 0,
       }}
       onMouseEnter={(e) => {
-        if (!isSelected) (e.currentTarget as HTMLDivElement).style.backgroundColor = 'var(--color-selected)'
+        if (!isSelected && !isDragOver) (e.currentTarget as HTMLDivElement).style.backgroundColor = 'var(--color-selected)'
       }}
       onMouseLeave={(e) => {
-        if (!isSelected) (e.currentTarget as HTMLDivElement).style.backgroundColor = 'transparent'
+        if (!isSelected && !isDragOver) (e.currentTarget as HTMLDivElement).style.backgroundColor = 'transparent'
       }}
     >
-      {/* Chevron toggle — only for nodes with children */}
       <span
         onClick={(e) => { e.stopPropagation(); onToggle?.() }}
         style={{
-          width: 14,
-          height: 14,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexShrink: 0,
-          color: 'var(--color-text-secondary)',
-          opacity: hasChildren ? 1 : 0,
+          width: 14, height: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+          color: 'var(--color-text-secondary)', opacity: hasChildren ? 1 : 0,
           pointerEvents: hasChildren ? 'auto' : 'none',
         }}
       >
         <ChevronIcon open={!!isOpen} />
       </span>
 
-      {/* Icon */}
       <span style={{ color, flexShrink: 0, display: 'flex', alignItems: 'center' }}>
         {icon}
       </span>
 
-      {/* Label */}
-      <span style={{
-        fontSize: '0.75rem',
-        color: isSelected ? 'var(--color-primary)' : 'var(--color-text-primary)',
-        fontWeight: isSelected ? 600 : 400,
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-        flex: 1,
-        lineHeight: 1,
-      }}>
-        {label}
-      </span>
+      {editing ? (
+        <input
+          autoFocus
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          onBlur={commitEdit}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') { e.preventDefault(); commitEdit() }
+            else if (e.key === 'Escape') { setEditing(false) }
+          }}
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            flex: 1, fontSize: '0.75rem', padding: '2px 4px',
+            border: '1px solid var(--color-primary)', borderRadius: 3,
+            background: 'var(--color-bg)', color: 'var(--color-text-primary)',
+            outline: 'none', minWidth: 0,
+          }}
+        />
+      ) : (
+        <span
+          onDoubleClick={(e) => { e.stopPropagation(); startEdit() }}
+          title={onRename ? 'Double-click to rename' : undefined}
+          style={{
+            fontSize: '0.75rem',
+            color: isSelected ? 'var(--color-primary)' : 'var(--color-text-primary)',
+            fontWeight: isSelected ? 600 : 400,
+            overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+            flex: 1, lineHeight: 1,
+          }}
+        >
+          {label}
+        </span>
+      )}
     </div>
   )
+}
+
+// ─── Drag protocol ────────────────────────────────────────────────────────────
+
+const LAYER_MIME = 'application/builder-layer'
+
+type LayerKind = 'element' | 'column' | 'row' | 'section'
+
+interface LayerDragPayload {
+  kind: LayerKind
+  id: string
+  /** Parent id at the time the drag started */
+  parentId?: string
+}
+
+function encodeLayerDrag(p: LayerDragPayload): string { return JSON.stringify(p) }
+
+function decodeLayerDrag(e: React.DragEvent): LayerDragPayload | null {
+  try {
+    const raw = e.dataTransfer.getData(LAYER_MIME)
+    if (!raw) return null
+    const obj = JSON.parse(raw)
+    if (obj && obj.kind && obj.id) return obj as LayerDragPayload
+  } catch { /* ignore */ }
+  return null
 }
 
 // ─── Sub-trees ────────────────────────────────────────────────────────────────
@@ -203,16 +271,51 @@ function ElementLayer({ el, selectedId, setSelected, nodeRefs }: {
   nodeRefs: React.MutableRefObject<Map<string, HTMLDivElement>>
 }) {
   const isSelected = selectedId === el.id
+  const updateElement = useBuilderStore((s) => s.updateElement)
+  const moveElement = useBuilderStore((s) => s.moveElement)
+  const [dragOver, setDragOver] = useState(false)
+
+  function handleDragStart(e: React.DragEvent) {
+    e.dataTransfer.setData(LAYER_MIME, encodeLayerDrag({ kind: 'element', id: el.id, parentId: el.columnId }))
+    e.dataTransfer.effectAllowed = 'move'
+  }
+  function handleDragOver(e: React.DragEvent) {
+    if (!e.dataTransfer.types.includes(LAYER_MIME)) return
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+    setDragOver(true)
+  }
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault()
+    e.stopPropagation()
+    setDragOver(false)
+    const p = decodeLayerDrag(e)
+    if (!p || p.kind !== 'element' || p.id === el.id) return
+    // Insert before this element in this column
+    const state = useBuilderStore.getState()
+    const targetCol = state.columns[el.columnId]
+    if (!targetCol) return
+    const targetIdx = targetCol.elementIds.indexOf(el.id)
+    moveElement(p.id, p.parentId ?? '', el.columnId, targetIdx)
+  }
+
   return (
     <LayerRow
       id={el.id}
-      label={elementLabel(el.content)}
+      label={elementLabel(el.content, el.name)}
       icon={<ElementIcon />}
       depth={3}
       isSelected={isSelected}
       hasChildren={false}
       onClick={() => setSelected(el.id)}
+      onRename={(name) => updateElement(el.id, { name })}
       nodeRef={{ current: null } as React.RefObject<HTMLDivElement | null>}
+      draggable
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+      onDragEnd={() => setDragOver(false)}
+      isDragOver={dragOver}
     />
   )
 }
@@ -226,12 +329,46 @@ function ColumnLayer({ col, selectedId, setSelected, nodeRefs }: {
   const [open, setOpen] = useState(true)
   const isSelected = selectedId === col.id
   const hasChildren = col.elementIds.length > 0
+  const updateColumn = useBuilderStore((s) => s.updateColumn)
+  const moveColumnToRow = useBuilderStore((s) => s.moveColumnToRow)
+  const moveElement = useBuilderStore((s) => s.moveElement)
+  const [dragOver, setDragOver] = useState(false)
+
+  function handleDragStart(e: React.DragEvent) {
+    e.dataTransfer.setData(LAYER_MIME, encodeLayerDrag({ kind: 'column', id: col.id, parentId: col.rowId }))
+    e.dataTransfer.effectAllowed = 'move'
+  }
+  function handleDragOver(e: React.DragEvent) {
+    const types = e.dataTransfer.types
+    // Accept columns (reorder) and elements (drop into this column)
+    if (!types.includes(LAYER_MIME)) return
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+    setDragOver(true)
+  }
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault()
+    e.stopPropagation()
+    setDragOver(false)
+    const p = decodeLayerDrag(e)
+    if (!p) return
+    if (p.kind === 'column' && p.id !== col.id) {
+      const state = useBuilderStore.getState()
+      const dstRow = state.rows[col.rowId]
+      if (!dstRow) return
+      const idx = dstRow.columnIds.indexOf(col.id)
+      moveColumnToRow(p.id, col.rowId, idx)
+    } else if (p.kind === 'element') {
+      // Drop element into this column at the end
+      moveElement(p.id, p.parentId ?? '', col.id, col.elementIds.length)
+    }
+  }
 
   return (
     <>
       <LayerRow
         id={col.id}
-        label={`Column`}
+        label={col.name && col.name.trim() ? col.name : 'Column'}
         icon={<ColumnIcon />}
         depth={2}
         isSelected={isSelected}
@@ -239,17 +376,22 @@ function ColumnLayer({ col, selectedId, setSelected, nodeRefs }: {
         isOpen={open}
         onToggle={() => setOpen((v) => !v)}
         onClick={() => setSelected(col.id)}
+        onRename={(name) => updateColumn(col.id, { name })}
         nodeRef={{ current: null } as React.RefObject<HTMLDivElement | null>}
+        draggable
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+        onDragEnd={() => setDragOver(false)}
+        isDragOver={dragOver}
       />
-      {open && col.elementIds.map((elId, i) => {
-        // elements accessed via store directly — avoid re-subscribing here
+      {open && col.elementIds.map((elId) => {
         return <ElementLayerById key={elId} id={elId} selectedId={selectedId} setSelected={setSelected} nodeRefs={nodeRefs} />
       })}
     </>
   )
 }
 
-// Access element by id via getState to avoid extra subscriptions
 function ElementLayerById({ id, selectedId, setSelected, nodeRefs }: {
   id: string
   selectedId: string | null
@@ -270,12 +412,44 @@ function RowLayer({ row, selectedId, setSelected, nodeRefs }: {
   const [open, setOpen] = useState(true)
   const isSelected = selectedId === row.id
   const hasChildren = row.columnIds.length > 0
+  const updateRow = useBuilderStore((s) => s.updateRow)
+  const moveRowToSection = useBuilderStore((s) => s.moveRowToSection)
+  const moveColumnToRow = useBuilderStore((s) => s.moveColumnToRow)
+  const [dragOver, setDragOver] = useState(false)
+
+  function handleDragStart(e: React.DragEvent) {
+    e.dataTransfer.setData(LAYER_MIME, encodeLayerDrag({ kind: 'row', id: row.id, parentId: row.sectionId }))
+    e.dataTransfer.effectAllowed = 'move'
+  }
+  function handleDragOver(e: React.DragEvent) {
+    if (!e.dataTransfer.types.includes(LAYER_MIME)) return
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+    setDragOver(true)
+  }
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault()
+    e.stopPropagation()
+    setDragOver(false)
+    const p = decodeLayerDrag(e)
+    if (!p) return
+    if (p.kind === 'row' && p.id !== row.id) {
+      const state = useBuilderStore.getState()
+      const dstSection = state.sections[row.sectionId]
+      if (!dstSection) return
+      const idx = dstSection.rowIds.indexOf(row.id)
+      moveRowToSection(p.id, row.sectionId, idx)
+    } else if (p.kind === 'column') {
+      // Drop column into this row
+      moveColumnToRow(p.id, row.id, row.columnIds.length)
+    }
+  }
 
   return (
     <>
       <LayerRow
         id={row.id}
-        label={`Row`}
+        label={row.name && row.name.trim() ? row.name : 'Row'}
         icon={<RowIcon />}
         depth={1}
         isSelected={isSelected}
@@ -283,7 +457,14 @@ function RowLayer({ row, selectedId, setSelected, nodeRefs }: {
         isOpen={open}
         onToggle={() => setOpen((v) => !v)}
         onClick={() => setSelected(row.id)}
+        onRename={(name) => updateRow(row.id, { name })}
         nodeRef={{ current: null } as React.RefObject<HTMLDivElement | null>}
+        draggable
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+        onDragEnd={() => setDragOver(false)}
+        isDragOver={dragOver}
       />
       {open && row.columnIds.map((colId, i) => (
         <ColumnLayerById key={colId} id={colId} colIndex={i} selectedId={selectedId} setSelected={setSelected} nodeRefs={nodeRefs} />
@@ -314,12 +495,39 @@ function SectionLayer({ section, index, selectedId, setSelected, nodeRefs }: {
   const [open, setOpen] = useState(true)
   const isSelected = selectedId === section.id
   const hasChildren = section.rowIds.length > 0
+  const updateSection = useBuilderStore((s) => s.updateSection)
+  const moveSectionToIndex = useBuilderStore((s) => s.moveSectionToIndex)
+  const moveRowToSection = useBuilderStore((s) => s.moveRowToSection)
+  const [dragOver, setDragOver] = useState(false)
+
+  function handleDragStart(e: React.DragEvent) {
+    e.dataTransfer.setData(LAYER_MIME, encodeLayerDrag({ kind: 'section', id: section.id }))
+    e.dataTransfer.effectAllowed = 'move'
+  }
+  function handleDragOver(e: React.DragEvent) {
+    if (!e.dataTransfer.types.includes(LAYER_MIME)) return
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+    setDragOver(true)
+  }
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault()
+    e.stopPropagation()
+    setDragOver(false)
+    const p = decodeLayerDrag(e)
+    if (!p) return
+    if (p.kind === 'section' && p.id !== section.id) {
+      moveSectionToIndex(p.id, index)
+    } else if (p.kind === 'row') {
+      moveRowToSection(p.id, section.id, section.rowIds.length)
+    }
+  }
 
   return (
     <>
       <LayerRow
         id={section.id}
-        label={`Section ${index + 1}`}
+        label={section.name && section.name.trim() ? section.name : `Section ${index + 1}`}
         icon={<SectionIcon />}
         depth={0}
         isSelected={isSelected}
@@ -327,7 +535,14 @@ function SectionLayer({ section, index, selectedId, setSelected, nodeRefs }: {
         isOpen={open}
         onToggle={() => setOpen((v) => !v)}
         onClick={() => setSelected(section.id)}
+        onRename={(name) => updateSection(section.id, { name })}
         nodeRef={{ current: null } as React.RefObject<HTMLDivElement | null>}
+        draggable
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+        onDragEnd={() => setDragOver(false)}
+        isDragOver={dragOver}
       />
       {open && section.rowIds.map((rowId) => (
         <RowLayerById key={rowId} id={rowId} selectedId={selectedId} setSelected={setSelected} nodeRefs={nodeRefs} />

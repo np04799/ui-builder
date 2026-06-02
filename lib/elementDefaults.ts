@@ -62,7 +62,7 @@ export function defaultContentForType(elementType: string): ElementContent | nul
     case 'spacer':
       return { type: 'spacer', height: '40px' }
     case 'icon':
-      return { type: 'icon', name: 'star', size: '24px', color: 'currentColor' }
+      return { type: 'icon', name: 'star-fill', size: '24px', color: 'currentColor' }
 
     // ── Media ────────────────────────────────────────────────────────────────
     case 'image':
@@ -414,6 +414,66 @@ export function defaultContentForType(elementType: string): ElementContent | nul
         group: false,
         groupItems: [],
         groupMax: 4,
+      }
+
+    case 'section-block':
+      return {
+        type: 'section-block',
+        preset: 'plain',
+        tag: 'section',
+        heading: 'Section heading',
+        subtitle: 'Optional subtitle goes here',
+        content: 'Section content. This is a semantic <section> block. Use it to group related content.',
+        maxWidth: '1200px',
+      }
+
+    case 'div-container':
+      return {
+        type: 'div-container',
+        tag: 'div',
+        text: '',
+        bg: 'transparent',
+        textColor: 'inherit',
+        padding: 16,
+        borderRadius: 0,
+        showBorder: false,
+        borderColor: '#e5e7eb',
+        display: 'block',
+      }
+
+    case 'table':
+      return {
+        type: 'table',
+        headers: [
+          { id: 'h1', label: 'Name' },
+          { id: 'h2', label: 'Role' },
+          { id: 'h3', label: 'Status' },
+          { id: 'h4', label: 'Date' },
+        ],
+        rows: [
+          { id: 'r1', cells: [
+            { id: 'c11', value: 'Alice Chen' },
+            { id: 'c12', value: 'Designer' },
+            { id: 'c13', value: 'Active' },
+            { id: 'c14', value: '2024-01-15' },
+          ]},
+          { id: 'r2', cells: [
+            { id: 'c21', value: 'Bob Patel' },
+            { id: 'c22', value: 'Developer' },
+            { id: 'c23', value: 'Active' },
+            { id: 'c24', value: '2024-02-03' },
+          ]},
+          { id: 'r3', cells: [
+            { id: 'c31', value: 'Carol Diaz' },
+            { id: 'c32', value: 'Manager' },
+            { id: 'c33', value: 'Inactive' },
+            { id: 'c34', value: '2024-03-12' },
+          ]},
+        ],
+        variant: 'striped',
+        size: 'md',
+        responsive: true,
+        headerStyle: 'default',
       }
 
     case 'hamburger-menu':

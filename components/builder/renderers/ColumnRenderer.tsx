@@ -4,6 +4,7 @@ import { memo, useRef, useState, useCallback } from 'react'
 import { useColumn, useResponsiveMode } from '@/hooks/useBuilderSelectors'
 import { useBuilderStore } from '@/store/builder.store'
 import { useSelectable } from '@/hooks/useSelectable'
+import { useFramework } from '@/hooks/useFramework'
 import ElementRenderer from './ElementRenderer'
 import DraggableElement from '@/components/builder/dnd/DraggableElement'
 import DropIndicator from '@/components/builder/dnd/DropIndicator'
@@ -33,6 +34,7 @@ const ColumnRenderer = memo(function ColumnRenderer({ id, skipIfManaged = true }
   const activeDrag = useBuilderStore((s) => s.dragState)
   const { isSelected, selectionStyle, selectionHandlers } = useSelectable(id)
   const responsiveMode = useResponsiveMode()
+  const framework = useFramework()
   const columnRef = useRef<HTMLDivElement>(null)
 
   const [dropSlot, setDropSlot] = useState<number | null>(null)
@@ -135,29 +137,63 @@ const ColumnRenderer = memo(function ColumnRenderer({ id, skipIfManaged = true }
   const isEmpty = elementIds.length === 0
   const breakpointStyles = (column.responsive?.[responsiveMode] ?? {}) as React.CSSProperties
 
+  // Resolve grid span — uses column.span if provided, otherwise auto-distributes evenly.
+  // Span is a 1–12 value per breakpoint. In Bootstrap/Tailwind/MUI/Custom, we always
+  // apply a percentage-based flex-basis internally so the builder canvas is consistent.
+  const colSpan = column.span?.[responsiveMode]
+
   // Default responsive column sizing — only applied when no explicit flexBasis is stored
   const hasStoredBasis = !!(column.styles.flexBasis || breakpointStyles.flexBasis)
-  const responsiveColDefaults: React.CSSProperties =
-    !hasStoredBasis && responsiveMode === 'mobile'
-      ? { flexBasis: '100%', flexGrow: 0, flexShrink: 0 }
-      : !hasStoredBasis && responsiveMode === 'tablet'
-        ? { flexBasis: '50%', flexGrow: 0, flexShrink: 0, minWidth: '50%' }
-        : {}
+  let responsiveColDefaults: React.CSSProperties = {}
+
+  if (!hasStoredBasis) {
+    if (colSpan && colSpan > 0 && colSpan <= 12) {
+      // Use stored span to compute width
+      const pct = (colSpan / 12) * 100
+      responsiveColDefaults = { flexBasis: `${pct}%`, flexGrow: 0, flexShrink: 0, maxWidth: `${pct}%` }
+    } else if (responsiveMode === 'mobile') {
+      responsiveColDefaults = { flexBasis: '100%', flexGrow: 0, flexShrink: 0 }
+    } else if (responsiveMode === 'tablet') {
+      responsiveColDefaults = { flexBasis: '50%', flexGrow: 0, flexShrink: 0, minWidth: '50%' }
+    }
+  }
+
+  // Framework class names — applied alongside inline styles so exports stay correct
+  const fwClass = (() => {
+    if (framework === 'bootstrap' && colSpan) {
+      const bp = responsiveMode === 'mobile' ? '' : responsiveMode === 'tablet' ? '-md' : '-lg'
+      return `col${bp}-${colSpan}`
+    }
+    if (framework === 'tailwind' && colSpan) {
+      return `w-full md:w-${colSpan}/12`
+    }
+    return ''
+  })()
+
+  // Column children layout: vertical (default), horizontal (flex-row + wrap), or grid
+  const childDir = column.direction ?? 'vertical'
+  const childGap = column.childGap ?? '8px'
+  const childLayoutStyle: React.CSSProperties = (() => {
+    if (childDir === 'horizontal') return { display: 'flex', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'flex-start', gap: childGap }
+    if (childDir === 'grid') return { display: 'grid', gridTemplateColumns: `repeat(${column.gridColumns ?? 2}, minmax(0, 1fr))`, gap: childGap }
+    return { display: 'flex', flexDirection: 'column' }
+  })()
 
   return (
     <div
       ref={columnRef}
       data-column-id={id}
       data-selectable-id={id}
+      className={[fwClass, column.classNames ?? ''].filter(Boolean).join(' ') || undefined}
+      id={column.htmlId || undefined}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       onDragEnd={handleDragEnd}
       style={{
-        flex: 1,
+        flex: hasStoredBasis || colSpan ? undefined : 1,
         minWidth: 0,
-        display: 'flex',
-        flexDirection: 'column',
+        ...childLayoutStyle,
         padding: isEmpty ? '0' : '8px',
         border: isDragOver
           ? '2px dashed var(--color-primary)'

@@ -9,6 +9,7 @@ import AlignButtonGroup from '@/components/builder/controls/AlignButtonGroup'
 import ColorSwatch from '@/components/builder/controls/ColorSwatch'
 import SpacingControl from '@/components/builder/controls/SpacingControl'
 import NumberInput from '@/components/builder/controls/NumberInput'
+import TextInput from '@/components/builder/controls/TextInput'
 import ResponsiveVisibility from '@/components/builder/controls/ResponsiveVisibility'
 import type { ResponsiveStyles } from '@/types/builder.types'
 
@@ -68,6 +69,38 @@ export default function ColumnProperties({ id }: Props) {
             onChange={(v) => patchSpan('mobile', Number(v))}
           />
         </PropRow>
+      </PropGroup>
+
+      <PropGroup label="Child layout">
+        <PropRow label="Direction">
+          <SelectInput
+            value={column.direction ?? 'vertical'}
+            options={[
+              { label: 'Vertical (stack)', value: 'vertical' },
+              { label: 'Horizontal (row)', value: 'horizontal' },
+              { label: 'Grid', value: 'grid' },
+            ]}
+            onChange={(v) => updateColumn(id, { direction: v as 'vertical' | 'horizontal' | 'grid' })}
+          />
+        </PropRow>
+        {column.direction === 'grid' && (
+          <PropRow label="Grid cols">
+            <SelectInput
+              value={String(column.gridColumns ?? 2)}
+              options={[2, 3, 4, 5, 6].map((n) => ({ label: `${n} columns`, value: String(n) }))}
+              onChange={(v) => updateColumn(id, { gridColumns: Number(v) })}
+            />
+          </PropRow>
+        )}
+        <PropRow label="Gap" stack>
+          <SpacingControl
+            value={column.childGap ?? '8px'}
+            onChange={(v) => updateColumn(id, { childGap: v })}
+          />
+        </PropRow>
+        <p style={{ fontSize: '0.7rem', color: 'var(--color-text-secondary)', margin: '4px 0 0', lineHeight: 1.5 }}>
+          Choose how child elements arrange inside this column.
+        </p>
       </PropGroup>
 
       <PropGroup label="Size">
@@ -133,6 +166,30 @@ export default function ColumnProperties({ id }: Props) {
           <SpacingControl
             value={styles.padding ?? '0px'}
             onChange={(v) => patchStyle('padding', v)}
+          />
+        </PropRow>
+      </PropGroup>
+
+      <PropGroup label="Column meta">
+        <PropRow label="Name" stack>
+          <TextInput
+            value={column.name ?? ''}
+            onChange={(v) => updateColumn(id, { name: v || undefined })}
+            placeholder="Shown in Layers panel"
+          />
+        </PropRow>
+        <PropRow label="HTML id" stack>
+          <TextInput
+            value={column.htmlId ?? ''}
+            onChange={(v) => updateColumn(id, { htmlId: v || undefined })}
+            placeholder="my-column"
+          />
+        </PropRow>
+        <PropRow label="CSS class(es)" stack>
+          <TextInput
+            value={column.classNames ?? ''}
+            onChange={(v) => updateColumn(id, { classNames: v || undefined })}
+            placeholder="extra-class another"
           />
         </PropRow>
       </PropGroup>

@@ -13,6 +13,34 @@ const WEB_GROUPS = [
     color: '#6366f1',
     items: [
       {
+        label: 'Section', type: 'section-block',
+        icon: (
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="1" y="3" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="1.4" />
+            <path d="M4 6.5h5M4 9h8M4 11.5h6" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+          </svg>
+        ),
+      },
+      {
+        label: 'Div / Span', type: 'div-container',
+        icon: (
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="1.5" y="3" width="17" height="14" rx="2" stroke="currentColor" strokeWidth="1.4" strokeDasharray="2 1.5" />
+            <path d="M6 10h8M6 13h5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" opacity="0.6" />
+          </svg>
+        ),
+      },
+      {
+        label: 'Table', type: 'table',
+        icon: (
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="1.5" y="3" width="17" height="14" rx="1.5" stroke="currentColor" strokeWidth="1.4" />
+            <path d="M1.5 7.5h17M1.5 12h17M7 3v14M13 3v14" stroke="currentColor" strokeWidth="1.2" />
+            <rect x="1.5" y="3" width="17" height="4.5" rx="1.5" fill="currentColor" fillOpacity="0.12" />
+          </svg>
+        ),
+      },
+      {
         label: 'Hero', type: 'hero',
         icon: (
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -459,13 +487,8 @@ const WEB_GROUPS = [
       },
     ],
   },
-]
-
-// ─── KPI Dashboard groups ─────────────────────────────────────────────────────
-
-const KPI_GROUPS = [
   {
-    label: 'SaaS Components',
+    label: 'SaaS',
     color: '#8b5cf6',
     items: [
       {
@@ -490,6 +513,11 @@ const KPI_GROUPS = [
       },
     ],
   },
+]
+
+// ─── KPI Dashboard groups ─────────────────────────────────────────────────────
+
+const KPI_GROUPS = [
   {
     label: 'Charts',
     color: '#14b8a6',

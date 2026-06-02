@@ -4,21 +4,12 @@ import type { ElementNode } from '@/types/store.types'
 import { useBuilderStore } from '@/store/builder.store'
 import PropGroup from '@/components/builder/controls/PropGroup'
 import PropRow from '@/components/builder/controls/PropRow'
-import SelectInput from '@/components/builder/controls/SelectInput'
 import ColorSwatch from '@/components/builder/controls/ColorSwatch'
 import NumberInput from '@/components/builder/controls/NumberInput'
 import AlignButtonGroup from '@/components/builder/controls/AlignButtonGroup'
 import SpacingControl from '@/components/builder/controls/SpacingControl'
 import CustomCSSField from '@/components/builder/controls/CustomCSSField'
-
-const ICON_OPTIONS = [
-  { label: 'Star', value: 'star' },
-  { label: 'Heart', value: 'heart' },
-  { label: 'Check', value: 'check' },
-  { label: 'Arrow', value: 'arrow' },
-  { label: 'Mail', value: 'mail' },
-  { label: 'Phone', value: 'phone' },
-]
+import IconPicker from '@/components/builder/controls/IconPicker'
 
 interface Props { element: ElementNode }
 
@@ -38,13 +29,9 @@ export default function IconProps({ element }: Props) {
 
   return (
     <>
-      <PropGroup label="Icon">
-        <PropRow label="Type">
-          <SelectInput
-            value={content.name ?? 'star'}
-            options={ICON_OPTIONS}
-            onChange={(v) => patchContent({ name: v })}
-          />
+      <PropGroup label="Icon (Bootstrap Icons)">
+        <PropRow label="Icon" stack>
+          <IconPicker value={content.name ?? 'star-fill'} onChange={(v) => patchContent({ name: v })} />
         </PropRow>
         <PropRow label="Size">
           <NumberInput

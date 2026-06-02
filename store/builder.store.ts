@@ -105,6 +105,13 @@ interface BuilderActions {
    * Safe to call with sourceColumnId === destColumnId (delegates to reorderElements).
    * Guarantees no duplicate IDs and no orphaned elements.
    */
+  /** Move a column from one row to another row at a target index. */
+  moveColumnToRow: (columnId: string, destRowId: string, toIndex: number) => void
+  /** Move a row from one section to another section at a target index. */
+  moveRowToSection: (rowId: string, destSectionId: string, toIndex: number) => void
+  /** Move a section to a specific index in sectionOrder. */
+  moveSectionToIndex: (sectionId: string, toIndex: number) => void
+  /** Move an element to a specific column at a target index. */
   moveElement: (
     elementId: string,
     sourceColumnId: string,
@@ -153,6 +160,8 @@ interface BuilderActions {
       responsive?: ResponsiveStyles
       classNames?: string
       content?: ElementContent
+      htmlId?: string
+      name?: string
     }
   ) => void
 
@@ -162,9 +171,19 @@ interface BuilderActions {
   deleteRow: (rowId: string) => void
   deleteSection: (sectionId: string) => void
 
-  updateSection: (sectionId: string, patch: { styles?: Record<string, string>; responsive?: ResponsiveStyles }) => void
-  updateRow: (rowId: string, patch: { styles?: Record<string, string>; responsive?: ResponsiveStyles }) => void
-  updateColumn: (columnId: string, patch: { styles?: Record<string, string>; span?: Partial<Record<Breakpoint, number>>; responsive?: ResponsiveStyles }) => void
+  updateSection: (sectionId: string, patch: { styles?: Record<string, string>; responsive?: ResponsiveStyles; classNames?: string; htmlId?: string; name?: string }) => void
+  updateRow: (rowId: string, patch: { styles?: Record<string, string>; responsive?: ResponsiveStyles; classNames?: string; htmlId?: string; name?: string }) => void
+  updateColumn: (columnId: string, patch: {
+    styles?: Record<string, string>
+    span?: Partial<Record<Breakpoint, number>>
+    responsive?: ResponsiveStyles
+    classNames?: string
+    htmlId?: string
+    name?: string
+    direction?: 'vertical' | 'horizontal' | 'grid'
+    gridColumns?: number
+    childGap?: string
+  }) => void
   /**
    * Resize two adjacent columns atomically. leftPercent is the new left column
    * width as a percentage (0–100). The right column takes the remainder.
@@ -356,6 +375,74 @@ export const useBuilderStore = create<BuilderStoreState & BuilderActions>()(
         const [moved] = ids.splice(fromIndex, 1)
         ids.splice(toIndex, 0, moved)
         col.elementIds = ids
+      })
+    },
+
+    moveColumnToRow(columnId, destRowId, toIndex) {
+      get().pushHistory()
+      set((state) => {
+        const col = state.columns[columnId]
+        if (!col) return
+        const srcRow = state.rows[col.rowId]
+        const dstRow = state.rows[destRowId]
+        if (!srcRow || !dstRow) return
+        const sameRow = srcRow.id === dstRow.id
+        // Remove from source
+        srcRow.columnIds = srcRow.columnIds.filter((id) => id !== columnId)
+        // Update parent ref
+        col.rowId = destRowId
+        // Insert
+        const clamped = Math.min(toIndex, dstRow.columnIds.length)
+        dstRow.columnIds.splice(clamped, 0, columnId)
+        // Redistribute spans across both rows if they differ
+        const redistribute = (rowId: string) => {
+          const r = state.rows[rowId]
+          if (!r) return
+          const cs = r.columnIds
+          const count = cs.length
+          if (count > 0 && count <= 12) {
+            const base = Math.floor(12 / count)
+            const rem = 12 - base * count
+            cs.forEach((cid, idx) => {
+              const c = state.columns[cid]
+              if (!c) return
+              const span = base + (idx < rem ? 1 : 0)
+              c.span = { desktop: span, tablet: count <= 2 ? span : 6, mobile: 12 }
+            })
+          }
+        }
+        redistribute(destRowId)
+        if (!sameRow) redistribute(srcRow.id)
+      })
+    },
+
+    moveRowToSection(rowId, destSectionId, toIndex) {
+      get().pushHistory()
+      set((state) => {
+        const row = state.rows[rowId]
+        if (!row) return
+        const srcSection = state.sections[row.sectionId]
+        const dstSection = state.sections[destSectionId]
+        if (!srcSection || !dstSection) return
+        // Remove from source
+        srcSection.rowIds = srcSection.rowIds.filter((id) => id !== rowId)
+        // Update parent ref
+        row.sectionId = destSectionId
+        // Insert
+        const clamped = Math.min(toIndex, dstSection.rowIds.length)
+        dstSection.rowIds.splice(clamped, 0, rowId)
+      })
+    },
+
+    moveSectionToIndex(sectionId, toIndex) {
+      get().pushHistory()
+      set((state) => {
+        const ids = state.sectionOrder
+        const fromIdx = ids.indexOf(sectionId)
+        if (fromIdx === -1) return
+        ids.splice(fromIdx, 1)
+        const clamped = Math.min(toIndex, ids.length)
+        ids.splice(clamped, 0, sectionId)
       })
     },
 
@@ -620,6 +707,19 @@ export const useBuilderStore = create<BuilderStoreState & BuilderActions>()(
         if (state.rows[rowId] === undefined) return
         state.columns[column.id] = column
         state.rows[rowId].columnIds.push(column.id)
+        // Auto-distribute spans evenly across all columns in this row (12-col grid)
+        const cols = state.rows[rowId].columnIds
+        const count = cols.length
+        if (count > 0 && count <= 12) {
+          const baseSpan = Math.floor(12 / count)
+          const remainder = 12 - baseSpan * count
+          cols.forEach((cid, idx) => {
+            const c = state.columns[cid]
+            if (!c) return
+            const thisSpan = baseSpan + (idx < remainder ? 1 : 0)
+            c.span = { desktop: thisSpan, tablet: count <= 2 ? thisSpan : 6, mobile: 12 }
+          })
+        }
       })
       return column.id
     },
@@ -670,6 +770,19 @@ export const useBuilderStore = create<BuilderStoreState & BuilderActions>()(
         state.columns[col.id] = col
         state.rows[rowId].columnIds.push(col.id)
         state.selectedId = col.id
+        // Auto-distribute spans
+        const cols = state.rows[rowId].columnIds
+        const count = cols.length
+        if (count > 0 && count <= 12) {
+          const baseSpan = Math.floor(12 / count)
+          const remainder = 12 - baseSpan * count
+          cols.forEach((cid, idx) => {
+            const c = state.columns[cid]
+            if (!c) return
+            const thisSpan = baseSpan + (idx < remainder ? 1 : 0)
+            c.span = { desktop: thisSpan, tablet: count <= 2 ? thisSpan : 6, mobile: 12 }
+          })
+        }
       })
       return col.id
     },
@@ -685,6 +798,8 @@ export const useBuilderStore = create<BuilderStoreState & BuilderActions>()(
         if (patch.responsive !== undefined) el.responsive = patch.responsive
         if (patch.classNames !== undefined) el.classNames = patch.classNames
         if (patch.content !== undefined) el.content = patch.content
+        if (patch.htmlId !== undefined) el.htmlId = patch.htmlId
+        if (patch.name !== undefined) el.name = patch.name
       })
     },
 
@@ -701,6 +816,9 @@ export const useBuilderStore = create<BuilderStoreState & BuilderActions>()(
           s.styles = merged
         }
         if (patch.responsive !== undefined) s.responsive = patch.responsive
+        if (patch.classNames !== undefined) s.classNames = patch.classNames
+        if (patch.htmlId !== undefined) s.htmlId = patch.htmlId
+        if (patch.name !== undefined) s.name = patch.name
       })
     },
 
@@ -711,6 +829,9 @@ export const useBuilderStore = create<BuilderStoreState & BuilderActions>()(
         if (!r) return
         if (patch.styles !== undefined) r.styles = { ...r.styles, ...patch.styles }
         if (patch.responsive !== undefined) r.responsive = patch.responsive
+        if (patch.classNames !== undefined) r.classNames = patch.classNames
+        if (patch.htmlId !== undefined) r.htmlId = patch.htmlId
+        if (patch.name !== undefined) r.name = patch.name
       })
     },
 
@@ -722,6 +843,12 @@ export const useBuilderStore = create<BuilderStoreState & BuilderActions>()(
         if (patch.styles !== undefined) col.styles = { ...col.styles, ...patch.styles }
         if (patch.span !== undefined) col.span = { ...col.span, ...patch.span }
         if (patch.responsive !== undefined) col.responsive = patch.responsive
+        if (patch.classNames !== undefined) col.classNames = patch.classNames
+        if (patch.htmlId !== undefined) col.htmlId = patch.htmlId
+        if (patch.name !== undefined) col.name = patch.name
+        if (patch.direction !== undefined) col.direction = patch.direction
+        if (patch.gridColumns !== undefined) col.gridColumns = patch.gridColumns
+        if (patch.childGap !== undefined) col.childGap = patch.childGap
       })
     },
 
@@ -1011,13 +1138,29 @@ export const useBuilderStore = create<BuilderStoreState & BuilderActions>()(
       set((state) => {
         const col = state.columns[columnId]
         if (col === undefined) return
+        const rowId = col.rowId
         for (const elemId of col.elementIds) delete state.elements[elemId]
-        const row = state.rows[col.rowId]
+        const row = state.rows[rowId]
         if (row !== undefined) {
           row.columnIds = row.columnIds.filter((id) => id !== columnId)
         }
         delete state.columns[columnId]
         if (state.selectedId === columnId) state.selectedId = null
+        // Redistribute spans across remaining columns
+        if (row !== undefined) {
+          const cols = row.columnIds
+          const count = cols.length
+          if (count > 0 && count <= 12) {
+            const baseSpan = Math.floor(12 / count)
+            const remainder = 12 - baseSpan * count
+            cols.forEach((cid, idx) => {
+              const c = state.columns[cid]
+              if (!c) return
+              const thisSpan = baseSpan + (idx < remainder ? 1 : 0)
+              c.span = { desktop: thisSpan, tablet: count <= 2 ? thisSpan : 6, mobile: 12 }
+            })
+          }
+        }
       })
     },
 

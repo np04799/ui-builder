@@ -116,6 +116,30 @@ export default function SectionProperties({ id }: Props) {
         </PropRow>
       </PropGroup>
 
+      <PropGroup label="Section meta">
+        <PropRow label="Name" stack>
+          <TextInput
+            value={section.name ?? ''}
+            onChange={(v) => updateSection(id, { name: v || undefined })}
+            placeholder="Shown in Layers panel (e.g. Hero, Features…)"
+          />
+        </PropRow>
+        <PropRow label="HTML id" stack>
+          <TextInput
+            value={section.htmlId ?? ''}
+            onChange={(v) => updateSection(id, { htmlId: v || undefined })}
+            placeholder="hero-section"
+          />
+        </PropRow>
+        <PropRow label="CSS class(es)" stack>
+          <TextInput
+            value={section.classNames ?? ''}
+            onChange={(v) => updateSection(id, { classNames: v || undefined })}
+            placeholder="my-section another-class"
+          />
+        </PropRow>
+      </PropGroup>
+
       <ResponsiveVisibility
         responsive={section.responsive ?? {}}
         onUpdate={(r: ResponsiveStyles) => updateSection(id, { responsive: r })}

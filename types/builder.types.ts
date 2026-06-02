@@ -431,6 +431,20 @@ export type ElementContent =
       profileInitials?: string
       /** Mobile: collapse all icons to avatar only below this px */
       mobileBreakpoint?: number
+      /** Logo (left side) */
+      showLogo?: boolean
+      logoText?: string
+      logoSrc?: string
+      /** Container layout: full-width or constrained to maxWidth */
+      containerLayout?: 'fluid' | 'centered'
+      /** Max width when containerLayout = 'centered' */
+      maxWidth?: string
+      /** Horizontal padding */
+      paddingX?: number
+      /** Gap between right-side action icons */
+      actionGap?: number
+      /** Show divider between actions and profile */
+      showProfileDivider?: boolean
     }
 
   | {
@@ -518,6 +532,47 @@ export type ElementContent =
       bg?: string
       textColor?: string
     }
+  | {
+      type: 'section-block'
+      /** Visual preset for the inner section */
+      preset: 'plain' | 'card' | 'hero' | 'feature' | 'cta'
+      /** HTML tag — Section by default but user can pick another semantic tag */
+      tag?: 'section' | 'article' | 'aside' | 'main' | 'header' | 'footer' | 'div'
+      heading?: string
+      subtitle?: string
+      content?: string
+      bg?: string
+      textColor?: string
+      paddingY?: number
+      paddingX?: number
+      maxWidth?: string
+      align?: 'left' | 'center' | 'right'
+      showBorder?: boolean
+    }
+  | {
+      type: 'div-container'
+      tag: 'div' | 'span' | 'article' | 'aside' | 'nav' | 'header' | 'footer' | 'main'
+      /** Optional inline content (mostly used for span/inline elements) */
+      text?: string
+      bg?: string
+      textColor?: string
+      padding?: number
+      borderRadius?: number
+      showBorder?: boolean
+      borderColor?: string
+      minHeight?: number
+      display?: 'block' | 'inline' | 'inline-block' | 'flex' | 'inline-flex' | 'grid'
+    }
+  | {
+      type: 'table'
+      headers: { id: string; label: string }[]
+      rows: { id: string; cells: { id: string; value: string }[] }[]
+      variant: 'default' | 'striped' | 'bordered' | 'borderless' | 'hover' | 'striped-hover'
+      size: 'sm' | 'md' | 'lg'
+      responsive: boolean
+      caption?: string
+      headerStyle: 'default' | 'dark' | 'light'
+    }
 
 /** Derived union of all valid element type strings */
 export type ElementType = ElementContent['type']
@@ -544,6 +599,10 @@ export interface BuilderElement {
    * Empty for MUI and Custom modes.
    */
   classNames?: string
+  /** Optional user-defined HTML id attribute */
+  htmlId?: string
+  /** Optional human-readable name shown in Layers panel */
+  name?: string
 }
 
 export interface BuilderColumn {
@@ -552,6 +611,10 @@ export interface BuilderColumn {
   styles: StyleMap
   responsive: ResponsiveStyles
   classNames?: string
+  /** Optional user-defined HTML id attribute */
+  htmlId?: string
+  /** Optional human-readable name shown in Layers panel */
+  name?: string
   /** When true, this column is managed by a parent element (e.g. DrawerElement) and should be skipped at the row level in all renderers */
   managedBy?: string
   /**
@@ -560,6 +623,12 @@ export interface BuilderColumn {
    * Custom mode ignores this — width is expressed in styles.
    */
   span?: Partial<Record<Breakpoint, number>>
+  /** Direction in which child elements are arranged inside this column */
+  direction?: 'vertical' | 'horizontal' | 'grid'
+  /** Grid columns count when direction === 'grid' */
+  gridColumns?: number
+  /** Gap between elements inside this column */
+  childGap?: string
 }
 
 export interface BuilderRow {
@@ -568,6 +637,8 @@ export interface BuilderRow {
   styles: StyleMap
   responsive: ResponsiveStyles
   classNames?: string
+  htmlId?: string
+  name?: string
   /** Column gap per breakpoint — interpreted by the export engine per mode */
   gap?: Partial<Record<Breakpoint, string>>
   /** When true, the builder hides the "Add Column" control — used by templates with fixed column layouts */
@@ -580,6 +651,8 @@ export interface BuilderSection {
   styles: StyleMap
   responsive: ResponsiveStyles
   classNames?: string
+  htmlId?: string
+  name?: string
   background?: SectionBackground
 }
 

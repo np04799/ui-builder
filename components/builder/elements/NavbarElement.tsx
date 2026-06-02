@@ -421,22 +421,42 @@ const NavbarElement = memo(function NavbarElement({
 
   // ── Bootstrap navbar ───────────────────────────────────────────────────────
   if (framework === 'bootstrap') {
+    // In builder, we force-show the collapse so items are always visible.
+    // In preview (real app), normal collapse behavior applies.
+    const forceShow = !isPreview
+    const bgColor = style?.backgroundColor ?? '#ffffff'
+    const textColor = (style?.color as string) ?? '#212529'
+
     return (
-      <nav className="navbar navbar-expand-lg" style={{ backgroundColor: style?.backgroundColor ?? '#fff', ...style }}>
+      <nav className="navbar navbar-expand-sm" style={{ backgroundColor: bgColor, color: textColor, borderRadius: 6, ...style }}>
         <div className="container-fluid">
-          <a className="navbar-brand fw-bold" href="#">{logoType === 'image' && logoSrc ? <img src={logoSrc} alt={logoText} height={32} /> : logoText}</a>
-          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target={`#${uid}-nav`}>
-            <span className="navbar-toggler-icon" />
-          </button>
-          <div className="collapse navbar-collapse" id={`${uid}-nav`}>
+          <a className="navbar-brand fw-bold" href="#" style={{ color: textColor }}>
+            {logoType === 'image' && logoSrc
+              // eslint-disable-next-line @next/next/no-img-element
+              ? <img src={logoSrc} alt={logoText || 'Logo'} height={32} style={{ display: 'block' }} />
+              : (logoText || 'Brand')}
+          </a>
+          {!forceShow && (
+            <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target={`#${uid}-nav`} aria-label="Toggle navigation">
+              <span className="navbar-toggler-icon" />
+            </button>
+          )}
+          <div className={`collapse navbar-collapse${forceShow ? ' show' : ''}`} id={`${uid}-nav`} style={forceShow ? { display: 'flex' } : undefined}>
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               {items.map((item) => (
                 <li key={item.id} className="nav-item">
-                  <a className="nav-link" href={item.href}>{item.label}</a>
+                  <a className="nav-link" href={item.href} style={{ color: textColor }}>{item.label}</a>
                 </li>
               ))}
             </ul>
-            {cta && <a href={cta.href} className="btn btn-primary ms-2">{cta.text}</a>}
+            {cta && (
+              <a
+                href={cta.href}
+                className={`btn ${cta.variant === 'outline' ? 'btn-outline-primary' : cta.variant === 'secondary' ? 'btn-secondary' : cta.variant === 'ghost' ? 'btn-link' : 'btn-primary'} ms-2`}
+              >
+                {cta.text}
+              </a>
+            )}
           </div>
         </div>
       </nav>

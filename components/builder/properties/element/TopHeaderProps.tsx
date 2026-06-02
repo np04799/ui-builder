@@ -12,8 +12,6 @@ import NumberInput from '@/components/builder/controls/NumberInput'
 import CustomCSSField from '@/components/builder/controls/CustomCSSField'
 import { TOP_HEADER_PRESETS } from '@/components/builder/elements/TopHeaderElement'
 
-// ─── Preset picker ────────────────────────────────────────────────────────────
-
 type PresetId = 'light' | 'dark' | 'indigo' | 'blur' | 'minimal'
 
 const PRESET_META: { id: PresetId; name: string; description: string }[] = [
@@ -39,37 +37,19 @@ function PresetPicker({ current, onApply }: { current: PresetId; onApply: (id: P
               key={p.id}
               onClick={() => onApply(p.id)}
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 10,
+                display: 'flex', alignItems: 'center', gap: 10,
                 border: isActive ? '2px solid var(--color-primary)' : '1.5px solid var(--color-border)',
-                borderRadius: 8,
-                overflow: 'hidden',
-                cursor: 'pointer',
-                padding: 0,
-                background: 'none',
-                textAlign: 'left',
+                borderRadius: 8, overflow: 'hidden', cursor: 'pointer', padding: 0, background: 'none', textAlign: 'left',
               }}
             >
-              {/* Mini preview strip */}
               <div style={{
-                width: 80,
-                height: 40,
-                flexShrink: 0,
-                backgroundColor: tokens.bg,
-                borderRight: `1px solid ${tokens.border}`,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '0 8px',
-                gap: 4,
+                width: 80, height: 40, flexShrink: 0, backgroundColor: tokens.bg,
+                borderRight: `1px solid ${tokens.border}`, display: 'flex', alignItems: 'center',
+                justifyContent: 'space-between', padding: '0 8px', gap: 4,
               }}>
-                {/* Page title placeholder */}
                 <div style={{ width: 28, height: 5, borderRadius: 3, backgroundColor: tokens.text, opacity: 0.7 }} />
-                {/* Avatar dot */}
                 <div style={{ width: 14, height: 14, borderRadius: '50%', background: 'linear-gradient(135deg,#4f46e5,#06b6d4)', flexShrink: 0 }} />
               </div>
-              {/* Label */}
               <div style={{ flex: 1, padding: '0 10px 0 0' }}>
                 <div style={{ fontSize: '0.75rem', fontWeight: isActive ? 700 : 500, color: 'var(--color-text-primary)' }}>{p.name}</div>
                 <div style={{ fontSize: '0.65rem', color: 'var(--color-text-secondary)', marginTop: 1 }}>{p.description}</div>
@@ -89,8 +69,6 @@ function PresetPicker({ current, onApply }: { current: PresetId; onApply: (id: P
   )
 }
 
-// ─── Toggle row helper ────────────────────────────────────────────────────────
-
 function ToggleRow({ label, value, onChange }: { label: string; value: boolean; onChange: (v: boolean) => void }) {
   return (
     <PropRow label={label}>
@@ -103,16 +81,13 @@ function ToggleRow({ label, value, onChange }: { label: string; value: boolean; 
   )
 }
 
-// ─── Tab bar ──────────────────────────────────────────────────────────────────
-
-type Tab = 'presets' | 'content' | 'style' | 'profile'
+type Tab = 'presets' | 'content' | 'style'
 
 function TabBar({ active, onChange }: { active: Tab; onChange: (t: Tab) => void }) {
   const tabs: { id: Tab; label: string }[] = [
     { id: 'presets', label: 'Presets' },
     { id: 'content', label: 'Content' },
     { id: 'style',   label: 'Style' },
-    { id: 'profile', label: 'Profile' },
   ]
   return (
     <div style={{ display: 'flex', borderBottom: '1px solid var(--color-border)', marginBottom: 2 }}>
@@ -121,17 +96,12 @@ function TabBar({ active, onChange }: { active: Tab; onChange: (t: Tab) => void 
           key={t.id}
           onClick={() => onChange(t.id)}
           style={{
-            flex: 1,
-            height: 34,
-            border: 'none',
+            flex: 1, height: 34, border: 'none',
             borderBottom: active === t.id ? '2px solid var(--color-primary)' : '2px solid transparent',
             background: 'none',
             color: active === t.id ? 'var(--color-primary)' : 'var(--color-text-secondary)',
-            fontWeight: active === t.id ? 600 : 400,
-            fontSize: '0.6875rem',
-            cursor: 'pointer',
-            transition: 'color 150ms',
-            padding: 0,
+            fontWeight: active === t.id ? 600 : 400, fontSize: '0.6875rem', cursor: 'pointer',
+            transition: 'color 150ms', padding: 0,
           }}
         >
           {t.label}
@@ -140,8 +110,6 @@ function TabBar({ active, onChange }: { active: Tab; onChange: (t: Tab) => void 
     </div>
   )
 }
-
-// ─── Main ─────────────────────────────────────────────────────────────────────
 
 interface Props { element: ElementNode }
 
@@ -152,12 +120,8 @@ export default function TopHeaderProps({ element }: Props) {
   if (element.content.type !== 'top-header') return null
   const { content, styles } = element
 
-  function patch(patch: Partial<typeof content>) {
-    updateElement(element.id, { content: { ...content, ...patch } })
-  }
-
-  function patchStyle(key: string, value: string) {
-    updateElement(element.id, { styles: { ...styles, [key]: value } })
+  function patch(p: Partial<typeof content>) {
+    updateElement(element.id, { content: { ...content, ...p } })
   }
 
   function applyPreset(id: PresetId) {
@@ -178,20 +142,26 @@ export default function TopHeaderProps({ element }: Props) {
       {/* ── CONTENT ─────────────────────────────────────────── */}
       {tab === 'content' && (
         <>
+          <PropGroup label="Logo">
+            <ToggleRow label="Show logo" value={!!content.showLogo} onChange={(v) => patch({ showLogo: v })} />
+            {content.showLogo && (
+              <>
+                <PropRow label="Logo text" stack>
+                  <TextInput value={content.logoText ?? ''} onChange={(v) => patch({ logoText: v })} placeholder="Brand" />
+                </PropRow>
+                <PropRow label="Logo image URL" stack>
+                  <TextInput value={content.logoSrc ?? ''} onChange={(v) => patch({ logoSrc: v })} placeholder="https://…" />
+                </PropRow>
+              </>
+            )}
+          </PropGroup>
+
           <PropGroup label="Page title">
             <PropRow label="Breadcrumb" stack>
-              <TextInput
-                value={content.breadcrumbLabel ?? 'Home'}
-                onChange={(v) => patch({ breadcrumbLabel: v })}
-                placeholder="Home"
-              />
+              <TextInput value={content.breadcrumbLabel ?? 'Home'} onChange={(v) => patch({ breadcrumbLabel: v })} placeholder="Home" />
             </PropRow>
             <PropRow label="Page title" stack>
-              <TextInput
-                value={content.pageTitle ?? ''}
-                onChange={(v) => patch({ pageTitle: v })}
-                placeholder="Dashboard"
-              />
+              <TextInput value={content.pageTitle ?? ''} onChange={(v) => patch({ pageTitle: v })} placeholder="Dashboard" />
             </PropRow>
           </PropGroup>
 
@@ -199,11 +169,7 @@ export default function TopHeaderProps({ element }: Props) {
             <ToggleRow label="Search bar" value={content.showSearch !== false} onChange={(v) => patch({ showSearch: v })} />
             {content.showSearch !== false && (
               <PropRow label="Placeholder" stack>
-                <TextInput
-                  value={content.searchPlaceholder ?? 'Search…'}
-                  onChange={(v) => patch({ searchPlaceholder: v })}
-                  placeholder="Search…"
-                />
+                <TextInput value={content.searchPlaceholder ?? 'Search…'} onChange={(v) => patch({ searchPlaceholder: v })} placeholder="Search…" />
               </PropRow>
             )}
           </PropGroup>
@@ -212,28 +178,40 @@ export default function TopHeaderProps({ element }: Props) {
             <ToggleRow label="Notifications" value={content.showNotifications !== false} onChange={(v) => patch({ showNotifications: v })} />
             {content.showNotifications !== false && (
               <PropRow label="Badge count">
-                <NumberInput
-                  value={String(content.notificationCount ?? 0)}
-                  onChange={(v) => patch({ notificationCount: parseInt(v) || 0 })}
-                  min={0}
-                  max={99}
-                />
+                <NumberInput value={String(content.notificationCount ?? 0)} onChange={(v) => patch({ notificationCount: parseInt(v) || 0 })} min={0} max={99} />
               </PropRow>
             )}
             <ToggleRow label="Messages" value={!!content.showMessages} onChange={(v) => patch({ showMessages: v })} />
             {content.showMessages && (
               <PropRow label="Badge count">
-                <NumberInput
-                  value={String(content.messageCount ?? 0)}
-                  onChange={(v) => patch({ messageCount: parseInt(v) || 0 })}
-                  min={0}
-                  max={99}
-                />
+                <NumberInput value={String(content.messageCount ?? 0)} onChange={(v) => patch({ messageCount: parseInt(v) || 0 })} min={0} max={99} />
               </PropRow>
             )}
             <ToggleRow label="Settings" value={!!content.showSettings} onChange={(v) => patch({ showSettings: v })} />
             <ToggleRow label="Help / docs" value={!!content.showHelp} onChange={(v) => patch({ showHelp: v })} />
             <ToggleRow label="Theme toggle" value={content.showThemeToggle !== false} onChange={(v) => patch({ showThemeToggle: v })} />
+          </PropGroup>
+
+          {/* Profile section moved here, below Action Icons */}
+          <PropGroup label="Profile">
+            <ToggleRow label="Show profile" value={content.showProfile !== false} onChange={(v) => patch({ showProfile: v })} />
+            {content.showProfile !== false && (
+              <>
+                <PropRow label="Name" stack>
+                  <TextInput value={content.profileName ?? 'John Doe'} onChange={(v) => patch({ profileName: v })} placeholder="John Doe" />
+                </PropRow>
+                <PropRow label="Role" stack>
+                  <TextInput value={content.profileRole ?? ''} onChange={(v) => patch({ profileRole: v })} placeholder="Administrator" />
+                </PropRow>
+                <PropRow label="Initials" stack>
+                  <TextInput value={content.profileInitials ?? ''} onChange={(v) => patch({ profileInitials: v })} placeholder="JD (auto if blank)" />
+                </PropRow>
+                <PropRow label="Image URL" stack>
+                  <TextInput value={content.profileSrc ?? ''} onChange={(v) => patch({ profileSrc: v })} placeholder="https://…" />
+                </PropRow>
+                <ToggleRow label="Divider before profile" value={content.showProfileDivider !== false} onChange={(v) => patch({ showProfileDivider: v })} />
+              </>
+            )}
           </PropGroup>
         </>
       )}
@@ -241,13 +219,49 @@ export default function TopHeaderProps({ element }: Props) {
       {/* ── STYLE ─────────────────────────────────────────────── */}
       {tab === 'style' && (
         <>
+          <PropGroup label="Container">
+            <PropRow label="Layout">
+              <SelectInput
+                value={content.containerLayout ?? 'fluid'}
+                options={[
+                  { label: 'Fluid (full width)', value: 'fluid' },
+                  { label: 'Centered (constrained)', value: 'centered' },
+                ]}
+                onChange={(v) => patch({ containerLayout: v as 'fluid' | 'centered' })}
+              />
+            </PropRow>
+            {content.containerLayout === 'centered' && (
+              <PropRow label="Max width" stack>
+                <SelectInput
+                  value={content.maxWidth ?? '1200px'}
+                  options={[
+                    { label: 'Narrow (640px)', value: '640px' },
+                    { label: 'Medium (960px)', value: '960px' },
+                    { label: 'Wide (1200px)', value: '1200px' },
+                    { label: 'Extra wide (1440px)', value: '1440px' },
+                    { label: 'Custom', value: 'custom' },
+                  ]}
+                  onChange={(v) => patch({ maxWidth: v === 'custom' ? '1200px' : v })}
+                />
+              </PropRow>
+            )}
+            <PropRow label="Padding X">
+              <NumberInput
+                value={String(content.paddingX ?? 20)}
+                onChange={(v) => patch({ paddingX: parseInt(v) || 0 })}
+                min={0}
+                max={120}
+              />
+            </PropRow>
+          </PropGroup>
+
           <PropGroup label="Dimensions">
             <PropRow label="Height (px)">
               <NumberInput
                 value={String(content.height ?? 60)}
                 onChange={(v) => patch({ height: parseInt(v) || 60 })}
                 min={48}
-                max={100}
+                max={120}
               />
             </PropRow>
           </PropGroup>
@@ -289,47 +303,6 @@ export default function TopHeaderProps({ element }: Props) {
             knownKeys={['backgroundColor', 'color', 'borderColor']}
             onChange={(s) => updateElement(element.id, { styles: s })}
           />
-        </>
-      )}
-
-      {/* ── PROFILE ─────────────────────────────────────────── */}
-      {tab === 'profile' && (
-        <>
-          <PropGroup label="User profile">
-            <ToggleRow label="Show profile" value={content.showProfile !== false} onChange={(v) => patch({ showProfile: v })} />
-
-            {content.showProfile !== false && (
-              <>
-                <PropRow label="Name" stack>
-                  <TextInput
-                    value={content.profileName ?? 'John Doe'}
-                    onChange={(v) => patch({ profileName: v })}
-                    placeholder="John Doe"
-                  />
-                </PropRow>
-                <PropRow label="Role" stack>
-                  <TextInput
-                    value={content.profileRole ?? ''}
-                    onChange={(v) => patch({ profileRole: v })}
-                    placeholder="Administrator"
-                  />
-                </PropRow>
-                <PropRow label="Initials" stack>
-                  <TextInput
-                    value={content.profileInitials ?? ''}
-                    onChange={(v) => patch({ profileInitials: v })}
-                    placeholder="JD (auto if blank)"
-                  />
-                </PropRow>
-              </>
-            )}
-          </PropGroup>
-
-          <PropGroup label="Mobile">
-            <p style={{ fontSize: '0.72rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.5 }}>
-              On small screens the profile name and role are hidden automatically. Only the avatar is shown.
-            </p>
-          </PropGroup>
         </>
       )}
     </>
