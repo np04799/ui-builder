@@ -195,7 +195,7 @@ const ColumnRenderer = memo(function ColumnRenderer({ id, skipIfManaged = true }
       style={{
         flex: hasStoredBasis || colSpan ? undefined : 1,
         minWidth: 0,
-        overflow: 'hidden',
+        overflow: 'visible',
         ...childLayoutStyle,
         padding: isEmpty ? '0' : '8px',
         border: isDragOver
@@ -278,7 +278,7 @@ const ColumnRenderer = memo(function ColumnRenderer({ id, skipIfManaged = true }
 
           {elementIds.map((elementId, index) => (
             <div key={elementId}>
-              <div style={{ marginBottom: 12 }}>
+              <div style={{ marginBottom: 12, width: '100%', boxSizing: 'border-box' }}>
                 <DraggableElement elementId={elementId} columnId={id} index={index}>
                   <ElementRenderer id={elementId} />
                 </DraggableElement>

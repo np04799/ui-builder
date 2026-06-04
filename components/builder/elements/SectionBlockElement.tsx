@@ -23,11 +23,11 @@ interface Props {
 }
 
 const PRESET_STYLES: Record<Preset, { bg: string; textColor: string; padY: number; padX: number; align: 'left' | 'center'; border: boolean; cardLike: boolean }> = {
-  plain: { bg: 'transparent', textColor: 'inherit', padY: 32, padX: 24, align: 'left', border: false, cardLike: false },
-  card: { bg: '#ffffff', textColor: '#0f172a', padY: 24, padX: 24, align: 'left', border: true, cardLike: true },
-  hero: { bg: 'linear-gradient(135deg, #4f46e5, #06b6d4)', textColor: '#ffffff', padY: 64, padX: 32, align: 'center', border: false, cardLike: false },
-  feature: { bg: '#f8fafc', textColor: '#0f172a', padY: 48, padX: 24, align: 'center', border: false, cardLike: false },
-  cta: { bg: '#0f172a', textColor: '#ffffff', padY: 56, padX: 32, align: 'center', border: false, cardLike: false },
+  plain: { bg: 'transparent', textColor: 'inherit', padY: 16, padX: 0, align: 'left', border: false, cardLike: false },
+  card: { bg: '#ffffff', textColor: '#0f172a', padY: 20, padX: 20, align: 'left', border: true, cardLike: true },
+  hero: { bg: 'linear-gradient(135deg, #4f46e5, #06b6d4)', textColor: '#ffffff', padY: 48, padX: 24, align: 'center', border: false, cardLike: false },
+  feature: { bg: '#f8fafc', textColor: '#0f172a', padY: 32, padX: 16, align: 'center', border: false, cardLike: false },
+  cta: { bg: '#0f172a', textColor: '#ffffff', padY: 40, padX: 24, align: 'center', border: false, cardLike: false },
 }
 
 const SectionBlockElement = memo(function SectionBlockElement({

@@ -436,8 +436,9 @@ export function defaultContentForType(elementType: string): ElementContent | nul
         textColor: 'inherit',
         padding: 16,
         borderRadius: 0,
-        showBorder: false,
+        showBorder: true,
         borderColor: '#e5e7eb',
+        minHeight: 80,
         display: 'block',
       }
 

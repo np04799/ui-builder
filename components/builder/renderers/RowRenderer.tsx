@@ -47,7 +47,7 @@ const RowRenderer = memo(function RowRenderer({ id }: Props) {
         flexWrap: 'wrap',
         width: '100%',
         boxSizing: 'border-box',
-        gap: row.columnIds.length <= 1 ? '16px' : '0',
+        gap: '16px',
         ...responsiveRowDefaults,
         ...(row.styles as React.CSSProperties),
         ...breakpointStyles,

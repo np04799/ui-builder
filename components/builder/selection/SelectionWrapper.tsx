@@ -66,6 +66,8 @@ export default function SelectionWrapper({ id, children, style }: Props) {
       data-selectable-id={id}
       style={{
         position: 'relative',
+        width: '100%',
+        boxSizing: 'border-box',
         ...style,
         ...borderStyle,
       }}

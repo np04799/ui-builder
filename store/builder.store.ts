@@ -811,7 +811,10 @@ export const useBuilderStore = create<BuilderStoreState & BuilderActions>()(
       set((state) => {
         const el = state.elements[elementId]
         if (el === undefined) return
-        if (patch.styles !== undefined) el.styles = patch.styles
+        if (patch.styles !== undefined) {
+          // Merge styles — same pattern as updateSection — prevents accidental style wipe
+          el.styles = { ...el.styles, ...patch.styles }
+        }
         if (patch.responsive !== undefined) el.responsive = patch.responsive
         if (patch.classNames !== undefined) el.classNames = patch.classNames
         if (patch.content !== undefined) el.content = patch.content

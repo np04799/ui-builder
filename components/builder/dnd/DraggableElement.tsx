@@ -67,6 +67,8 @@ export default function DraggableElement({
       }}
       style={{
         position: 'relative',
+        width: '100%',
+        boxSizing: 'border-box',
         opacity: isDragging ? 0.35 : 1,
         transition: 'opacity 120ms ease',
       }}
