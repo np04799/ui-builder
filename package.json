@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "chart.js": "^4.5.1",
+    "firebase": "^12.14.0",
     "immer": "^11.1.8",
     "jszip": "^3.10.1",
     "next": "16.2.6",

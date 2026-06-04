@@ -27,6 +27,13 @@ import {
   createSection,
 } from '@/lib/builder.helpers'
 import { buildProject } from '@/engine/export/builder.export'
+import {
+  saveProjectToFirestore,
+  loadProjectFromFirestore,
+  listProjectsFromFirestore,
+  deleteProjectFromFirestore,
+} from '@/lib/firebase'
+import { useAuthStore } from '@/store/auth.store'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Empty state factory
@@ -228,6 +235,16 @@ interface BuilderActions {
    * export logic, only the source of state.
    */
   toProject: () => BuilderProject | null
+
+  // ── Persistence ──────────────────────────────────────────────────────────
+  /** Save current project to localStorage. Returns the storage key used. */
+  saveProject: () => string | null
+  /** Load a project by key from localStorage. Returns true on success. */
+  loadProject: (key: string) => boolean
+  /** List all saved project keys + metadata from localStorage. */
+  listSavedProjects: () => { key: string; name: string; updatedAt: string; mode: string }[]
+  /** Delete a saved project from localStorage. */
+  deleteSavedProject: (key: string) => void
 
   // ── Internal lookups (prefer selectors file for React components) ─────────
   getSection: (id: string) => SectionNode | undefined
@@ -1300,6 +1317,83 @@ export const useBuilderStore = create<BuilderStoreState & BuilderActions>()(
     },
 
     // ── Export ────────────────────────────────────────────────────────────────
+
+    // ── Persistence ──────────────────────────────────────────────────────────
+
+    saveProject() {
+      const state = get()
+      if (!state.projectMeta) return null
+      const key = `bp_project_${state.projectMeta.id}`
+      const payload = {
+        sections: state.sections,
+        rows: state.rows,
+        columns: state.columns,
+        elements: state.elements,
+        sectionOrder: state.sectionOrder,
+        projectMeta: { ...state.projectMeta, updatedAt: new Date().toISOString() },
+        mode: state.mode,
+        canvasWidth: state.canvasWidth,
+      }
+      // Try Firestore first if user is logged in
+      const user = typeof window !== 'undefined' ? useAuthStore.getState().user : null
+      if (user) {
+        saveProjectToFirestore(user.uid, state.projectMeta.id, payload).catch(console.error)
+      }
+      // Always also save to localStorage as offline fallback
+      try {
+        localStorage.setItem(key, JSON.stringify(payload))
+        const indexRaw = localStorage.getItem('bp_project_index') ?? '[]'
+        const index: { key: string; name: string; updatedAt: string; mode: string }[] = JSON.parse(indexRaw)
+        const entry = { key, name: state.projectMeta.name, updatedAt: payload.projectMeta.updatedAt ?? new Date().toISOString(), mode: state.mode }
+        const existing = index.findIndex((i) => i.key === key)
+        if (existing >= 0) index[existing] = entry
+        else index.push(entry)
+        localStorage.setItem('bp_project_index', JSON.stringify(index))
+        return key
+      } catch {
+        return null
+      }
+    },
+
+    loadProject(key) {
+      try {
+        const raw = localStorage.getItem(key)
+        if (!raw) return false
+        const payload = JSON.parse(raw)
+        set((state) => {
+          Object.assign(state, createEmptyState())
+          state.sections = payload.sections ?? {}
+          state.rows = payload.rows ?? {}
+          state.columns = payload.columns ?? {}
+          state.elements = payload.elements ?? {}
+          state.sectionOrder = payload.sectionOrder ?? []
+          state.projectMeta = payload.projectMeta ?? null
+          state.mode = payload.mode ?? 'custom'
+          state.canvasWidth = payload.canvasWidth ?? '100%'
+        })
+        return true
+      } catch {
+        return false
+      }
+    },
+
+    listSavedProjects() {
+      try {
+        const raw = localStorage.getItem('bp_project_index') ?? '[]'
+        return JSON.parse(raw)
+      } catch {
+        return []
+      }
+    },
+
+    deleteSavedProject(key) {
+      try {
+        localStorage.removeItem(key)
+        const raw = localStorage.getItem('bp_project_index') ?? '[]'
+        const index = (JSON.parse(raw) as { key: string }[]).filter((i) => i.key !== key)
+        localStorage.setItem('bp_project_index', JSON.stringify(index))
+      } catch { /* ignore */ }
+    },
 
     toProject() {
       return buildProject(get())

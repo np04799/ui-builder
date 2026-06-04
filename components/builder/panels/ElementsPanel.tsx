@@ -794,7 +794,7 @@ function GroupSection({ group, defaultOpen = false }: { group: Group; defaultOpe
 
 // ─── Tab panel ────────────────────────────────────────────────────────────────
 
-type TabId = 'web' | 'kpi'
+type TabId = 'web'
 
 interface TabDef {
   id: TabId
@@ -810,15 +810,7 @@ const TABS: TabDef[] = [
     label: 'Web Elements',
     groups: WEB_GROUPS,
     tip: 'Drag any element onto the canvas, or click to add to the active column.',
-  },
-  {
-    id: 'kpi',
-    label: 'KPI Dashboard',
-    badge: 'New',
-    groups: KPI_GROUPS,
-    tip: 'Charts use sample data by default. Use the props panel to edit data, upload CSV/JSON, or connect an API.',
-  },
-]
+  }]
 
 // ─── Main panel ───────────────────────────────────────────────────────────────
 

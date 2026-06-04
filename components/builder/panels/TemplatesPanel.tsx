@@ -8,7 +8,7 @@ import { defaultContentForType } from '@/lib/elementDefaults'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type TabId = 'web' | 'kpi'
+type TabId = 'web'
 
 // ─── SVG thumbnails (template cards) ─────────────────────────────────────────
 
@@ -820,7 +820,6 @@ function KpiTab() {
 
 const PANEL_TABS: { id: TabId; label: string; badge?: string }[] = [
   { id: 'web', label: 'Web Elements' },
-  { id: 'kpi', label: 'KPI Dashboard', badge: 'New' },
 ]
 
 export default function TemplatesPanel() {
@@ -880,11 +879,7 @@ export default function TemplatesPanel() {
       </div>
 
       {/* Tab content */}
-      {activeTab === 'web' ? (
-        <WebTemplatesTab />
-      ) : (
-        <KpiTab />
-      )}
+      <WebTemplatesTab />
     </div>
   )
 }

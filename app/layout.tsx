@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Roboto, Playfair_Display, Montserrat, Space_Grotesk } from 'next/font/google'
 import ThemeProvider from '@/providers/ThemeProvider'
+import AuthProvider from '@/providers/AuthProvider'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
@@ -22,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${roboto.variable} ${playfair.variable} ${montserrat.variable} ${spaceGrotesk.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col">
-        <ThemeProvider>{children}</ThemeProvider>
+        <AuthProvider><ThemeProvider>{children}</ThemeProvider></AuthProvider>
       </body>
     </html>
   )

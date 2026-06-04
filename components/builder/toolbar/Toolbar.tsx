@@ -1,11 +1,14 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { useResponsiveMode } from '@/hooks/useBuilderSelectors'
 import { useBuilderStore } from '@/store/builder.store'
 import { MonitorIcon, TabletIcon, MobileIcon, UndoIcon, RedoIcon } from '@/components/builder/icons'
 import { PREVIEW_STORAGE_KEY } from '@/app/preview/page'
 import { useThemeStore } from '@/store/theme.store'
+import { useAuthStore } from '@/store/auth.store'
+import { signOut, isConfigured } from '@/lib/firebase'
 
 // ─── SVG icons ────────────────────────────────────────────────────────────────
 function PanelLeftIcon() {
@@ -88,6 +91,250 @@ const SEP: React.CSSProperties = {
 
 function Sep() {
   return <div style={SEP} />
+}
+
+
+function SaveButton() {
+  const saveProject = useBuilderStore((s) => s.saveProject)
+  const listSaved = useBuilderStore((s) => s.listSavedProjects)
+  const loadProject = useBuilderStore((s) => s.loadProject)
+  const deleteSaved = useBuilderStore((s) => s.deleteSavedProject)
+  const projectMeta = useBuilderStore((s) => s.projectMeta)
+  const [saved, setSaved] = useState(false)
+  const [open, setOpen] = useState(false)
+  const [projects, setProjects] = useState<{ key: string; name: string; updatedAt: string; mode: string }[]>([])
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    setProjects(listSaved())
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [open, listSaved])
+
+  function handleSave() {
+    const key = saveProject()
+    if (key) {
+      setSaved(true)
+      setTimeout(() => setSaved(false), 1800)
+    }
+  }
+
+  function handleLoad(key: string) {
+    loadProject(key)
+    setOpen(false)
+  }
+
+  function handleDelete(e: React.MouseEvent, key: string) {
+    e.stopPropagation()
+    deleteSaved(key)
+    setProjects(listSaved())
+  }
+
+  const BTN: React.CSSProperties = {
+    height: 32,
+    padding: '0 12px',
+    borderRadius: '6px 0 0 6px',
+    border: '1px solid var(--color-border)',
+    borderRight: 'none',
+    backgroundColor: saved ? 'var(--color-accent, #22c55e)' : 'transparent',
+    color: saved ? '#fff' : 'var(--color-text-primary)',
+    fontSize: '0.8125rem',
+    fontWeight: 500,
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    gap: 5,
+    flexShrink: 0,
+    transition: 'background-color 200ms, color 200ms',
+  }
+
+  return (
+    <div ref={ref} style={{ display: 'flex', flexShrink: 0, position: 'relative' }}>
+      <button style={BTN} onClick={handleSave} title={projectMeta ? `Save "${projectMeta.name}"` : 'Save project'}>
+        {saved ? (
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            <path d="M2 6.5l3.5 3.5 5.5-6" />
+          </svg>
+        ) : (
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M10.5 11.5h-8a1 1 0 0 1-1-1v-8l2-2h6l2 2v8a1 1 0 0 1-1 1z" />
+            <path d="M4 1.5v3h5v-3M4 11.5v-4h5v4" />
+          </svg>
+        )}
+        {saved ? 'Saved!' : 'Save'}
+      </button>
+      <button
+        style={{
+          height: 32,
+          width: 26,
+          borderRadius: '0 6px 6px 0',
+          border: '1px solid var(--color-border)',
+          backgroundColor: 'transparent',
+          color: 'var(--color-text-secondary)',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexShrink: 0,
+          padding: 0,
+        }}
+        onClick={() => setOpen(v => !v)}
+        title="Saved projects"
+      >
+        <svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+          <path d="M2 3.5l2.5 2.5 2.5-2.5" />
+        </svg>
+      </button>
+
+      {open && (
+        <div style={{
+          position: 'absolute',
+          top: 'calc(100% + 6px)',
+          left: 0,
+          zIndex: 1000,
+          backgroundColor: 'var(--color-surface)',
+          border: '1px solid var(--color-border)',
+          borderRadius: 8,
+          boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+          minWidth: 220,
+          overflow: 'hidden',
+        }}>
+          <div style={{ padding: '8px 12px 6px', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+            Saved Projects
+          </div>
+          {projects.length === 0 ? (
+            <div style={{ padding: '8px 12px 12px', fontSize: '0.8125rem', color: 'var(--color-text-secondary)' }}>No saved projects yet.</div>
+          ) : (
+            <div style={{ maxHeight: 280, overflowY: 'auto' }}>
+              {projects.map((p) => (
+                <div
+                  key={p.key}
+                  onClick={() => handleLoad(p.key)}
+                  style={{ display: 'flex', alignItems: 'center', padding: '8px 12px', cursor: 'pointer', gap: 8 }}
+                  onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--color-selected, rgba(99,102,241,0.08))')}
+                  onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}
+                >
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: '0.8125rem', fontWeight: 500, color: 'var(--color-text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.name}</div>
+                    <div style={{ fontSize: '0.6875rem', color: 'var(--color-text-secondary)' }}>{p.mode} · {new Date(p.updatedAt).toLocaleDateString()}</div>
+                  </div>
+                  <button
+                    onClick={(e) => handleDelete(e, p.key)}
+                    title="Delete"
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-secondary)', padding: 4, borderRadius: 4, flexShrink: 0 }}
+                    onMouseEnter={e => (e.currentTarget.style.color = '#ef4444')}
+                    onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-text-secondary)')}
+                  >
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+                      <path d="M2 3h8M5 3V2h2v1M4.5 9.5V5M7.5 9.5V5M3 3l.5 7h5l.5-7" />
+                    </svg>
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+
+function UserMenu() {
+  const user = useAuthStore((s) => s.user)
+  const loading = useAuthStore((s) => s.loading)
+  const router = useRouter()
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [open])
+
+  if (loading) return <div style={{ width: 30, height: 30, borderRadius: '50%', backgroundColor: 'var(--color-border)', flexShrink: 0 }} />
+
+  if (!user) {
+    return (
+      <button
+        onClick={() => router.push('/login')}
+        style={{
+          height: 30, padding: '0 12px', borderRadius: 6,
+          border: '1px solid var(--color-border)',
+          backgroundColor: 'transparent', color: 'var(--color-text-primary)',
+          fontSize: '0.8125rem', fontWeight: 500, cursor: 'pointer', flexShrink: 0,
+        }}
+      >
+        Sign in
+      </button>
+    )
+  }
+
+  const initials = (user.displayName ?? user.email ?? 'U').slice(0, 2).toUpperCase()
+
+  return (
+    <div ref={ref} style={{ position: 'relative', flexShrink: 0 }}>
+      <button
+        onClick={() => setOpen(v => !v)}
+        title={user.displayName ?? user.email ?? 'Account'}
+        style={{
+          width: 30, height: 30, borderRadius: '50%', overflow: 'hidden',
+          border: '2px solid var(--color-primary)', cursor: 'pointer', padding: 0,
+          flexShrink: 0,
+        }}
+      >
+        {user.photoURL ? (
+          <img src={user.photoURL} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        ) : (
+          <div style={{ width: '100%', height: '100%', backgroundColor: '#c7d2fe', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--color-primary)' }}>
+            {initials}
+          </div>
+        )}
+      </button>
+
+      {open && (
+        <div style={{
+          position: 'absolute', top: 'calc(100% + 6px)', right: 0, zIndex: 1000,
+          backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)',
+          borderRadius: 8, boxShadow: '0 8px 24px rgba(0,0,0,0.12)', minWidth: 180,
+        }}>
+          <div style={{ padding: '10px 14px 8px', borderBottom: '1px solid var(--color-border)' }}>
+            <div style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--color-text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {user.displayName ?? 'User'}
+            </div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {user.email}
+            </div>
+          </div>
+          <div style={{ padding: '4px 0' }}>
+            <button
+              onClick={async () => { await signOut(); setOpen(false) }}
+              style={{
+                width: '100%', textAlign: 'left', padding: '8px 14px', border: 'none',
+                backgroundColor: 'transparent', color: 'var(--color-text-primary)',
+                fontSize: '0.8125rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8,
+              }}
+              onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--color-selected, rgba(99,102,241,0.08))')}
+              onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}
+            >
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+                <path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h3M9 9.5l3-3-3-3M12 6.5H5" />
+              </svg>
+              Sign out
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
 }
 
 function ThemeToggle() {
@@ -583,6 +830,10 @@ export default function Toolbar() {
 
         <Sep />
 
+        <SaveButton />
+
+        <Sep />
+
         {/* Undo / Redo */}
         <UndoRedoButtons />
 
@@ -676,34 +927,7 @@ export default function Toolbar() {
         <Sep />
 
         {/* User avatar */}
-        <div
-          style={{
-            width: 30,
-            height: 30,
-            borderRadius: '50%',
-            overflow: 'hidden',
-            flexShrink: 0,
-            cursor: 'pointer',
-            border: '2px solid var(--color-border)',
-          }}
-          title="Account"
-        >
-          <div
-            style={{
-              width: '100%',
-              height: '100%',
-              backgroundColor: '#c7d2fe',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '0.75rem',
-              fontWeight: 700,
-              color: 'var(--color-primary)',
-            }}
-          >
-            N
-          </div>
-        </div>
+        <UserMenu />
       </div>
     </header>
   )
