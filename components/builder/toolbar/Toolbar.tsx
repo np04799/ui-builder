@@ -5,6 +5,7 @@ import { useResponsiveMode } from '@/hooks/useBuilderSelectors'
 import { useBuilderStore } from '@/store/builder.store'
 import { MonitorIcon, TabletIcon, MobileIcon, UndoIcon, RedoIcon } from '@/components/builder/icons'
 import { PREVIEW_STORAGE_KEY } from '@/app/preview/page'
+import { useThemeStore } from '@/store/theme.store'
 
 // ─── SVG icons ────────────────────────────────────────────────────────────────
 function PanelLeftIcon() {
@@ -87,6 +88,182 @@ const SEP: React.CSSProperties = {
 
 function Sep() {
   return <div style={SEP} />
+}
+
+function ThemeToggle() {
+  const theme = useThemeStore((s) => s.theme)
+  const toggleTheme = useThemeStore((s) => s.toggleTheme)
+  const isDark = theme === 'dark'
+  return (
+    <button
+      onClick={toggleTheme}
+      title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      style={{
+        width: 32,
+        height: 32,
+        borderRadius: 6,
+        border: '1px solid var(--color-border)',
+        backgroundColor: 'transparent',
+        color: 'var(--color-text-secondary)',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexShrink: 0,
+      }}
+    >
+      {isDark ? (
+        // Sun icon
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+          <circle cx="7" cy="7" r="2.5" />
+          <path d="M7 1v1.5M7 11.5V13M1 7h1.5M11.5 7H13M2.93 2.93l1.06 1.06M9.99 9.99l1.06 1.06M2.93 11.07l1.06-1.06M9.99 4.01l1.06-1.06" />
+        </svg>
+      ) : (
+        // Moon icon
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 9.5A5.5 5.5 0 014.5 2a5.5 5.5 0 100 10A5.5 5.5 0 0012 9.5z" />
+        </svg>
+      )}
+    </button>
+  )
+}
+
+function ExportButton() {
+  const [open, setOpen] = useState(false)
+  const [loading, setLoading] = useState<string | null>(null)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [open])
+
+  async function handleExport(format: 'html' | 'css' | 'zip') {
+    setLoading(format)
+    setOpen(false)
+    try {
+      const state = useBuilderStore.getState()
+      const res = await fetch('/api/export', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ state, format }),
+      })
+      if (!res.ok) throw new Error(await res.text())
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      const project = state.projectMeta
+      const name = (project?.name ?? 'export').replace(/[^a-z0-9]/gi, '-').toLowerCase()
+      a.download = format === 'zip' ? `${name}.zip` : format === 'html' ? `${name}.html` : `${name}.css`
+      a.click()
+      URL.revokeObjectURL(url)
+    } catch (err) {
+      console.error('[export]', err)
+      alert('Export failed. Please try again.')
+    } finally {
+      setLoading(null)
+    }
+  }
+
+  const ICON_BTN_BASE: React.CSSProperties = {
+    height: 32,
+    padding: '0 12px',
+    borderRadius: 6,
+    border: '1px solid var(--color-border)',
+    backgroundColor: 'transparent',
+    color: 'var(--color-text-primary)',
+    fontSize: '0.8125rem',
+    fontWeight: 500,
+    cursor: 'pointer',
+    flexShrink: 0,
+    display: 'flex',
+    alignItems: 'center',
+    gap: 5,
+    position: 'relative',
+  }
+
+  return (
+    <div ref={ref} style={{ position: 'relative', flexShrink: 0 }}>
+      <button
+        style={ICON_BTN_BASE}
+        onClick={() => setOpen(v => !v)}
+        disabled={loading !== null}
+        title="Export project"
+      >
+        {loading ? (
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" style={{ animation: 'spin 0.8s linear infinite' }}>
+            <path d="M6.5 1.5A5 5 0 1 1 1.5 6.5" />
+          </svg>
+        ) : (
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M6.5 1v7M4 6l2.5 2.5L9 6" />
+            <path d="M1.5 9.5v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1" />
+          </svg>
+        )}
+        Export
+        <svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+          <path d="M2 3.5l2.5 2.5 2.5-2.5" />
+        </svg>
+      </button>
+
+      {open && (
+        <div style={{
+          position: 'absolute',
+          top: 'calc(100% + 6px)',
+          right: 0,
+          zIndex: 1000,
+          backgroundColor: 'var(--color-surface)',
+          border: '1px solid var(--color-border)',
+          borderRadius: 8,
+          boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+          minWidth: 170,
+          overflow: 'hidden',
+        }}>
+          <div style={{ padding: '6px 0' }}>
+            {[
+              { format: 'html' as const, label: 'HTML file', desc: 'index.html', icon: '</>' },
+              { format: 'css' as const, label: 'CSS file', desc: 'styles.css', icon: '#' },
+              { format: 'zip' as const, label: 'ZIP package', desc: 'html + css + assets', icon: '⬛' },
+            ].map(({ format, label, desc, icon }) => (
+              <button
+                key={format}
+                onClick={() => handleExport(format)}
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 10,
+                  padding: '8px 14px',
+                  border: 'none',
+                  backgroundColor: 'transparent',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  color: 'var(--color-text-primary)',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--color-selected, rgba(99,102,241,0.08))')}
+                onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}
+              >
+                <span style={{ width: 28, height: 28, borderRadius: 6, border: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--color-primary)', flexShrink: 0 }}>
+                  {icon}
+                </span>
+                <span>
+                  <div style={{ fontSize: '0.8125rem', fontWeight: 500 }}>{label}</div>
+                  <div style={{ fontSize: '0.6875rem', color: 'var(--color-text-secondary)' }}>{desc}</div>
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+    </div>
+  )
 }
 
 function PreviewToggle() {
@@ -411,6 +588,10 @@ export default function Toolbar() {
 
         <Sep />
 
+        <ThemeToggle />
+
+        <Sep />
+
         {/* Preview button — outlined */}
         <button
           style={{
@@ -440,6 +621,8 @@ export default function Toolbar() {
           </svg>
           Preview
         </button>
+
+        <ExportButton />
 
         {/* Publish button — primary purple with dropdown */}
         <div style={{ display: 'flex', flexShrink: 0 }}>
