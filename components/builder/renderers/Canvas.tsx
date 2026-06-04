@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { useOrderedSections } from '@/hooks/useBuilderSelectors'
 import { useBuilderStore } from '@/store/builder.store'
 import SectionRenderer from './SectionRenderer'
@@ -219,7 +220,9 @@ export default function Canvas() {
   const quickAddElement = useBuilderStore((s) => s.quickAddElement)
   const addDrawerLayout = useBuilderStore((s) => s.addDrawerLayout)
   const insertTemplate = useBuilderStore((s) => s.insertTemplate)
+  const moveSectionToIndex = useBuilderStore((s) => s.moveSectionToIndex)
   const canvasWidth = useBuilderStore((s) => s.canvasWidth)
+  const [dragOverSectionId, setDragOverSectionId] = useState<string | null>(null)
 
   function handleCanvasDrop(e: React.DragEvent) {
     e.preventDefault()
@@ -240,6 +243,8 @@ export default function Canvas() {
       const tpl = TEMPLATES.find((t) => t.id === payload.templateId)
       if (tpl) insertTemplate(materializeTemplate(tpl.section))
     }
+    // Section drag handled by individual drop zones below
+    setDragOverSectionId(null)
   }
 
   const isFullWidth = canvasWidth === '100%'
@@ -248,8 +253,42 @@ export default function Canvas() {
     <EmptyState />
   ) : (
     <>
-      {sections.map((section) => (
+      {sections.map((section, index) => (
         <div key={section.id}>
+          {/* Drop zone above section for reorder */}
+          <div
+            style={{
+              height: dragOverSectionId === `above-${section.id}` ? 48 : 4,
+              backgroundColor: dragOverSectionId === `above-${section.id}`
+                ? 'color-mix(in srgb, var(--color-primary) 15%, transparent)'
+                : 'transparent',
+              border: dragOverSectionId === `above-${section.id}`
+                ? '2px dashed var(--color-primary)'
+                : '2px dashed transparent',
+              borderRadius: 6,
+              transition: 'all 120ms ease',
+              margin: '2px 0',
+            }}
+            onDragOver={(e) => {
+              const raw = e.dataTransfer.getData(DND_TYPE)
+              if (!raw) { e.preventDefault(); setDragOverSectionId(`above-${section.id}`); return }
+              const payload = decodeDragPayload(raw)
+              if (payload?.type !== 'section') return
+              e.preventDefault()
+              setDragOverSectionId(`above-${section.id}`)
+            }}
+            onDragLeave={() => setDragOverSectionId(null)}
+            onDrop={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              setDragOverSectionId(null)
+              const raw = e.dataTransfer.getData(DND_TYPE)
+              const payload = decodeDragPayload(raw)
+              if (payload?.type !== 'section') return
+              // Move dragged section to position `index` (before this section)
+              moveSectionToIndex(payload.sectionId, index)
+            }}
+          />
           <SectionRenderer id={section.id} />
           <AddSectionButton afterSectionId={section.id} />
         </div>

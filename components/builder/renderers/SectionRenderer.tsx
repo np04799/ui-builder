@@ -6,7 +6,7 @@ import { useBuilderStore } from '@/store/builder.store'
 import { useSelectable } from '@/hooks/useSelectable'
 import RowRenderer from './RowRenderer'
 import ResizeHandle from '@/components/builder/dnd/ResizeHandle'
-import { DND_TYPE, decodeDragPayload } from '@/components/builder/dnd/dragTypes'
+import { DND_TYPE, decodeDragPayload, encodeDragPayload } from '@/components/builder/dnd/dragTypes'
 import { defaultContentForType } from '@/lib/elementDefaults'
 import { TEMPLATES, materializeTemplate } from '@/lib/templates'
 
@@ -21,12 +21,16 @@ interface Props {
 const SectionRenderer = memo(function SectionRenderer({ id }: Props) {
   const section = useSection(id)
   const rows = useSectionRows(id)
-  const { isSelected, selectionStyle, selectionHandlers } = useSelectable(id)
+  const { isSelected, isHovered, selectionStyle, selectionHandlers } = useSelectable(id)
   const addRow = useBuilderStore((s) => s.addRow)
   const addColumn = useBuilderStore((s) => s.addColumn)
   const addElement = useBuilderStore((s) => s.addElement)
   const updateSection = useBuilderStore((s) => s.updateSection)
   const insertTemplate = useBuilderStore((s) => s.insertTemplate)
+  const moveSectionToIndex = useBuilderStore((s) => s.moveSectionToIndex)
+  const sectionOrder = useBuilderStore((s) => s.sectionOrder)
+  const [isDragGripHovered, setIsDragGripHovered] = useState(false)
+  const [isSectionDragging, setIsSectionDragging] = useState(false)
   const [isDragOver, setIsDragOver] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
 
@@ -197,6 +201,47 @@ const SectionRenderer = memo(function SectionRenderer({ id }: Props) {
       {...selectionHandlers}
     >
       {isFullBleed ? innerContent : <div style={innerStyle}>{innerContent}</div>}
+
+      {/* Section drag grip — shown on hover/select */}
+      {(isSelected || isHovered || isDragGripHovered) && !isSectionDragging && (
+        <div
+          data-drag-grip
+          draggable
+          title="Drag to reorder section"
+          onMouseEnter={() => setIsDragGripHovered(true)}
+          onMouseLeave={() => setIsDragGripHovered(false)}
+          onDragStart={(e) => {
+            e.stopPropagation()
+            e.dataTransfer.effectAllowed = 'move'
+            e.dataTransfer.setData(DND_TYPE, encodeDragPayload({ type: 'section', sectionId: id }))
+            requestAnimationFrame(() => setIsSectionDragging(true))
+          }}
+          onDragEnd={() => setIsSectionDragging(false)}
+          style={{
+            position: 'absolute',
+            top: 8,
+            right: 8,
+            width: 24,
+            height: 24,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'grab',
+            color: '#fff',
+            backgroundColor: 'var(--color-primary)',
+            borderRadius: 4,
+            zIndex: 20,
+            userSelect: 'none',
+            boxShadow: '0 1px 4px rgba(0,0,0,0.25)',
+          }}
+        >
+          <svg width="11" height="16" viewBox="0 0 11 16" fill="currentColor" aria-hidden="true">
+            <circle cx="3.5" cy="3" r="1.2" /><circle cx="7.5" cy="3" r="1.2" />
+            <circle cx="3.5" cy="8" r="1.2" /><circle cx="7.5" cy="8" r="1.2" />
+            <circle cx="3.5" cy="13" r="1.2" /><circle cx="7.5" cy="13" r="1.2" />
+          </svg>
+        </div>
+      )}
 
       {isSelected && (
         <ResizeHandle
