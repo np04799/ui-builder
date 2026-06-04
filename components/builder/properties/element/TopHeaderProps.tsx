@@ -220,6 +220,9 @@ export default function TopHeaderProps({ element }: Props) {
       {tab === 'style' && (
         <>
           <PropGroup label="Container">
+            <p style={{ fontSize: '0.7rem', color: 'var(--color-text-secondary)', margin: '0 0 8px', lineHeight: 1.5, fontStyle: 'italic' }}>
+              Tip: Place the Top Header inside a full-width row (single column, span 12) so the max-width and padding controls take visible effect.
+            </p>
             <PropRow label="Layout">
               <SelectInput
                 value={content.containerLayout ?? 'fluid'}

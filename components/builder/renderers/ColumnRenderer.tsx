@@ -148,13 +148,15 @@ const ColumnRenderer = memo(function ColumnRenderer({ id, skipIfManaged = true }
 
   if (!hasStoredBasis) {
     if (colSpan && colSpan > 0 && colSpan <= 12) {
-      // Use stored span to compute width
+      // Use stored span to compute width. flexShrink:1 lets the column shrink if its
+      // padding/border would otherwise push it past maxWidth. box-sizing:border-box on
+      // the outer style block ensures padding is counted in the percentage width.
       const pct = (colSpan / 12) * 100
-      responsiveColDefaults = { flexBasis: `${pct}%`, flexGrow: 0, flexShrink: 0, maxWidth: `${pct}%` }
+      responsiveColDefaults = { flexBasis: `${pct}%`, flexGrow: 0, flexShrink: 1, maxWidth: `${pct}%`, boxSizing: 'border-box' }
     } else if (responsiveMode === 'mobile') {
-      responsiveColDefaults = { flexBasis: '100%', flexGrow: 0, flexShrink: 0 }
+      responsiveColDefaults = { flexBasis: '100%', flexGrow: 0, flexShrink: 1, maxWidth: '100%', boxSizing: 'border-box' }
     } else if (responsiveMode === 'tablet') {
-      responsiveColDefaults = { flexBasis: '50%', flexGrow: 0, flexShrink: 0, minWidth: '50%' }
+      responsiveColDefaults = { flexBasis: '50%', flexGrow: 0, flexShrink: 1, maxWidth: '50%', boxSizing: 'border-box' }
     }
   }
 
@@ -193,6 +195,7 @@ const ColumnRenderer = memo(function ColumnRenderer({ id, skipIfManaged = true }
       style={{
         flex: hasStoredBasis || colSpan ? undefined : 1,
         minWidth: 0,
+        overflow: 'hidden',
         ...childLayoutStyle,
         padding: isEmpty ? '0' : '8px',
         border: isDragOver

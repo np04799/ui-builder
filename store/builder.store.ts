@@ -400,8 +400,8 @@ export const useBuilderStore = create<BuilderStoreState & BuilderActions>()(
           if (!r) return
           const cs = r.columnIds
           const count = cs.length
-          if (count > 0 && count <= 12) {
-            const base = Math.floor(12 / count)
+          if (count > 0) {
+            const base = Math.max(1, Math.floor(12 / count))
             const rem = 12 - base * count
             cs.forEach((cid, idx) => {
               const c = state.columns[cid]
@@ -710,8 +710,8 @@ export const useBuilderStore = create<BuilderStoreState & BuilderActions>()(
         // Auto-distribute spans evenly across all columns in this row (12-col grid)
         const cols = state.rows[rowId].columnIds
         const count = cols.length
-        if (count > 0 && count <= 12) {
-          const baseSpan = Math.floor(12 / count)
+        if (count > 0) {
+          const baseSpan = Math.max(1, Math.floor(12 / count))
           const remainder = 12 - baseSpan * count
           cols.forEach((cid, idx) => {
             const c = state.columns[cid]
@@ -773,8 +773,8 @@ export const useBuilderStore = create<BuilderStoreState & BuilderActions>()(
         // Auto-distribute spans
         const cols = state.rows[rowId].columnIds
         const count = cols.length
-        if (count > 0 && count <= 12) {
-          const baseSpan = Math.floor(12 / count)
+        if (count > 0) {
+          const baseSpan = Math.max(1, Math.floor(12 / count))
           const remainder = 12 - baseSpan * count
           cols.forEach((cid, idx) => {
             const c = state.columns[cid]
@@ -1150,8 +1150,8 @@ export const useBuilderStore = create<BuilderStoreState & BuilderActions>()(
         if (row !== undefined) {
           const cols = row.columnIds
           const count = cols.length
-          if (count > 0 && count <= 12) {
-            const baseSpan = Math.floor(12 / count)
+          if (count > 0) {
+            const baseSpan = Math.max(1, Math.floor(12 / count))
             const remainder = 12 - baseSpan * count
             cols.forEach((cid, idx) => {
               const c = state.columns[cid]

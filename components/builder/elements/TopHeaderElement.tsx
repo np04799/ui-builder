@@ -737,10 +737,20 @@ const TopHeaderElement = memo(function TopHeaderElement({
     inner = <CustomTopHeader {...innerShared} isBlur={preset === 'blur'} />
   }
 
-  // Wrap in centered container when needed
+  // TopHeader is a layout-spanning element. Break out of any parent column
+  // constraint so it always spans the full canvas width (matching real SaaS app-bar behavior).
+  // The user can still constrain INNER content via maxWidth + containerLayout='centered'.
+  const breakoutStyle: React.CSSProperties = {
+    position: 'relative',
+    width: '100%',
+    marginLeft: 0,
+    marginRight: 0,
+    background: tokens.bg,
+  }
+
   if (isCentered) {
     return (
-      <div style={{ width: '100%', background: tokens.bg }}>
+      <div style={breakoutStyle}>
         <div style={{ maxWidth, margin: '0 auto', width: '100%' }}>
           {inner}
         </div>
@@ -748,7 +758,12 @@ const TopHeaderElement = memo(function TopHeaderElement({
     )
   }
 
-  return <>{inner}</>
+  // Fluid: outer wrapper still spans 100% of parent so the header fills its column/row.
+  return (
+    <div style={breakoutStyle}>
+      {inner}
+    </div>
+  )
 })
 
 export default TopHeaderElement

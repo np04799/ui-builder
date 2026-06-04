@@ -1,6 +1,7 @@
 'use client'
 
 import { memo, createElement } from 'react'
+import { usePreviewState } from '@/components/builder/elements/PreviewStateContext'
 
 type Tag = 'div' | 'span' | 'article' | 'aside' | 'nav' | 'header' | 'footer' | 'main'
 type Display = 'block' | 'inline' | 'inline-block' | 'flex' | 'inline-flex' | 'grid'
@@ -32,6 +33,7 @@ const DivContainerElement = memo(function DivContainerElement({
   display = 'block',
   style,
 }: Props) {
+  const isPreview = usePreviewState() !== null
   // For span elements, default to inline-block if user didn't override
   const resolvedDisplay = display ?? (tag === 'span' ? 'inline-block' : 'block')
 
@@ -48,8 +50,8 @@ const DivContainerElement = memo(function DivContainerElement({
     ...style,
   }
 
-  // Empty hint when no text and no children
-  const innerNode = text || (
+  // Empty hint when no text and no children — builder mode only
+  const innerNode = text || (isPreview ? null : (
     <span style={{
       fontSize: '0.75rem',
       color: 'rgba(0,0,0,0.4)',
@@ -58,7 +60,7 @@ const DivContainerElement = memo(function DivContainerElement({
     }}>
       &lt;{tag}&gt; container — set text or add children
     </span>
-  )
+  ))
 
   return createElement(tag, { style: wrapperStyle }, innerNode)
 })

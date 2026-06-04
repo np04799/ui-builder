@@ -75,12 +75,6 @@ export default function SelectionWrapper({ id, children, style }: Props) {
       {isSelected && (
         <>
           <ResizeHandle
-            direction="corner"
-            nodeId={id}
-            targetRef={wrapperRef}
-            onResize={handleElementResize}
-          />
-          <ResizeHandle
             direction="right"
             nodeId={id}
             targetRef={wrapperRef}
@@ -88,6 +82,12 @@ export default function SelectionWrapper({ id, children, style }: Props) {
           />
           <ResizeHandle
             direction="bottom"
+            nodeId={id}
+            targetRef={wrapperRef}
+            onResize={handleElementResize}
+          />
+          <ResizeHandle
+            direction="corner"
             nodeId={id}
             targetRef={wrapperRef}
             onResize={handleElementResize}
