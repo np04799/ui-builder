@@ -23,5 +23,6 @@ export default function DividerElement({ style, color = 'var(--color-border)', t
 
   if (framework === 'bootstrap') return <hr className="my-3" style={{ ...base, opacity: 1, ...style }} />
   if (framework === 'tailwind') return <hr className="my-3" style={{ ...base, ...style }} />
+  if (framework === 'mui') return <hr className="MuiDivider-root" style={{ ...base, ...style }} />
   return <hr style={{ ...base, ...style }} />
 }

@@ -47,6 +47,7 @@ export default function VideoElement({ src, provider = 'youtube', style }: Props
       </div>
     )
   }
+  // MUI / Custom — same layout
   return (
     <div style={{ width: '100%', aspectRatio: '16/9', borderRadius: 8, overflow: 'hidden', ...style }}>
       <iframe src={embedSrc} style={{ width: '100%', height: '100%', border: 'none' }} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />

@@ -111,12 +111,14 @@ const ProgressElement = memo(function ProgressElement({
           {showLabel && <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--color-text-primary)' }}>{value}/{max}</span>}
         </div>
       )}
-      <div style={{ width: '100%', height, backgroundColor: 'var(--color-border)', borderRadius: height, overflow: 'hidden' }}>
+      <div style={{ width: '100%', height, backgroundColor: framework === 'mui' ? 'rgba(0,0,0,0.1)' : 'var(--color-border)', borderRadius: height, overflow: 'hidden' }}
+           className={framework === 'mui' ? 'MuiLinearProgress-root' : undefined}>
         <div
           role="progressbar"
           aria-valuenow={value}
           aria-valuemin={0}
           aria-valuemax={max}
+          className={framework === 'mui' ? 'MuiLinearProgress-bar' : undefined}
           style={{
             height: '100%',
             width: `${pct}%`,

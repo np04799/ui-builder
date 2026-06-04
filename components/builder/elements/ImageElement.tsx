@@ -25,6 +25,11 @@ const ImageElement = memo(function ImageElement({ src, alt, objectFit, style }: 
     return <img src={src} alt={alt} className="w-full h-auto rounded" style={{ objectFit, display: 'block', ...style }} />
   }
   // eslint-disable-next-line @next/next/no-img-element
+  if (framework === 'mui') {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={src} alt={alt} className="MuiCardMedia-root" style={{ objectFit, width: '100%', display: 'block', borderRadius: 4, ...style }} />
+  }
+  // eslint-disable-next-line @next/next/no-img-element
   return <img src={src} alt={alt} style={{ width: '100%', height: 'auto', objectFit, borderRadius: 4, display: 'block', ...style }} />
 })
 

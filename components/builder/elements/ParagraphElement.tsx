@@ -13,6 +13,9 @@ const ParagraphElement = memo(function ParagraphElement({ text, style }: Props) 
   if (framework === 'tailwind') {
     return <p className="text-base text-gray-600 leading-relaxed m-0" style={style}>{content}</p>
   }
+  if (framework === 'mui') {
+    return <p className="MuiTypography-root MuiTypography-body1" style={{ margin: 0, ...style }}>{content}</p>
+  }
   return <p style={{ margin: 0, fontSize: '1rem', lineHeight: 1.7, color: 'var(--color-text-secondary)', ...style }}>{content}</p>
 })
 
