@@ -123,6 +123,31 @@ function ModalElement({ triggerText = 'Open Modal', triggerVariant = 'primary', 
     return { ...base, backgroundColor: 'transparent', color: 'var(--color-text-primary)' }
   }
 
+  // ── MUI ───────────────────────────────────────────────────────────────────
+  if (framework === 'mui') {
+    const muiTriggerStyle: React.CSSProperties = triggerVariant === 'outline'
+      ? { ...triggerStyle(), fontFamily: 'Roboto,sans-serif', textTransform: 'uppercase', letterSpacing: '0.02857em', fontSize: '0.875rem' }
+      : { ...triggerStyle(), fontFamily: 'Roboto,sans-serif', textTransform: 'uppercase', letterSpacing: '0.02857em', fontSize: '0.875rem' }
+    return (
+      <div style={{ display: 'inline-flex', flexDirection: 'column', gap: 8, fontFamily: 'Roboto, sans-serif', ...style }}>
+        <button onClick={handleOpen} className={`MuiButton-root MuiButton-${triggerVariant === 'primary' ? 'contained' : triggerVariant === 'outline' ? 'outlined' : 'text'}`} style={{ alignSelf: 'flex-start' }}>{triggerText}</button>
+        {open && isPreview && (
+          <>
+            <div onClick={() => setOpen(false)} style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1300 }} />
+            <div className="MuiPaper-root MuiPaper-elevation24" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', zIndex: 1400, backgroundColor: '#fff', borderRadius: 4, minWidth: 400, maxWidth: '90vw', boxShadow: '0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14),0 9px 46px 8px rgba(0,0,0,.12)' }}>
+              <div style={{ padding: '16px 24px', borderBottom: '1px solid rgba(0,0,0,0.12)' }}><h2 className="MuiTypography-root MuiTypography-h6" style={{ margin: 0 }}>{title}</h2></div>
+              <div style={{ padding: '20px 24px' }}><p className="MuiTypography-root MuiTypography-body1" style={{ margin: 0 }}>{body}</p></div>
+              <div style={{ padding: '8px 8px', display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+                <button onClick={() => setOpen(false)} className="MuiButton-root MuiButton-text">{cancelText}</button>
+                <button onClick={() => setOpen(false)} className="MuiButton-root MuiButton-contained">{confirmText}</button>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    )
+  }
+
   return (
     <div style={{ display: 'inline-flex', flexDirection: 'column', gap: 8, fontFamily: 'inherit', ...style }}>
       <button onClick={handleOpen} style={{ ...triggerStyle(), alignSelf: 'flex-start' }}>{triggerText}</button>

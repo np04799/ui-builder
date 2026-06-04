@@ -104,6 +104,27 @@ function AccordionElement({ items = [], allowMultiple = false, variant = 'defaul
     return { borderRadius: 8, boxShadow: '0 1px 3px rgba(0,0,0,0.07)', border: '1px solid var(--color-border)', marginBottom: isLast ? 0 : 8, overflow: 'hidden', backgroundColor: 'var(--color-bg)' }
   }
 
+  // ── MUI ───────────────────────────────────────────────────────────────────
+  if (framework === 'mui') {
+    return (
+      <div className="MuiPaper-root MuiPaper-outlined" style={{ fontFamily: 'Roboto, sans-serif', borderRadius: 4, overflow: 'hidden', ...style }}>
+        {items.map((item) => {
+          const isOpen = openIds.has(item.id)
+          return (
+            <div key={item.id} style={{ borderBottom: '1px solid rgba(0,0,0,0.12)' }}>
+              <button onClick={() => toggle(item.id)} aria-expanded={isOpen}
+                style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '0.9375rem', fontWeight: 500, color: 'rgba(0,0,0,0.87)', textAlign: 'left', fontFamily: 'inherit' }}>
+                <span>{item.title}</span>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={{ transform: isOpen ? 'rotate(180deg)' : 'none', transition: 'transform 200ms' }}><path d="M4 6l4 4 4-4" /></svg>
+              </button>
+              {isOpen && <div style={{ padding: '4px 16px 16px', fontSize: '0.875rem', color: 'rgba(0,0,0,0.6)', lineHeight: 1.6 }}>{item.content}</div>}
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
+
   return (
     <div style={{ fontFamily: 'inherit', ...style }}>
       {items.map((item, idx) => {

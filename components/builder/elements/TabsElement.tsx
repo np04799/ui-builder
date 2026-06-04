@@ -90,6 +90,25 @@ function TabsElement({ tabs = [], activeTab: initialActive = 0, variant = 'line'
     return { padding: '10px 18px', border: 'none', background: 'none', cursor: 'pointer', fontSize: '0.9rem', fontWeight: isActive ? 600 : 400, color: isActive ? 'var(--color-primary)' : 'var(--color-text-secondary)', borderBottom: isActive ? '2px solid var(--color-primary)' : '2px solid transparent', marginBottom: -2, whiteSpace: 'nowrap' }
   }
 
+  // ── MUI ───────────────────────────────────────────────────────────────────
+  if (framework === 'mui') {
+    return (
+      <div style={{ fontFamily: 'Roboto, sans-serif', ...style }}>
+        <div style={{ display: 'flex', borderBottom: '1px solid rgba(0,0,0,0.12)', marginBottom: 16 }}>
+          {tabs.map((tab, idx) => (
+            <button key={tab.id} onClick={() => setActive(idx)}
+              style={{ padding: '10px 16px', border: 'none', background: 'none', cursor: 'pointer', fontSize: '0.875rem', fontWeight: idx === safeActive ? 600 : 400, color: idx === safeActive ? '#1976d2' : 'rgba(0,0,0,0.6)', borderBottom: idx === safeActive ? '2px solid #1976d2' : '2px solid transparent', marginBottom: -1, textTransform: 'uppercase', letterSpacing: '0.02857em', fontFamily: 'inherit' }}>
+              {tab.label}
+            </button>
+          ))}
+        </div>
+        <div style={{ minHeight: 80, padding: '0 4px' }}>
+          <p style={{ margin: 0, fontSize: '0.875rem', color: 'rgba(0,0,0,0.87)', lineHeight: 1.6 }}>{tabs[safeActive]?.content ?? ''}</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div style={{ fontFamily: 'inherit', ...style }}>
       <div style={barStyle}>{tabs.map((tab, idx) => <button key={tab.id} onClick={() => setActive(idx)} style={tabBtn(idx === safeActive)}>{tab.label}</button>)}</div>
