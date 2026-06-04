@@ -276,7 +276,7 @@ const ColumnRenderer = memo(function ColumnRenderer({ id, skipIfManaged = true }
 
           {elementIds.map((elementId, index) => (
             <div key={elementId}>
-              <div style={{ marginBottom: 12, width: '100%', boxSizing: 'border-box' }}>
+              <div style={{ marginBottom: 12, width: '100%', boxSizing: 'border-box', pointerEvents: isDragOver ? 'none' : undefined }}>
                 <DraggableElement elementId={elementId} columnId={id} index={index}>
                   <ElementRenderer id={elementId} />
                 </DraggableElement>
