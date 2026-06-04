@@ -27,12 +27,7 @@ import {
   createSection,
 } from '@/lib/builder.helpers'
 import { buildProject } from '@/engine/export/builder.export'
-import {
-  saveProjectToFirestore,
-  loadProjectFromFirestore,
-  listProjectsFromFirestore,
-  deleteProjectFromFirestore,
-} from '@/lib/firebase'
+import { saveProjectToFirestore } from '@/lib/firebase'
 import { useAuthStore } from '@/store/auth.store'
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -881,8 +876,6 @@ export const useBuilderStore = create<BuilderStoreState & BuilderActions>()(
 
         // Clamp to 1-col minimum on each side (~8.33%)
         const clamped = Math.min(Math.max(leftPercent, 8.34), 91.66)
-        const rightPercent = 100 - clamped
-
         // Snap to nearest 1/12 grid step
         const snap = (pct: number) => Math.round((pct / 100) * 12) / 12 * 100
         const leftSnapped = snap(clamped)

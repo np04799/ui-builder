@@ -31,7 +31,6 @@ const ColumnRenderer = memo(function ColumnRenderer({ id, skipIfManaged = true }
   const addRowAfterColumn = useBuilderStore((s) => s.addRowAfterColumn)
   const addColumnToSameRow = useBuilderStore((s) => s.addColumnToSameRow)
   const updateColumn = useBuilderStore((s) => s.updateColumn)
-  const activeDrag = useBuilderStore((s) => s.dragState)
   const { isSelected, selectionStyle, selectionHandlers } = useSelectable(id)
   const responsiveMode = useResponsiveMode()
   const framework = useFramework()
@@ -42,8 +41,7 @@ const ColumnRenderer = memo(function ColumnRenderer({ id, skipIfManaged = true }
   const [isDragOver, setIsDragOver] = useState(false)
   const [showPicker, setShowPicker] = useState(false)
 
-  const isDragActive = activeDrag !== null
-
+  
   // ── Drop slot calculation ──────────────────────────────────────────────────
 
   const getDropSlot = useCallback((clientY: number): number => {

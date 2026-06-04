@@ -27,8 +27,6 @@ const SectionRenderer = memo(function SectionRenderer({ id }: Props) {
   const addElement = useBuilderStore((s) => s.addElement)
   const updateSection = useBuilderStore((s) => s.updateSection)
   const insertTemplate = useBuilderStore((s) => s.insertTemplate)
-  const moveSectionToIndex = useBuilderStore((s) => s.moveSectionToIndex)
-  const sectionOrder = useBuilderStore((s) => s.sectionOrder)
   const [isDragGripHovered, setIsDragGripHovered] = useState(false)
   const [isSectionDragging, setIsSectionDragging] = useState(false)
   const [isDragOver, setIsDragOver] = useState(false)
