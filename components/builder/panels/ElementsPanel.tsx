@@ -31,6 +31,24 @@ const WEB_GROUPS = [
         ),
       },
       {
+        label: 'Row', type: 'row-layout',
+        icon: (
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="1" y="5" width="18" height="10" rx="2" stroke="currentColor" strokeWidth="1.4" />
+            <path d="M7 5v10M13 5v10" stroke="currentColor" strokeWidth="1.2" />
+          </svg>
+        ),
+      },
+      {
+        label: 'Column', type: 'column-layout',
+        icon: (
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="1" y="3" width="8" height="14" rx="2" stroke="currentColor" strokeWidth="1.4" />
+            <rect x="11" y="3" width="8" height="14" rx="2" stroke="currentColor" strokeWidth="1.4" fill="currentColor" fillOpacity="0.08" />
+          </svg>
+        ),
+      },
+      {
         label: 'Table', type: 'table',
         icon: (
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none">

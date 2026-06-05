@@ -1264,6 +1264,19 @@ export const useBuilderStore = create<BuilderStoreState & BuilderActions>()(
         }
 
         const element = createElement(columnId, content)
+
+        // For section-block / div-container: create a managed child column
+        // so users can drag elements directly into the container
+        if (content.type === 'section-block' || content.type === 'div-container') {
+          // Find the row that owns this column
+          const rowId = Object.values(state.rows).find(r => r.columnIds.includes(columnId))?.id ?? ''
+          const managedCol = createColumn(rowId)
+          managedCol.managedBy = element.id  // owned by this element
+          managedCol.styles = { minHeight: '60px', width: '100%' }
+          state.columns[managedCol.id] = managedCol
+          ;(element.content as Record<string, unknown>).contentColumnId = managedCol.id
+        }
+
         state.elements[element.id] = element
         state.columns[columnId].elementIds.push(element.id)
         state.selectedId = element.id

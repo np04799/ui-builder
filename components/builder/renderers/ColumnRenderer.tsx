@@ -330,7 +330,7 @@ const ColumnRenderer = memo(function ColumnRenderer({ id, skipIfManaged = true }
 
       {isSelected && (
         <ResizeHandle
-          direction="bottom"
+          direction="s"
           nodeId={id}
           targetRef={columnRef}
           onResize={handleColumnResize}

@@ -76,24 +76,15 @@ export default function SelectionWrapper({ id, children, style }: Props) {
       {children}
       {isSelected && (
         <>
-          <ResizeHandle
-            direction="right"
-            nodeId={id}
-            targetRef={wrapperRef}
-            onResize={handleElementResize}
-          />
-          <ResizeHandle
-            direction="bottom"
-            nodeId={id}
-            targetRef={wrapperRef}
-            onResize={handleElementResize}
-          />
-          <ResizeHandle
-            direction="corner"
-            nodeId={id}
-            targetRef={wrapperRef}
-            onResize={handleElementResize}
-          />
+          {(['nw','n','ne','e','se','s','sw','w'] as const).map(dir => (
+            <ResizeHandle
+              key={dir}
+              direction={dir}
+              nodeId={id}
+              targetRef={wrapperRef}
+              onResize={handleElementResize}
+            />
+          ))}
         </>
       )}
     </div>

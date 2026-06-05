@@ -615,6 +615,7 @@ export const ELEMENT_REGISTRY: ElementRegistry = {
         maxWidth={content.maxWidth}
         align={content.align}
         showBorder={content.showBorder}
+        contentColumnId={content.contentColumnId}
         style={style}
       />
     ),
@@ -633,6 +634,7 @@ export const ELEMENT_REGISTRY: ElementRegistry = {
         borderColor={content.borderColor}
         minHeight={content.minHeight}
         display={content.display}
+        contentColumnId={content.contentColumnId}
         style={style}
       />
     ),

@@ -2,24 +2,24 @@
 
 import { useRef, useCallback } from 'react'
 
-type Direction = 'bottom' | 'right' | 'corner'
+type Direction = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw'
 
 interface Props {
   direction: Direction
   nodeId: string
-  /** Called with the final { width?, height? } in px */
   onResize: (size: { width?: number; height?: number }) => void
-  /** Element to measure during drag — defaults to parentElement */
   targetRef?: React.RefObject<HTMLElement | null>
 }
 
-const CURSOR: Record<Direction, string> = {
-  bottom: 'row-resize',
-  right:  'col-resize',
-  corner: 'nwse-resize',
+const CURSORS: Record<Direction, string> = {
+  n: 'n-resize', s: 's-resize',
+  e: 'e-resize', w: 'w-resize',
+  ne: 'ne-resize', nw: 'nw-resize',
+  se: 'se-resize', sw: 'sw-resize',
 }
 
-const SIZE = 10 // hit-area px
+// Visual pip size and hit area
+const PIP = 8
 
 export default function ResizeHandle({ direction, onResize, targetRef }: Props) {
   const handleRef = useRef<HTMLDivElement>(null)
@@ -27,13 +27,15 @@ export default function ResizeHandle({ direction, onResize, targetRef }: Props) 
   const startY = useRef(0)
   const startW = useRef(0)
   const startH = useRef(0)
-  const rafId  = useRef(0)
+  const startTop = useRef(0)
+  const startLeft = useRef(0)
+  const rafId = useRef(0)
 
   const onMouseDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
 
-    const target = targetRef?.current ?? (handleRef.current?.parentElement as HTMLElement | null)
+    const target = targetRef?.current ?? handleRef.current?.parentElement as HTMLElement | null
     if (!target) return
 
     const rect = target.getBoundingClientRect()
@@ -41,26 +43,40 @@ export default function ResizeHandle({ direction, onResize, targetRef }: Props) 
     startY.current = e.clientY
     startW.current = rect.width
     startH.current = rect.height
+    startTop.current = rect.top
+    startLeft.current = rect.left
 
-    document.body.style.cursor = CURSOR[direction]
+    document.body.style.cursor = CURSORS[direction]
     document.body.style.userSelect = 'none'
 
     function onMouseMove(ev: MouseEvent) {
       cancelAnimationFrame(rafId.current)
       rafId.current = requestAnimationFrame(() => {
+        if (!target) return
         const dx = ev.clientX - startX.current
         const dy = ev.clientY - startY.current
-        const newW = Math.max(40,  startW.current + dx)
-        const newH = Math.max(20,  startH.current + dy)
 
-        if (!target) return
-        if (direction === 'bottom' || direction === 'corner') {
-          target.style.minHeight = `${newH}px`
-          target.style.height    = `${newH}px`
+        // Width changes: e/ne/se grow right, w/nw/sw grow left (inverted)
+        if (direction.includes('e')) {
+          const w = Math.max(40, startW.current + dx)
+          target.style.width = `${w}px`
+          target.style.maxWidth = `${w}px`
         }
-        if (direction === 'right' || direction === 'corner') {
-          target.style.width    = `${newW}px`
-          target.style.maxWidth = `${newW}px`
+        if (direction.includes('w')) {
+          const w = Math.max(40, startW.current - dx)
+          target.style.width = `${w}px`
+          target.style.maxWidth = `${w}px`
+        }
+        // Height changes: s/se/sw grow down, n/ne/nw grow up (inverted)
+        if (direction.includes('s')) {
+          const h = Math.max(20, startH.current + dy)
+          target.style.height = `${h}px`
+          target.style.minHeight = `${h}px`
+        }
+        if (direction === 'n' || direction === 'ne' || direction === 'nw') {
+          const h = Math.max(20, startH.current - dy)
+          target.style.height = `${h}px`
+          target.style.minHeight = `${h}px`
         }
       })
     }
@@ -74,12 +90,15 @@ export default function ResizeHandle({ direction, onResize, targetRef }: Props) 
 
       const dx = ev.clientX - startX.current
       const dy = ev.clientY - startY.current
-      const finalW = Math.max(40, startW.current + dx)
-      const finalH = Math.max(20, startH.current + dy)
-
       const size: { width?: number; height?: number } = {}
-      if (direction === 'bottom' || direction === 'corner') size.height = Math.round(finalH)
-      if (direction === 'right'  || direction === 'corner') size.width  = Math.round(finalW)
+
+      if (direction.includes('e')) size.width  = Math.round(Math.max(40, startW.current + dx))
+      if (direction.includes('w')) size.width  = Math.round(Math.max(40, startW.current - dx))
+      if (direction.includes('s')) size.height = Math.round(Math.max(20, startH.current + dy))
+      if (direction === 'n' || direction === 'ne' || direction === 'nw') {
+        size.height = Math.round(Math.max(20, startH.current - dy))
+      }
+
       onResize(size)
     }
 
@@ -87,59 +106,33 @@ export default function ResizeHandle({ direction, onResize, targetRef }: Props) 
     document.addEventListener('mouseup', onMouseUp)
   }, [direction, onResize, targetRef])
 
-  const style: React.CSSProperties = {
-    position: 'absolute',
-    zIndex: 20,
-    ...(direction === 'bottom' ? {
-      bottom: -SIZE / 2,
-      left: '10%',
-      width: '80%',
-      height: SIZE,
-      cursor: 'row-resize',
-    } : direction === 'right' ? {
-      right: -SIZE / 2,
-      top: '10%',
-      width: SIZE,
-      height: '80%',
-      cursor: 'col-resize',
-    } : /* corner */ {
-      bottom: -SIZE / 2,
-      right: -SIZE / 2,
-      width: SIZE + 4,
-      height: SIZE + 4,
-      cursor: 'nwse-resize',
-    }),
-  }
+  // Position each handle at the correct edge/corner
+  const isN  = direction === 'n'
+  const isS  = direction === 's'
+  const isE  = direction === 'e'
+  const isW  = direction === 'w'
+  const isNE = direction === 'ne'
+  const isNW = direction === 'nw'
+  const isSE = direction === 'se'
+  const isSW = direction === 'sw'
 
-  const pipStyle: React.CSSProperties = direction === 'corner' ? {
-    width: '100%',
-    height: '100%',
-    borderRadius: 2,
-    background: 'var(--color-primary)',
-    opacity: 0,
-    transition: 'opacity 120ms',
-  } : direction === 'bottom' ? {
+  const pos: React.CSSProperties = {
     position: 'absolute',
-    left: '50%',
-    top: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 32,
-    height: 4,
-    borderRadius: 2,
-    background: 'var(--color-primary)',
-    opacity: 0,
-    transition: 'opacity 120ms',
-  } : {
-    position: 'absolute',
-    left: '50%',
-    top: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 4,
-    height: 32,
-    borderRadius: 2,
-    background: 'var(--color-primary)',
-    opacity: 0,
-    transition: 'opacity 120ms',
+    zIndex: 30,
+    width: PIP + 4,
+    height: PIP + 4,
+    ...(isNW ? { top: -PIP/2 - 2, left: -PIP/2 - 2 } :
+        isN  ? { top: -PIP/2 - 2, left: '50%', transform: 'translateX(-50%)' } :
+        isNE ? { top: -PIP/2 - 2, right: -PIP/2 - 2 } :
+        isE  ? { right: -PIP/2 - 2, top: '50%', transform: 'translateY(-50%)' } :
+        isSE ? { bottom: -PIP/2 - 2, right: -PIP/2 - 2 } :
+        isS  ? { bottom: -PIP/2 - 2, left: '50%', transform: 'translateX(-50%)' } :
+        isSW ? { bottom: -PIP/2 - 2, left: -PIP/2 - 2 } :
+        /* W */{ left: -PIP/2 - 2, top: '50%', transform: 'translateY(-50%)' }),
+    cursor: CURSORS[direction],
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   }
 
   return (
@@ -147,12 +140,17 @@ export default function ResizeHandle({ direction, onResize, targetRef }: Props) 
       ref={handleRef}
       onMouseDown={onMouseDown}
       data-resize-handle={direction}
-      style={style}
+      style={pos}
     >
-      <div data-resize-pip style={pipStyle} />
-      <style>{`
-        [data-resize-handle]:hover [data-resize-pip] { opacity: 1 !important; }
-      `}</style>
+      <div style={{
+        width: PIP,
+        height: PIP,
+        borderRadius: 2,
+        backgroundColor: '#fff',
+        border: '2px solid var(--color-primary)',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+        transition: 'transform 100ms',
+      }} />
     </div>
   )
 }

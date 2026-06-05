@@ -142,7 +142,7 @@ const RowRenderer = memo(function RowRenderer({ id }: Props) {
 
       {isSelected && (
         <ResizeHandle
-          direction="bottom"
+          direction="s"
           nodeId={id}
           targetRef={rowRef}
           onResize={({ height }) => {

@@ -2,6 +2,7 @@
 
 import { memo, createElement } from 'react'
 import { usePreviewState } from '@/components/builder/elements/PreviewStateContext'
+import ColumnRenderer from '@/components/builder/renderers/ColumnRenderer'
 
 type Tag = 'div' | 'span' | 'article' | 'aside' | 'nav' | 'header' | 'footer' | 'main'
 type Display = 'block' | 'inline' | 'inline-block' | 'flex' | 'inline-flex' | 'grid'
@@ -17,6 +18,7 @@ interface Props {
   borderColor?: string
   minHeight?: number
   display?: Display
+  contentColumnId?: string
   style?: React.CSSProperties
 }
 
@@ -27,14 +29,14 @@ const DivContainerElement = memo(function DivContainerElement({
   textColor = 'inherit',
   padding = 16,
   borderRadius = 0,
-  showBorder = false,
+  showBorder = true,
   borderColor = '#e5e7eb',
-  minHeight,
+  minHeight = 80,
   display = 'block',
+  contentColumnId,
   style,
 }: Props) {
   const isPreview = usePreviewState() !== null
-  // For span elements, default to inline-block if user didn't override
   const resolvedDisplay = display ?? (tag === 'span' ? 'inline-block' : 'block')
 
   const wrapperStyle: React.CSSProperties = {
@@ -43,22 +45,27 @@ const DivContainerElement = memo(function DivContainerElement({
     color: textColor,
     padding,
     borderRadius,
-    border: showBorder ? `1px dashed ${borderColor}` : 'none',
+    border: showBorder ? `1.5px dashed ${borderColor}` : 'none',
     minHeight,
-    width: resolvedDisplay === 'block' || resolvedDisplay === 'flex' || resolvedDisplay === 'grid' ? '100%' : undefined,
+    width: (resolvedDisplay === 'block' || resolvedDisplay === 'flex' || resolvedDisplay === 'grid') ? '100%' : undefined,
     boxSizing: 'border-box',
+    position: 'relative',
     ...style,
   }
 
-  // Empty hint when no text and no children — builder mode only
+  // If we have a managed content column, render ColumnRenderer inside
+  if (contentColumnId) {
+    return createElement(
+      tag,
+      { style: wrapperStyle },
+      <ColumnRenderer id={contentColumnId} skipIfManaged={false} />
+    )
+  }
+
+  // Fallback: plain text content or empty hint
   const innerNode = text || (isPreview ? null : (
-    <span style={{
-      fontSize: '0.75rem',
-      color: 'rgba(0,0,0,0.4)',
-      opacity: 0.5,
-      fontStyle: 'italic',
-    }}>
-      &lt;{tag}&gt; container — set text or add children
+    <span style={{ fontSize: '0.75rem', color: 'rgba(0,0,0,0.35)', fontStyle: 'italic', pointerEvents: 'none' }}>
+      &lt;{tag}&gt; — drag elements here
     </span>
   ))
 

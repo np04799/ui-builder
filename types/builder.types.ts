@@ -548,6 +548,8 @@ export type ElementContent =
       maxWidth?: string
       align?: 'left' | 'center' | 'right'
       showBorder?: boolean
+      /** Managed column ID for accepting child elements via drag-drop */
+      contentColumnId?: string
     }
   | {
       type: 'div-container'
@@ -562,6 +564,8 @@ export type ElementContent =
       borderColor?: string
       minHeight?: number
       display?: 'block' | 'inline' | 'inline-block' | 'flex' | 'inline-flex' | 'grid'
+      /** Managed column ID for accepting child elements via drag-drop */
+      contentColumnId?: string
     }
   | {
       type: 'table'

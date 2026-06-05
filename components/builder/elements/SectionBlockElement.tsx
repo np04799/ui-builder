@@ -1,6 +1,7 @@
 'use client'
 
 import { memo, createElement } from 'react'
+import ColumnRenderer from '@/components/builder/renderers/ColumnRenderer'
 import { useFramework } from '@/hooks/useFramework'
 
 type Preset = 'plain' | 'card' | 'hero' | 'feature' | 'cta'
@@ -19,6 +20,7 @@ interface Props {
   maxWidth?: string
   align?: 'left' | 'center' | 'right'
   showBorder?: boolean
+  contentColumnId?: string
   style?: React.CSSProperties
 }
 
@@ -43,6 +45,7 @@ const SectionBlockElement = memo(function SectionBlockElement({
   maxWidth = '1200px',
   align,
   showBorder,
+  contentColumnId,
   style,
 }: Props) {
   const framework = useFramework()
@@ -101,7 +104,11 @@ const SectionBlockElement = memo(function SectionBlockElement({
     </div>
   )
 
-  return createElement(tag, { style: wrapperStyle }, inner)
+  const children = contentColumnId
+    ? <ColumnRenderer id={contentColumnId} skipIfManaged={false} />
+    : inner
+
+  return createElement(tag, { style: wrapperStyle }, children)
 })
 
 export default SectionBlockElement

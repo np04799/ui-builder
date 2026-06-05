@@ -243,7 +243,7 @@ const SectionRenderer = memo(function SectionRenderer({ id }: Props) {
 
       {isSelected && (
         <ResizeHandle
-          direction="bottom"
+          direction="s"
           nodeId={id}
           targetRef={sectionRef}
           onResize={({ height }) => {
