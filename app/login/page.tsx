@@ -50,24 +50,10 @@ export default function LoginPage() {
     }
   }
 
+  // Firebase not configured — redirect straight to builder
   if (!isConfigured) {
-    return (
-      <div style={PAGE}>
-        <div style={CARD}>
-          <Logo />
-          <p style={{ color: '#94a3b8', fontSize: '0.875rem', textAlign: 'center', marginTop: 16 }}>
-            Firebase is not configured. Set{' '}
-            <code style={{ color: '#a5b4fc' }}>NEXT_PUBLIC_FIREBASE_*</code> env vars to enable auth.
-          </p>
-          <button
-            style={{ ...BTN_PRIMARY, marginTop: 24 }}
-            onClick={() => router.push('/builder')}
-          >
-            Continue without account
-          </button>
-        </div>
-      </div>
-    )
+    router.replace('/builder')
+    return null
   }
 
   return (
