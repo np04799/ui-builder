@@ -684,11 +684,17 @@ export const useBuilderStore = create<BuilderStoreState & BuilderActions>()(
     addSection(afterSectionId) {
       get().pushHistory()
       const section = createSection()
+      // Auto-create a row + column so the section immediately accepts drops
+      const row = createRow(section.id)
+      const column = createColumn(row.id)
+      section.rowIds = [row.id]
+      row.columnIds = [column.id]
       set((state) => {
         state.sections[section.id] = section
+        state.rows[row.id] = row
+        state.columns[column.id] = column
         if (afterSectionId !== undefined) {
           const idx = state.sectionOrder.indexOf(afterSectionId)
-          // Guard: fall back to append if afterSectionId is stale/invalid
           if (idx !== -1) {
             state.sectionOrder.splice(idx + 1, 0, section.id)
           } else {

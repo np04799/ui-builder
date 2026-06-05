@@ -94,7 +94,8 @@ export default function PreviewPage() {
                   {row.columnIds.map((columnId) => {
                     const column = columns[columnId]
                     if (!column) return null
-                    // Skip columns managed internally by a parent element (e.g. drawer content col)
+                    // Skip columns managed by parent elements — they are rendered
+                    // inline inside their owner element (section-block, div-container, drawer)
                     if (column.managedBy) return null
                     return (
                       <div
@@ -108,15 +109,25 @@ export default function PreviewPage() {
                         {column.elementIds.map((elementId) => {
                           const element = elements[elementId]
                           if (!element) return null
+                          const content = element.content as Record<string, unknown>
+                          const contentColId = content.contentColumnId as string | undefined
                           const rendered = renderElement(
                             element.content,
                             element.styles as React.CSSProperties,
                           )
+                          // Render children of managed columns (section-block / div-container)
+                          const managedCol = contentColId ? columns[contentColId] : null
                           return (
                             <div key={elementId} style={{ marginBottom: 12 }}>
-                              {rendered ?? (
-                                <div style={{ color: '#aaa', fontSize: 12 }}>
-                                  {element.content.type}
+                              {rendered ?? <div style={{ color: '#aaa', fontSize: 12 }}>{element.content.type}</div>}
+                              {managedCol && managedCol.elementIds.length > 0 && (
+                                <div style={{ padding: '8px 0' }}>
+                                  {managedCol.elementIds.map((cid) => {
+                                    const cel = elements[cid]
+                                    if (!cel) return null
+                                    const cr = renderElement(cel.content, cel.styles as React.CSSProperties)
+                                    return <div key={cid} style={{ marginBottom: 8 }}>{cr}</div>
+                                  })}
                                 </div>
                               )}
                             </div>

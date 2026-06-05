@@ -299,24 +299,40 @@ function ElementLayer({ el, selectedId, setSelected, nodeRefs }: {
     moveElement(p.id, p.parentId ?? '', el.columnId, targetIdx)
   }
 
+  const contentColId = (el.content as Record<string, unknown>).contentColumnId as string | undefined
+  const [open, setOpen] = useState(true)
+
   return (
-    <LayerRow
-      id={el.id}
-      label={elementLabel(el.content, el.name)}
-      icon={<ElementIcon />}
-      depth={3}
-      isSelected={isSelected}
-      hasChildren={false}
-      onClick={() => setSelected(el.id)}
-      onRename={(name) => updateElement(el.id, { name })}
-      nodeRef={{ current: null } as React.RefObject<HTMLDivElement | null>}
-      draggable
-      onDragStart={handleDragStart}
-      onDragOver={handleDragOver}
-      onDrop={handleDrop}
-      onDragEnd={() => setDragOver(false)}
-      isDragOver={dragOver}
-    />
+    <>
+      <LayerRow
+        id={el.id}
+        label={elementLabel(el.content, el.name)}
+        icon={<ElementIcon />}
+        depth={3}
+        isSelected={isSelected}
+        hasChildren={!!contentColId}
+        isOpen={open}
+        onToggle={() => setOpen(v => !v)}
+        onClick={() => setSelected(el.id)}
+        onRename={(name) => updateElement(el.id, { name })}
+        nodeRef={{ current: null } as React.RefObject<HTMLDivElement | null>}
+        draggable
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+        onDragEnd={() => setDragOver(false)}
+        isDragOver={dragOver}
+      />
+      {contentColId && open && (
+        <ColumnLayerById
+          id={contentColId}
+          colIndex={0}
+          selectedId={selectedId}
+          setSelected={setSelected}
+          nodeRefs={nodeRefs}
+        />
+      )}
+    </>
   )
 }
 

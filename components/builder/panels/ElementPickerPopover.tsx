@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 const PICKER_GROUPS = [
   {
@@ -69,6 +70,13 @@ interface Props {
 
 export default function ElementPickerPopover({ onSelect, onClose }: Props) {
   const ref = useRef<HTMLDivElement>(null)
+  const searchRef = useRef<HTMLInputElement>(null)
+  const [search, setSearch] = useState('')
+
+  useEffect(() => {
+    // Auto-focus search input
+    setTimeout(() => searchRef.current?.focus(), 50)
+  }, [])
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -80,16 +88,23 @@ export default function ElementPickerPopover({ onSelect, onClose }: Props) {
     return () => document.removeEventListener('mousedown', handleClick)
   }, [onClose])
 
-  return (
+  const query = search.trim().toLowerCase()
+  const filteredGroups = query
+    ? PICKER_GROUPS.map(g => ({
+        ...g,
+        items: g.items.filter(item => item.label.toLowerCase().includes(query))
+      })).filter(g => g.items.length > 0)
+    : PICKER_GROUPS
+
+  return createPortal(
     <div
       ref={ref}
       style={{
-        position: 'absolute',
-        top: '100%',
+        position: 'fixed',
+        top: '50%',
         left: '50%',
-        transform: 'translateX(-50%)',
-        marginTop: 6,
-        zIndex: 1000,
+        transform: 'translate(-50%, -40%)',
+        zIndex: 9999,
         backgroundColor: 'var(--color-surface)',
         border: '1px solid var(--color-border)',
         borderRadius: 10,
@@ -101,20 +116,36 @@ export default function ElementPickerPopover({ onSelect, onClose }: Props) {
       }}
       onClick={(e) => e.stopPropagation()}
     >
-      <div
-        style={{
-          fontSize: '0.6875rem',
-          fontWeight: 700,
-          color: 'var(--color-text-secondary)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.07em',
-          padding: '4px 8px 8px',
-        }}
-      >
-        Add Element
+      <div style={{ padding: '6px 8px 8px' }}>
+        <input
+          ref={searchRef}
+          type="text"
+          placeholder="Search elements…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          onKeyDown={(e) => { if(e.key==='Escape') onClose() }}
+          style={{
+            width: '100%',
+            height: 30,
+            padding: '0 10px',
+            borderRadius: 6,
+            border: '1px solid var(--color-border)',
+            backgroundColor: 'var(--color-bg)',
+            color: 'var(--color-text-primary)',
+            fontSize: '0.8125rem',
+            outline: 'none',
+            boxSizing: 'border-box',
+          }}
+        />
       </div>
 
-      {PICKER_GROUPS.map((group) => (
+      {filteredGroups.length === 0 && (
+        <div style={{ padding: '8px 12px 12px', fontSize: '0.8125rem', color: 'var(--color-text-secondary)' }}>
+          No elements match &ldquo;{search}&rdquo;
+        </div>
+      )}
+
+      {filteredGroups.map((group) => (
         <div key={group.label}>
           <div
             style={{
@@ -166,6 +197,7 @@ export default function ElementPickerPopover({ onSelect, onClose }: Props) {
           </div>
         </div>
       ))}
-    </div>
+    </div>,
+    document.body
   )
 }

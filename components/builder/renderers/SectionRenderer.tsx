@@ -103,7 +103,7 @@ const SectionRenderer = memo(function SectionRenderer({ id }: Props) {
     position: 'relative',
     width: '100%',
     ...(mergedStyles.height ? { height: mergedStyles.height } : {}),
-    ...(isFullBleed ? { display: 'flex', flexDirection: 'column', overflow: 'hidden' } : { borderBottom: '1px solid var(--color-border)' }),
+    ...(isFullBleed ? { display: 'flex', flexDirection: 'column' } : { borderBottom: '1px solid var(--color-border)' }),
     backgroundColor: mergedStyles.backgroundColor ?? 'transparent',
     backgroundImage: mergedStyles.backgroundImage,
     backgroundSize: mergedStyles.backgroundSize ?? 'cover',
