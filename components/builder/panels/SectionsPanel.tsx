@@ -3,27 +3,39 @@
 import { defaultContentForType } from '@/lib/elementDefaults'
 import { useBuilderStore } from '@/store/builder.store'
 
+/**
+ * Helper: create a new section with one row, using the existing column
+ * (addSection creates section + row + column automatically).
+ * Returns { secId, rowId, col1Id }
+ */
+function newSection() {
+  const store = useBuilderStore.getState()
+  const secId = store.addSection()
+  const s = useBuilderStore.getState()
+  const rowId = s.sections[secId].rowIds[0]
+  const col1Id = s.rows[rowId].columnIds[0]
+  return { store, secId, rowId, col1Id }
+}
+
 const PREBUILT_SECTIONS = [
-  {
-    id: 'hero-centered',
-    label: 'Hero — Centered',
-    description: 'Full-width hero with heading, subtitle and CTA',
-    icon: '🦸',
-    build: () => {
-      const store = useBuilderStore.getState()
-      const _c = defaultContentForType('hero')
-      if (_c) store.quickAddElement(_c)
-    },
-  },
   {
     id: 'navbar-default',
     label: 'Navbar',
     description: 'Responsive navbar with logo and links',
     icon: '☰',
     build: () => {
-      const store = useBuilderStore.getState()
-      const _c = defaultContentForType('navbar')
-      if (_c) store.quickAddElement(_c)
+      const c = defaultContentForType('navbar')
+      if (c) useBuilderStore.getState().quickAddElement(c)
+    },
+  },
+  {
+    id: 'hero-centered',
+    label: 'Hero — Centered',
+    description: 'Full-width hero with heading, subtitle and CTA',
+    icon: '🦸',
+    build: () => {
+      const c = defaultContentForType('hero')
+      if (c) useBuilderStore.getState().quickAddElement(c)
     },
   },
   {
@@ -32,17 +44,12 @@ const PREBUILT_SECTIONS = [
     description: 'Heading + paragraph in two columns',
     icon: '⊞',
     build: () => {
-      const store = useBuilderStore.getState()
-      const secId = store.addSection()
-      // Use existing row created by addSection
-      const existingState = useBuilderStore.getState()
-      const rowId = existingState.sections[secId]?.rowIds[0] ?? store.addRow(secId)
-      // Use existing column, then add more
-      const existingCols = useBuilderStore.getState().rows[rowId]?.columnIds ?? []
-      const col1 = existingCols[0] ?? store.addColumn(rowId)
-      const col2 = store.addColumn(rowId)
-      { const _c = defaultContentForType('heading'); if (_c) store.addElement(col1, _c) }
-      { const _c = defaultContentForType('paragraph'); if (_c) store.addElement(col2, _c) }
+      const { store, rowId, col1Id } = newSection()
+      const col2Id = store.addColumn(rowId)
+      const h = defaultContentForType('heading')
+      const p = defaultContentForType('paragraph')
+      if (h) store.addElement(col1Id, h)
+      if (p) store.addElement(col2Id, p)
     },
   },
   {
@@ -51,43 +58,14 @@ const PREBUILT_SECTIONS = [
     description: 'Three-column card layout',
     icon: '🃏',
     build: () => {
-      const store = useBuilderStore.getState()
-      const secId = store.addSection()
-      // Use existing row created by addSection
-      const existingState = useBuilderStore.getState()
-      const rowId = existingState.sections[secId]?.rowIds[0] ?? store.addRow(secId)
-      for (let i = 0; i < 3; i++) {
-        // Use existing column
-      const existingCols2 = useBuilderStore.getState().rows[rowId]?.columnIds ?? []
-      const colId = existingCols2[0] ?? store.addColumn(rowId)
-        { const _c = defaultContentForType('card'); if (_c) store.addElement(colId, _c) }
-      }
-    },
-  },
-  {
-    id: 'contact-form',
-    label: 'Contact Form',
-    description: 'Heading + contact form section',
-    icon: '📋',
-    build: () => {
-      const store = useBuilderStore.getState()
-      const _c = defaultContentForType('heading')
-      if (_c) store.quickAddElement(_c)
-      // Add form to the same column
-      const _colId = Object.values(useBuilderStore.getState().columns).slice(-1)[0]?.id
-      const _f = defaultContentForType('form')
-      if (_f && _colId) store.addElement(_colId, _f)
-    },
-  },
-  {
-    id: 'footer-default',
-    label: 'Footer',
-    description: 'Links + copyright footer',
-    icon: '📄',
-    build: () => {
-      const store = useBuilderStore.getState()
-      const _c = defaultContentForType('footer')
-      if (_c) store.quickAddElement(_c)
+      const { store, rowId, col1Id } = newSection()
+      const col2Id = store.addColumn(rowId)
+      const col3Id = store.addColumn(rowId)
+      const colIds = [col1Id, col2Id, col3Id]
+      colIds.forEach(colId => {
+        const c = defaultContentForType('card')
+        if (c) store.addElement(colId, c)
+      })
     },
   },
   {
@@ -96,19 +74,29 @@ const PREBUILT_SECTIONS = [
     description: 'Image left, heading + paragraph right',
     icon: '🖼',
     build: () => {
-      const store = useBuilderStore.getState()
-      const secId = store.addSection()
-      // Use existing row created by addSection
-      const existingState = useBuilderStore.getState()
-      const rowId = existingState.sections[secId]?.rowIds[0] ?? store.addRow(secId)
-      // Use existing column, then add more
-      const existingCols = useBuilderStore.getState().rows[rowId]?.columnIds ?? []
-      const col1 = existingCols[0] ?? store.addColumn(rowId)
-      const col2 = store.addColumn(rowId)
-      { const _c = defaultContentForType('image'); if (_c) store.addElement(col1, _c) }
-      { const _c = defaultContentForType('heading'); if (_c) store.addElement(col2, _c) }
-      { const _c = defaultContentForType('paragraph'); if (_c) store.addElement(col2, _c) }
-      { const _c = defaultContentForType('button'); if (_c) store.addElement(col2, _c) }
+      const { store, rowId, col1Id } = newSection()
+      const col2Id = store.addColumn(rowId)
+      const img = defaultContentForType('image')
+      const h = defaultContentForType('heading')
+      const p = defaultContentForType('paragraph')
+      const b = defaultContentForType('button')
+      if (img) store.addElement(col1Id, img)
+      if (h) store.addElement(col2Id, h)
+      if (p) store.addElement(col2Id, p)
+      if (b) store.addElement(col2Id, b)
+    },
+  },
+  {
+    id: 'contact-form',
+    label: 'Contact Form',
+    description: 'Heading + contact form section',
+    icon: '📋',
+    build: () => {
+      const { store, col1Id } = newSection()
+      const h = defaultContentForType('heading')
+      const f = defaultContentForType('form')
+      if (h) store.addElement(col1Id, h)
+      if (f) store.addElement(col1Id, f)
     },
   },
   {
@@ -117,17 +105,24 @@ const PREBUILT_SECTIONS = [
     description: 'Three pricing card columns',
     icon: '💳',
     build: () => {
-      const store = useBuilderStore.getState()
-      const secId = store.addSection()
-      // Use existing row created by addSection
-      const existingState = useBuilderStore.getState()
-      const rowId = existingState.sections[secId]?.rowIds[0] ?? store.addRow(secId)
-      for (let i = 0; i < 3; i++) {
-        // Use existing column
-      const existingCols2 = useBuilderStore.getState().rows[rowId]?.columnIds ?? []
-      const colId = existingCols2[0] ?? store.addColumn(rowId)
-        { const _c = defaultContentForType('pricing-card'); if (_c) store.addElement(colId, _c) }
-      }
+      const { store, rowId, col1Id } = newSection()
+      const col2Id = store.addColumn(rowId)
+      const col3Id = store.addColumn(rowId)
+      const colIds = [col1Id, col2Id, col3Id]
+      colIds.forEach(colId => {
+        const c = defaultContentForType('pricing-card')
+        if (c) store.addElement(colId, c)
+      })
+    },
+  },
+  {
+    id: 'footer-default',
+    label: 'Footer',
+    description: 'Links + copyright footer',
+    icon: '📄',
+    build: () => {
+      const c = defaultContentForType('footer')
+      if (c) useBuilderStore.getState().quickAddElement(c)
     },
   },
 ]
