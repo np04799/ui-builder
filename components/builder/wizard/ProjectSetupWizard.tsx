@@ -52,7 +52,7 @@ export default function ProjectSetupWizard() {
       <div
         style={{
           width: 'min(560px, 92vw)',
-          maxHeight: '85vh',
+          maxHeight: '90vh',
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',

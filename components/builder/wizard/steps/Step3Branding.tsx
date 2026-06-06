@@ -80,8 +80,8 @@ export default function Step3Branding({ form, onChange, onNext, onBack, onSkip }
                 display: 'flex',
                 alignItems: 'center',
                 gap: 12,
-                padding: '8px 12px',
-                borderRadius: 8,
+                padding: '6px 10px',
+                borderRadius: 6,
                 border: `1.5px solid ${form.fontFamily === font.value ? 'var(--color-primary)' : 'var(--color-border)'}`,
                 backgroundColor: form.fontFamily === font.value ? 'color-mix(in srgb, var(--color-primary) 6%, transparent)' : 'var(--color-bg)',
                 cursor: 'pointer',
@@ -104,25 +104,16 @@ export default function Step3Branding({ form, onChange, onNext, onBack, onSkip }
         </div>
       </div>
 
-      {/* Live preview */}
-      <div
-        style={{
-          padding: '14px 16px',
-          borderRadius: 8,
-          backgroundColor: 'var(--color-surface)',
-          border: '1px solid var(--color-border)',
-        }}
-      >
-        <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: 'var(--color-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
-          Preview
-        </div>
-        <div style={{ fontFamily: form.fontFamily, display: 'flex', alignItems: 'baseline', gap: 12 }}>
-          <span style={{ fontSize: '2rem', fontWeight: 700, color: form.primaryColor, lineHeight: 1 }}>Aa</span>
-          <span style={{ fontSize: '0.9375rem', color: 'var(--color-text)' }}>Sample Text — The quick brown fox</span>
+      {/* Live preview - compact */}
+      <div style={{ padding: '10px 14px', borderRadius: 8, backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', gap: 12 }}>
+        <span style={{ fontSize: '0.6875rem', fontWeight: 600, color: 'var(--color-muted)', textTransform: 'uppercase', flexShrink: 0 }}>PREVIEW</span>
+        <div style={{ fontFamily: form.fontFamily, display: 'flex', alignItems: 'baseline', gap: 10 }}>
+          <span style={{ fontSize: '1.5rem', fontWeight: 700, color: form.primaryColor, lineHeight: 1 }}>Aa</span>
+          <span style={{ fontSize: '0.875rem', color: 'var(--color-text)' }}>The quick brown fox</span>
         </div>
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 24 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 16 }}>
         <button onClick={onBack} style={backBtnStyle}>← Back</button>
         <div style={{ display: 'flex', gap: 10 }}>
           <button onClick={onSkip} style={skipBtnStyle}>Skip</button>
