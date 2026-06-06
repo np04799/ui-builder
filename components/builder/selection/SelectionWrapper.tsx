@@ -68,6 +68,7 @@ export default function SelectionWrapper({ id, children, style }: Props) {
         position: 'relative',
         width: '100%',
         boxSizing: 'border-box',
+        overflow: 'visible',
         ...style,
         ...borderStyle,
       }}
