@@ -11,10 +11,8 @@ const PREBUILT_SECTIONS = [
     icon: '🦸',
     build: () => {
       const store = useBuilderStore.getState()
-      const secId = store.addSection()
-      const rowId = store.addRow(secId)
-      const colId = store.addColumn(rowId)
-      { const _c = defaultContentForType('hero'); if (_c) store.addElement(colId, _c) }
+      const _c = defaultContentForType('hero')
+      if (_c) store.quickAddElement(_c)
     },
   },
   {
@@ -24,10 +22,8 @@ const PREBUILT_SECTIONS = [
     icon: '☰',
     build: () => {
       const store = useBuilderStore.getState()
-      const secId = store.addSection()
-      const rowId = store.addRow(secId)
-      const colId = store.addColumn(rowId)
-      { const _c = defaultContentForType('navbar'); if (_c) store.addElement(colId, _c) }
+      const _c = defaultContentForType('navbar')
+      if (_c) store.quickAddElement(_c)
     },
   },
   {
@@ -38,8 +34,12 @@ const PREBUILT_SECTIONS = [
     build: () => {
       const store = useBuilderStore.getState()
       const secId = store.addSection()
-      const rowId = store.addRow(secId)
-      const col1 = store.addColumn(rowId)
+      // Use existing row created by addSection
+      const existingState = useBuilderStore.getState()
+      const rowId = existingState.sections[secId]?.rowIds[0] ?? store.addRow(secId)
+      // Use existing column, then add more
+      const existingCols = useBuilderStore.getState().rows[rowId]?.columnIds ?? []
+      const col1 = existingCols[0] ?? store.addColumn(rowId)
       const col2 = store.addColumn(rowId)
       { const _c = defaultContentForType('heading'); if (_c) store.addElement(col1, _c) }
       { const _c = defaultContentForType('paragraph'); if (_c) store.addElement(col2, _c) }
@@ -53,9 +53,13 @@ const PREBUILT_SECTIONS = [
     build: () => {
       const store = useBuilderStore.getState()
       const secId = store.addSection()
-      const rowId = store.addRow(secId)
+      // Use existing row created by addSection
+      const existingState = useBuilderStore.getState()
+      const rowId = existingState.sections[secId]?.rowIds[0] ?? store.addRow(secId)
       for (let i = 0; i < 3; i++) {
-        const colId = store.addColumn(rowId)
+        // Use existing column
+      const existingCols2 = useBuilderStore.getState().rows[rowId]?.columnIds ?? []
+      const colId = existingCols2[0] ?? store.addColumn(rowId)
         { const _c = defaultContentForType('card'); if (_c) store.addElement(colId, _c) }
       }
     },
@@ -67,11 +71,12 @@ const PREBUILT_SECTIONS = [
     icon: '📋',
     build: () => {
       const store = useBuilderStore.getState()
-      const secId = store.addSection()
-      const rowId = store.addRow(secId)
-      const colId = store.addColumn(rowId)
-      { const _c = defaultContentForType('heading'); if (_c) store.addElement(colId, _c) }
-      { const _c = defaultContentForType('form'); if (_c) store.addElement(colId, _c) }
+      const _c = defaultContentForType('heading')
+      if (_c) store.quickAddElement(_c)
+      // Add form to the same column
+      const _colId = Object.values(useBuilderStore.getState().columns).slice(-1)[0]?.id
+      const _f = defaultContentForType('form')
+      if (_f && _colId) store.addElement(_colId, _f)
     },
   },
   {
@@ -81,10 +86,8 @@ const PREBUILT_SECTIONS = [
     icon: '📄',
     build: () => {
       const store = useBuilderStore.getState()
-      const secId = store.addSection()
-      const rowId = store.addRow(secId)
-      const colId = store.addColumn(rowId)
-      { const _c = defaultContentForType('footer'); if (_c) store.addElement(colId, _c) }
+      const _c = defaultContentForType('footer')
+      if (_c) store.quickAddElement(_c)
     },
   },
   {
@@ -95,8 +98,12 @@ const PREBUILT_SECTIONS = [
     build: () => {
       const store = useBuilderStore.getState()
       const secId = store.addSection()
-      const rowId = store.addRow(secId)
-      const col1 = store.addColumn(rowId)
+      // Use existing row created by addSection
+      const existingState = useBuilderStore.getState()
+      const rowId = existingState.sections[secId]?.rowIds[0] ?? store.addRow(secId)
+      // Use existing column, then add more
+      const existingCols = useBuilderStore.getState().rows[rowId]?.columnIds ?? []
+      const col1 = existingCols[0] ?? store.addColumn(rowId)
       const col2 = store.addColumn(rowId)
       { const _c = defaultContentForType('image'); if (_c) store.addElement(col1, _c) }
       { const _c = defaultContentForType('heading'); if (_c) store.addElement(col2, _c) }
@@ -112,9 +119,13 @@ const PREBUILT_SECTIONS = [
     build: () => {
       const store = useBuilderStore.getState()
       const secId = store.addSection()
-      const rowId = store.addRow(secId)
+      // Use existing row created by addSection
+      const existingState = useBuilderStore.getState()
+      const rowId = existingState.sections[secId]?.rowIds[0] ?? store.addRow(secId)
       for (let i = 0; i < 3; i++) {
-        const colId = store.addColumn(rowId)
+        // Use existing column
+      const existingCols2 = useBuilderStore.getState().rows[rowId]?.columnIds ?? []
+      const colId = existingCols2[0] ?? store.addColumn(rowId)
         { const _c = defaultContentForType('pricing-card'); if (_c) store.addElement(colId, _c) }
       }
     },
