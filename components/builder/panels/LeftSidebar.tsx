@@ -6,6 +6,9 @@ import ElementsPanel from './ElementsPanel'
 import LayersPanel from './LayersPanel'
 import TemplatesPanel from './TemplatesPanel'
 import SettingsPanel from './SettingsPanel'
+import ComponentsPanel from './ComponentsPanel'
+import SectionsPanel from './SectionsPanel'
+import PagesPanel from './PagesPanel'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -71,6 +74,12 @@ function PanelContent({ activePanel }: { activePanel: PanelId }) {
       return <LayersPanel />
     case 'templates':
       return <TemplatesPanel />
+    case 'components':
+      return <ComponentsPanel />
+    case 'sections':
+      return <SectionsPanel />
+    case 'pages':
+      return <PagesPanel />
     case 'settings':
       return <SettingsPanel />
     default:

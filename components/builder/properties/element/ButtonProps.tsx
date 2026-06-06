@@ -34,6 +34,26 @@ interface Props {
   element: ElementNode
 }
 
+
+const FONT_OPTIONS = [
+  { label: 'Default', value: 'inherit' },
+  { label: 'Inter', value: 'Inter, system-ui, sans-serif' },
+  { label: 'Arial', value: 'Arial, sans-serif' },
+  { label: 'Helvetica', value: '"Helvetica Neue", sans-serif' },
+  { label: 'Georgia', value: 'Georgia, serif' },
+  { label: 'Times New Roman', value: '"Times New Roman", serif' },
+  { label: 'Courier New', value: '"Courier New", monospace' },
+  { label: 'Roboto', value: 'Roboto, sans-serif' },
+  { label: 'Open Sans', value: '"Open Sans", sans-serif' },
+  { label: 'Lato', value: 'Lato, sans-serif' },
+  { label: 'Montserrat', value: 'Montserrat, sans-serif' },
+  { label: 'Poppins', value: 'Poppins, sans-serif' },
+  { label: 'Playfair Display', value: '"Playfair Display", serif' },
+  { label: 'Merriweather', value: 'Merriweather, serif' },
+  { label: 'Raleway', value: 'Raleway, sans-serif' },
+  { label: 'Nunito', value: 'Nunito, sans-serif' },
+]
+
 export default function ButtonProps({ element }: Props) {
   const updateElement = useBuilderStore((s) => s.updateElement)
 
@@ -126,7 +146,7 @@ export default function ButtonProps({ element }: Props) {
 
       <CustomCSSField
         styles={styles}
-        knownKeys={['backgroundColor', 'color', 'borderColor', 'borderRadius', 'fontSize', 'padding', 'margin']}
+        knownKeys={['backgroundColor', 'color', 'fontFamily', 'borderColor', 'borderRadius', 'fontSize', 'padding', 'margin']}
         onChange={(s) => updateElement(element.id, { styles: s })}
       />
     </>

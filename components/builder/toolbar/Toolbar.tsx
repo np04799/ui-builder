@@ -892,7 +892,27 @@ export default function Toolbar() {
               alignItems: 'center',
               gap: 6,
             }}
-            onClick={() => {/* TODO: publish */}}
+            onClick={async () => {
+              const state = useBuilderStore.getState()
+              try {
+                const res = await fetch('/api/export', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ state, format: 'zip' }),
+                })
+                if (!res.ok) throw new Error('Export failed')
+                const blob = await res.blob()
+                const url = URL.createObjectURL(blob)
+                const a = document.createElement('a')
+                a.href = url
+                const name = (state.projectMeta?.name ?? 'project').replace(/[^a-z0-9]/gi, '-').toLowerCase()
+                a.download = `${name}.zip`
+                a.click()
+                URL.revokeObjectURL(url)
+              } catch (e) {
+                alert('Export failed. Please try again.')
+              }
+            }}
           >
             {/* Rocket icon */}
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
