@@ -1,5 +1,6 @@
 'use client'
 
+import { defaultContentForType } from '@/lib/elementDefaults'
 import { useBuilderStore } from '@/store/builder.store'
 
 const PREBUILT_SECTIONS = [
@@ -13,8 +14,7 @@ const PREBUILT_SECTIONS = [
       const secId = store.addSection()
       const rowId = store.addRow(secId)
       const colId = store.addColumn(rowId)
-      const { defaultContentForType } = require('@/lib/elementDefaults')
-      store.addElement(colId, defaultContentForType('hero'))
+      { const _c = defaultContentForType('hero'); if (_c) store.addElement(colId, _c) }
     },
   },
   {
@@ -27,8 +27,7 @@ const PREBUILT_SECTIONS = [
       const secId = store.addSection()
       const rowId = store.addRow(secId)
       const colId = store.addColumn(rowId)
-      const { defaultContentForType } = require('@/lib/elementDefaults')
-      store.addElement(colId, defaultContentForType('navbar'))
+      { const _c = defaultContentForType('navbar'); if (_c) store.addElement(colId, _c) }
     },
   },
   {
@@ -42,9 +41,8 @@ const PREBUILT_SECTIONS = [
       const rowId = store.addRow(secId)
       const col1 = store.addColumn(rowId)
       const col2 = store.addColumn(rowId)
-      const { defaultContentForType } = require('@/lib/elementDefaults')
-      store.addElement(col1, defaultContentForType('heading'))
-      store.addElement(col2, defaultContentForType('paragraph'))
+      { const _c = defaultContentForType('heading'); if (_c) store.addElement(col1, _c) }
+      { const _c = defaultContentForType('paragraph'); if (_c) store.addElement(col2, _c) }
     },
   },
   {
@@ -56,10 +54,9 @@ const PREBUILT_SECTIONS = [
       const store = useBuilderStore.getState()
       const secId = store.addSection()
       const rowId = store.addRow(secId)
-      const { defaultContentForType } = require('@/lib/elementDefaults')
       for (let i = 0; i < 3; i++) {
         const colId = store.addColumn(rowId)
-        store.addElement(colId, defaultContentForType('card'))
+        { const _c = defaultContentForType('card'); if (_c) store.addElement(colId, _c) }
       }
     },
   },
@@ -73,9 +70,8 @@ const PREBUILT_SECTIONS = [
       const secId = store.addSection()
       const rowId = store.addRow(secId)
       const colId = store.addColumn(rowId)
-      const { defaultContentForType } = require('@/lib/elementDefaults')
-      store.addElement(colId, defaultContentForType('heading'))
-      store.addElement(colId, defaultContentForType('form'))
+      { const _c = defaultContentForType('heading'); if (_c) store.addElement(colId, _c) }
+      { const _c = defaultContentForType('form'); if (_c) store.addElement(colId, _c) }
     },
   },
   {
@@ -88,8 +84,7 @@ const PREBUILT_SECTIONS = [
       const secId = store.addSection()
       const rowId = store.addRow(secId)
       const colId = store.addColumn(rowId)
-      const { defaultContentForType } = require('@/lib/elementDefaults')
-      store.addElement(colId, defaultContentForType('footer'))
+      { const _c = defaultContentForType('footer'); if (_c) store.addElement(colId, _c) }
     },
   },
   {
@@ -103,11 +98,10 @@ const PREBUILT_SECTIONS = [
       const rowId = store.addRow(secId)
       const col1 = store.addColumn(rowId)
       const col2 = store.addColumn(rowId)
-      const { defaultContentForType } = require('@/lib/elementDefaults')
-      store.addElement(col1, defaultContentForType('image'))
-      store.addElement(col2, defaultContentForType('heading'))
-      store.addElement(col2, defaultContentForType('paragraph'))
-      store.addElement(col2, defaultContentForType('button'))
+      { const _c = defaultContentForType('image'); if (_c) store.addElement(col1, _c) }
+      { const _c = defaultContentForType('heading'); if (_c) store.addElement(col2, _c) }
+      { const _c = defaultContentForType('paragraph'); if (_c) store.addElement(col2, _c) }
+      { const _c = defaultContentForType('button'); if (_c) store.addElement(col2, _c) }
     },
   },
   {
@@ -119,10 +113,9 @@ const PREBUILT_SECTIONS = [
       const store = useBuilderStore.getState()
       const secId = store.addSection()
       const rowId = store.addRow(secId)
-      const { defaultContentForType } = require('@/lib/elementDefaults')
       for (let i = 0; i < 3; i++) {
         const colId = store.addColumn(rowId)
-        store.addElement(colId, defaultContentForType('pricing-card'))
+        { const _c = defaultContentForType('pricing-card'); if (_c) store.addElement(colId, _c) }
       }
     },
   },

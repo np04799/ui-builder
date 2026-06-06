@@ -32,7 +32,7 @@ export default function CardElement({
   // ─── Bootstrap ──────────────────────────────────────────────────────────────
   if (framework === 'bootstrap') {
     return (
-      <div className="card" style={style}>
+      <div className="card" style={{ alignSelf: "flex-start", width: "100%", ...style }}>
         {image.src
           ? <img src={image.src} alt={image.alt} className="card-img-top" style={{ height: 180, objectFit: 'cover' }} />
           : <PlaceholderImg />
@@ -49,7 +49,7 @@ export default function CardElement({
   // ─── MUI ────────────────────────────────────────────────────────────────────
   if (framework === 'mui') {
     return (
-      <div className="mui-root MuiCard-root" style={style}>
+      <div className="mui-root MuiCard-root" style={{ alignSelf: "flex-start", width: "100%", ...style }}>
         {image.src
           ? <img src={image.src} alt={image.alt} className="MuiCardMedia-root" style={{ height: 180, objectFit: 'cover' }} />
           : <PlaceholderImg />
@@ -70,7 +70,7 @@ export default function CardElement({
   // ─── Tailwind ───────────────────────────────────────────────────────────────
   if (framework === 'tailwind') {
     return (
-      <div className="rounded-lg border border-gray-200 overflow-hidden bg-white shadow-sm" style={style}>
+      <div className="rounded-lg border border-gray-200 bg-white shadow-sm" style={{ alignSelf: "flex-start", width: "100%", ...style }}>
         {image.src
           ? <img src={image.src} alt={image.alt} className="w-full object-cover" style={{ height: 180 }} />
           : <PlaceholderImg />
@@ -94,9 +94,10 @@ export default function CardElement({
       style={{
         borderRadius: 10,
         border: '1px solid #e5e7eb',
-        overflow: 'hidden',
         backgroundColor: 'var(--color-bg)',
         boxShadow: '0 1px 3px rgba(0,0,0,0.07)',
+        alignSelf: 'flex-start',
+        width: '100%',
         ...style,
       }}
     >

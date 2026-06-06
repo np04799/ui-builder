@@ -69,6 +69,7 @@ export default function SelectionWrapper({ id, children, style }: Props) {
         width: '100%',
         boxSizing: 'border-box',
         overflow: 'visible',
+        alignSelf: 'flex-start',
         ...style,
         ...borderStyle,
       }}
