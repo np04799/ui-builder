@@ -31,7 +31,10 @@ export interface Template {
   category: 'banner' | 'cta' | 'form' | 'header' | 'ppc'
   desc: string
   animated?: boolean
-  section: TemplateSection
+  /** Single-section template (most templates) */
+  section?: TemplateSection
+  /** Multi-section / full-page template. When present, section is ignored. */
+  sections?: TemplateSection[]
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -907,716 +910,357 @@ export const TEMPLATES: Template[] = [
       }],
     },
   },
-  // ─── PPC Templates — Celestial Obsidian / Stellar Utah ──────────────────────
+
+  // ─── PPC Page Template — Stellar Utah (Celestial Obsidian design system) ────
 
   {
-    id: 'ppc-hero',
-    label: 'PPC — Stellar Hero',
+    id: 'ppc-stellar-utah',
+    label: 'Stellar Utah — Full Landing Page',
     category: 'ppc',
-    desc: 'Full-viewport dark hero with headline, tagline, dual CTAs and star-field atmosphere',
-    section: {
-      styles: {
-        backgroundColor: '#10141a',
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        padding: '120px 0 80px',
-        position: 'relative',
-        overflow: 'hidden',
+    desc: 'Complete luxury dark-sky resort landing page. 7 sections: nav, hero, experiences, stats, accommodations, CTA, footer.',
+    sections: [
+
+      // 1. Navigation
+      {
+        styles: {
+          backgroundColor: 'rgba(16,20,26,0.95)',
+          borderBottom: '1px solid rgba(195,198,210,0.08)',
+          padding: '0 48px',
+          position: 'sticky',
+          top: '0',
+          zIndex: '100',
+        },
+        responsive: {
+          tablet: { padding: '0 24px' },
+          mobile: { padding: '0 16px' },
+        },
+        rows: [{
+          locked: true,
+          styles: { alignItems: 'center', justifyContent: 'space-between', minHeight: '64px', flexWrap: 'nowrap', gap: '16px' },
+          columns: [
+            {
+              span: { desktop: 3, tablet: 5, mobile: 8 },
+              styles: { display: 'flex', alignItems: 'center', gap: '8px' },
+              elements: [
+                { content: { type: 'heading', level: 'h2', text: '✦ Stellar Utah' }, styles: { fontFamily: "'Space Grotesk', sans-serif", fontSize: '18px', fontWeight: '600', color: '#dfe2eb', margin: '0', letterSpacing: '-0.01em', whiteSpace: 'nowrap' } },
+              ],
+            },
+            {
+              span: { desktop: 6, tablet: 0, mobile: 0 },
+              styles: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '28px' },
+              responsive: { tablet: { display: 'none' }, mobile: { display: 'none' } },
+              elements: [
+                { content: { type: 'button', text: 'Experiences', href: '#experiences', variant: 'ghost' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", color: '#c3c6d2', fontSize: '14px', fontWeight: '400', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textDecoration: 'none' } },
+                { content: { type: 'button', text: 'Accommodations', href: '#stay', variant: 'ghost' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", color: '#c3c6d2', fontSize: '14px', fontWeight: '400', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textDecoration: 'none' } },
+                { content: { type: 'button', text: 'About', href: '#about', variant: 'ghost' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", color: '#c3c6d2', fontSize: '14px', fontWeight: '400', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textDecoration: 'none' } },
+                { content: { type: 'button', text: 'Gallery', href: '#gallery', variant: 'ghost' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", color: '#c3c6d2', fontSize: '14px', fontWeight: '400', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textDecoration: 'none' } },
+              ],
+            },
+            {
+              span: { desktop: 3, tablet: 7, mobile: 4 },
+              styles: { display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '12px' },
+              elements: [
+                { content: { type: 'button', text: 'Reserve Now', href: '#book', variant: 'primary' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", backgroundColor: '#cabeff', color: '#10141a', padding: '10px 22px', borderRadius: '4px', fontSize: '13px', fontWeight: '700', border: 'none', letterSpacing: '0.04em', textDecoration: 'none', whiteSpace: 'nowrap' } },
+              ],
+            },
+          ],
+        }],
       },
-      responsive: {
-        tablet: { padding: '100px 0 60px' },
-        mobile: { padding: '80px 0 48px' },
-      },
-      rows: [
-        {
-          styles: {
-            flexDirection: 'column',
-            alignItems: 'center',
-            textAlign: 'center',
-            gap: '0',
+
+      // 2. Hero
+      {
+        styles: {
+          backgroundColor: '#10141a',
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          padding: '120px 0 80px',
+        },
+        responsive: {
+          tablet: { padding: '100px 0 60px' },
+          mobile: { padding: '80px 0 48px' },
+        },
+        rows: [
+          {
+            styles: { flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '0' },
+            columns: [
+              {
+                span: { desktop: 8, tablet: 10, mobile: 12 },
+                styles: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px', padding: '0 16px' },
+                elements: [
+                  { content: { type: 'paragraph', text: "✦ Utah's Premier Dark-Sky Resort" }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '12px', fontWeight: '500', color: '#cabeff', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0' } },
+                  { content: { type: 'heading', level: 'h1', text: 'Sleep Beneath a Thousand Suns' }, styles: { fontFamily: "'EB Garamond', serif", fontSize: '72px', fontWeight: '400', color: '#dfe2eb', lineHeight: '1.1', margin: '0', letterSpacing: '-0.02em' }, responsive: { tablet: { fontSize: '52px' }, mobile: { fontSize: '38px' } } },
+                  { content: { type: 'paragraph', text: 'Luxury dark-sky accommodations in the heart of Canyon Country. No light pollution. No compromise. Pure cosmos.' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '18px', fontWeight: '300', color: '#c3c6d2', lineHeight: '1.7', maxWidth: '560px', margin: '0 auto' }, responsive: { mobile: { fontSize: '16px' } } },
+                  { content: { type: 'button', text: 'Reserve Your Night', href: '#book', variant: 'primary' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", backgroundColor: '#cabeff', color: '#10141a', padding: '16px 36px', borderRadius: '4px', fontSize: '15px', fontWeight: '700', border: 'none', letterSpacing: '0.06em', textTransform: 'uppercase', boxShadow: '0 0 40px rgba(202,190,255,0.35)', display: 'inline-block', textDecoration: 'none' } },
+                  { content: { type: 'button', text: 'Explore Experiences ↓', href: '#experiences', variant: 'ghost' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", backgroundColor: 'transparent', color: '#c3c6d2', padding: '14px 28px', borderRadius: '4px', fontSize: '14px', fontWeight: '400', border: '1px solid rgba(195,198,210,0.25)', letterSpacing: '0.04em', display: 'inline-block', textDecoration: 'none' } },
+                ],
+              },
+            ],
           },
-          columns: [
-            {
-              span: { desktop: 8, tablet: 10, mobile: 12 },
-              styles: {
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '24px',
-                padding: '0 16px',
-              },
-              elements: [
-                {
-                  content: { type: 'paragraph', text: '✦ Utah\'s Premier Stargazing Resort' },
-                  styles: {
-                    fontFamily: '\'Hanken Grotesk\', sans-serif',
-                    fontSize: '13px',
-                    fontWeight: '500',
-                    color: '#cabeff',
-                    letterSpacing: '0.18em',
-                    textTransform: 'uppercase',
-                    margin: '0',
-                    opacity: '0.9',
-                  },
-                },
-                {
-                  content: { type: 'heading', level: 'h1', text: 'Sleep Beneath a Thousand Suns' },
-                  styles: {
-                    fontFamily: '\'EB Garamond\', serif',
-                    fontSize: '72px',
-                    fontWeight: '400',
-                    color: '#dfe2eb',
-                    lineHeight: '1.1',
-                    margin: '0',
-                    letterSpacing: '-0.02em',
-                  },
-                  responsive: {
-                    tablet: { fontSize: '52px' },
-                    mobile: { fontSize: '38px' },
-                  },
-                },
-                {
-                  content: { type: 'paragraph', text: 'Luxury dark-sky accommodations in the heart of Canyon Country. No light pollution. No compromise. Pure cosmos.' },
-                  styles: {
-                    fontFamily: '\'Hanken Grotesk\', sans-serif',
-                    fontSize: '18px',
-                    fontWeight: '300',
-                    color: '#c3c6d2',
-                    lineHeight: '1.7',
-                    maxWidth: '560px',
-                    margin: '0 auto',
-                  },
-                  responsive: {
-                    mobile: { fontSize: '16px' },
-                  },
-                },
-                {
-                  content: { type: 'button', text: 'Reserve Your Night', href: '#book', variant: 'primary' },
-                  styles: {
-                    fontFamily: '\'Hanken Grotesk\', sans-serif',
-                    backgroundColor: '#cabeff',
-                    color: '#10141a',
-                    padding: '16px 36px',
-                    borderRadius: '4px',
-                    fontSize: '15px',
-                    fontWeight: '600',
-                    border: 'none',
-                    letterSpacing: '0.04em',
-                    textTransform: 'uppercase',
-                    boxShadow: '0 0 40px rgba(202,190,255,0.3)',
-                    display: 'inline-block',
-                    textDecoration: 'none',
-                  },
-                },
-                {
-                  content: { type: 'button', text: 'Explore Experiences ↓', href: '#experiences', variant: 'ghost' },
-                  styles: {
-                    fontFamily: '\'Hanken Grotesk\', sans-serif',
-                    backgroundColor: 'transparent',
-                    color: '#c3c6d2',
-                    padding: '14px 28px',
-                    borderRadius: '4px',
-                    fontSize: '14px',
-                    fontWeight: '400',
-                    border: '1px solid rgba(195,198,210,0.3)',
-                    letterSpacing: '0.04em',
-                    display: 'inline-block',
-                    textDecoration: 'none',
-                  },
-                },
-              ],
-            },
-          ],
-        },
-        {
-          styles: { gap: '32px', marginTop: '64px', justifyContent: 'center', flexWrap: 'wrap' },
-          columns: [
-            {
-              span: { desktop: 3, tablet: 4, mobile: 6 },
-              styles: { textAlign: 'center' },
-              elements: [
-                {
-                  content: { type: 'heading', level: 'h3', text: 'Gold Tier' },
-                  styles: { fontFamily: '\'Space Grotesk\', sans-serif', fontSize: '11px', fontWeight: '500', color: '#cabeff', letterSpacing: '0.16em', textTransform: 'uppercase', margin: '0 0 6px' },
-                },
-                {
-                  content: { type: 'paragraph', text: 'Dark Sky Reserve' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '14px', color: '#c3c6d2', margin: '0' },
-                },
-              ],
-            },
-            {
-              span: { desktop: 3, tablet: 4, mobile: 6 },
-              styles: { textAlign: 'center' },
-              elements: [
-                {
-                  content: { type: 'heading', level: 'h3', text: '11,000 ft' },
-                  styles: { fontFamily: '\'Space Grotesk\', sans-serif', fontSize: '11px', fontWeight: '500', color: '#cabeff', letterSpacing: '0.16em', textTransform: 'uppercase', margin: '0 0 6px' },
-                },
-                {
-                  content: { type: 'paragraph', text: 'Elevation Viewing' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '14px', color: '#c3c6d2', margin: '0' },
-                },
-              ],
-            },
-            {
-              span: { desktop: 3, tablet: 4, mobile: 6 },
-              styles: { textAlign: 'center' },
-              elements: [
-                {
-                  content: { type: 'heading', level: 'h3', text: '320+ Nights' },
-                  styles: { fontFamily: '\'Space Grotesk\', sans-serif', fontSize: '11px', fontWeight: '500', color: '#cabeff', letterSpacing: '0.16em', textTransform: 'uppercase', margin: '0 0 6px' },
-                },
-                {
-                  content: { type: 'paragraph', text: 'Clear Sky Annually' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '14px', color: '#c3c6d2', margin: '0' },
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  },
+          {
+            styles: { gap: '32px', marginTop: '64px', justifyContent: 'center', flexWrap: 'wrap' },
+            columns: [
+              { span: { desktop: 3, tablet: 4, mobile: 6 }, styles: { textAlign: 'center' }, elements: [
+                { content: { type: 'paragraph', text: 'GOLD TIER' }, styles: { fontFamily: "'Space Grotesk', sans-serif", fontSize: '11px', fontWeight: '500', color: '#cabeff', letterSpacing: '0.16em', textTransform: 'uppercase', margin: '0 0 6px' } },
+                { content: { type: 'paragraph', text: 'Dark Sky Reserve' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '14px', color: '#c3c6d2', margin: '0' } },
+              ]},
+              { span: { desktop: 3, tablet: 4, mobile: 6 }, styles: { textAlign: 'center' }, elements: [
+                { content: { type: 'paragraph', text: '11,000 FT' }, styles: { fontFamily: "'Space Grotesk', sans-serif", fontSize: '11px', fontWeight: '500', color: '#cabeff', letterSpacing: '0.16em', textTransform: 'uppercase', margin: '0 0 6px' } },
+                { content: { type: 'paragraph', text: 'Elevation Viewing' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '14px', color: '#c3c6d2', margin: '0' } },
+              ]},
+              { span: { desktop: 3, tablet: 4, mobile: 6 }, styles: { textAlign: 'center' }, elements: [
+                { content: { type: 'paragraph', text: '320+ NIGHTS' }, styles: { fontFamily: "'Space Grotesk', sans-serif", fontSize: '11px', fontWeight: '500', color: '#cabeff', letterSpacing: '0.16em', textTransform: 'uppercase', margin: '0 0 6px' } },
+                { content: { type: 'paragraph', text: 'Clear Sky Annually' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '14px', color: '#c3c6d2', margin: '0' } },
+              ]},
+            ],
+          },
+        ],
+      },
 
-  {
-    id: 'ppc-experiences',
-    label: 'PPC — Celestial Experiences',
-    category: 'ppc',
-    desc: 'Three-column experience cards with glassmorphism on dark background',
-    section: {
-      styles: {
-        backgroundColor: '#0d1017',
-        padding: '100px 0',
-      },
-      responsive: {
-        tablet: { padding: '72px 0' },
-        mobile: { padding: '56px 0' },
-      },
-      rows: [
-        {
-          styles: { flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '56px' },
-          columns: [
-            {
+      // 3. Experiences
+      {
+        styles: { backgroundColor: '#0d1017', padding: '100px 0' },
+        responsive: { tablet: { padding: '72px 0' }, mobile: { padding: '56px 0' } },
+        rows: [
+          {
+            styles: { flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '56px' },
+            columns: [{
               span: { desktop: 7, tablet: 10, mobile: 12 },
               styles: { display: 'flex', flexDirection: 'column', gap: '16px', padding: '0 16px' },
               elements: [
-                {
-                  content: { type: 'paragraph', text: '✦ What Awaits You' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '12px', fontWeight: '500', color: '#cabeff', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0' },
-                },
-                {
-                  content: { type: 'heading', level: 'h2', text: 'Curated Celestial Experiences' },
-                  styles: { fontFamily: '\'EB Garamond\', serif', fontSize: '48px', fontWeight: '400', color: '#dfe2eb', lineHeight: '1.2', margin: '0', letterSpacing: '-0.01em' },
-                  responsive: { tablet: { fontSize: '38px' }, mobile: { fontSize: '30px' } },
-                },
-                {
-                  content: { type: 'paragraph', text: 'From guided constellation tours to private observatory sessions, each experience is crafted by certified astronomers.' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '16px', fontWeight: '300', color: '#c3c6d2', lineHeight: '1.7', margin: '0' },
-                },
+                { content: { type: 'paragraph', text: '✦ What Awaits You' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '12px', fontWeight: '500', color: '#cabeff', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0' } },
+                { content: { type: 'heading', level: 'h2', text: 'Curated Celestial Experiences' }, styles: { fontFamily: "'EB Garamond', serif", fontSize: '48px', fontWeight: '400', color: '#dfe2eb', lineHeight: '1.2', margin: '0' }, responsive: { tablet: { fontSize: '38px' }, mobile: { fontSize: '30px' } } },
+                { content: { type: 'paragraph', text: 'From guided constellation tours to private observatory sessions, each experience is crafted by certified astronomers.' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '16px', fontWeight: '300', color: '#c3c6d2', lineHeight: '1.7', margin: '0' } },
               ],
-            },
-          ],
-        },
-        {
-          styles: { gap: '24px', justifyContent: 'center', flexWrap: 'wrap' },
-          columns: [
-            {
-              span: { desktop: 4, tablet: 6, mobile: 12 },
-              styles: {
-                backgroundColor: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(202,190,255,0.12)',
-                borderRadius: '12px',
-                padding: '36px 28px',
-                backdropFilter: 'blur(20px)',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '16px',
+            }],
+          },
+          {
+            styles: { gap: '24px', justifyContent: 'center', flexWrap: 'wrap' },
+            columns: [
+              {
+                span: { desktop: 4, tablet: 6, mobile: 12 },
+                styles: { backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(202,190,255,0.12)', borderRadius: '12px', padding: '36px 28px', backdropFilter: 'blur(20px)', display: 'flex', flexDirection: 'column', gap: '16px' },
+                elements: [
+                  { content: { type: 'heading', level: 'h3', text: '🌌' }, styles: { fontSize: '36px', margin: '0' } },
+                  { content: { type: 'heading', level: 'h3', text: 'Observatory Access' }, styles: { fontFamily: "'Space Grotesk', sans-serif", fontSize: '20px', fontWeight: '500', color: '#dfe2eb', margin: '0' } },
+                  { content: { type: 'paragraph', text: "Private sessions with a 20-inch Dobsonian telescope. See Jupiter's moons, Saturn's rings, and distant galaxies in crisp detail." }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '14px', fontWeight: '300', color: '#c3c6d2', lineHeight: '1.7', margin: '0' } },
+                  { content: { type: 'button', text: 'Learn more →', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", color: '#cabeff', fontSize: '13px', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textDecoration: 'none', letterSpacing: '0.04em' } },
+                ],
               },
-              elements: [
-                {
-                  content: { type: 'heading', level: 'h3', text: '🌌' },
-                  styles: { fontSize: '36px', margin: '0' },
-                },
-                {
-                  content: { type: 'heading', level: 'h3', text: 'Observatory Access' },
-                  styles: { fontFamily: '\'Space Grotesk\', sans-serif', fontSize: '20px', fontWeight: '500', color: '#dfe2eb', margin: '0' },
-                },
-                {
-                  content: { type: 'paragraph', text: 'Private sessions with a 20\" Dobsonian telescope. See Jupiter\'s moons, Saturn\'s rings, and distant galaxies in crisp detail.' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '14px', fontWeight: '300', color: '#c3c6d2', lineHeight: '1.7', margin: '0' },
-                },
-                {
-                  content: { type: 'button', text: 'Learn more →', href: '#', variant: 'ghost' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', color: '#cabeff', fontSize: '13px', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textDecoration: 'none', letterSpacing: '0.04em' },
-                },
-              ],
-            },
-            {
-              span: { desktop: 4, tablet: 6, mobile: 12 },
-              styles: {
-                backgroundColor: 'rgba(202,190,255,0.06)',
-                border: '1px solid rgba(202,190,255,0.2)',
-                borderRadius: '12px',
-                padding: '36px 28px',
-                backdropFilter: 'blur(20px)',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '16px',
+              {
+                span: { desktop: 4, tablet: 6, mobile: 12 },
+                styles: { backgroundColor: 'rgba(202,190,255,0.06)', border: '1px solid rgba(202,190,255,0.2)', borderRadius: '12px', padding: '36px 28px', backdropFilter: 'blur(20px)', display: 'flex', flexDirection: 'column', gap: '16px' },
+                elements: [
+                  { content: { type: 'heading', level: 'h3', text: '🌠' }, styles: { fontSize: '36px', margin: '0' } },
+                  { content: { type: 'heading', level: 'h3', text: 'Constellation Tour' }, styles: { fontFamily: "'Space Grotesk', sans-serif", fontSize: '20px', fontWeight: '500', color: '#dfe2eb', margin: '0' } },
+                  { content: { type: 'paragraph', text: "Walk the desert floor under a certified astronomer's guidance. Learn mythology, science, and navigation by starlight." }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '14px', fontWeight: '300', color: '#c3c6d2', lineHeight: '1.7', margin: '0' } },
+                  { content: { type: 'button', text: 'Learn more →', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", color: '#cabeff', fontSize: '13px', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textDecoration: 'none', letterSpacing: '0.04em' } },
+                ],
               },
-              elements: [
-                {
-                  content: { type: 'heading', level: 'h3', text: '🌠' },
-                  styles: { fontSize: '36px', margin: '0' },
-                },
-                {
-                  content: { type: 'heading', level: 'h3', text: 'Constellation Tour' },
-                  styles: { fontFamily: '\'Space Grotesk\', sans-serif', fontSize: '20px', fontWeight: '500', color: '#dfe2eb', margin: '0' },
-                },
-                {
-                  content: { type: 'paragraph', text: 'Walk the desert floor under a certified astronomer\'s guidance. Learn mythology, science, and navigation by starlight.' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '14px', fontWeight: '300', color: '#c3c6d2', lineHeight: '1.7', margin: '0' },
-                },
-                {
-                  content: { type: 'button', text: 'Learn more →', href: '#', variant: 'ghost' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', color: '#cabeff', fontSize: '13px', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textDecoration: 'none', letterSpacing: '0.04em' },
-                },
-              ],
-            },
-            {
-              span: { desktop: 4, tablet: 6, mobile: 12 },
-              styles: {
-                backgroundColor: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(202,190,255,0.12)',
-                borderRadius: '12px',
-                padding: '36px 28px',
-                backdropFilter: 'blur(20px)',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '16px',
+              {
+                span: { desktop: 4, tablet: 6, mobile: 12 },
+                styles: { backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(202,190,255,0.12)', borderRadius: '12px', padding: '36px 28px', backdropFilter: 'blur(20px)', display: 'flex', flexDirection: 'column', gap: '16px' },
+                elements: [
+                  { content: { type: 'heading', level: 'h3', text: '📸' }, styles: { fontSize: '36px', margin: '0' } },
+                  { content: { type: 'heading', level: 'h3', text: 'Astrophotography' }, styles: { fontFamily: "'Space Grotesk', sans-serif", fontSize: '20px', fontWeight: '500', color: '#dfe2eb', margin: '0' } },
+                  { content: { type: 'paragraph', text: 'Capture the Milky Way with expert coaching. Equipment provided, all skill levels welcome. Go home with gallery-ready shots.' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '14px', fontWeight: '300', color: '#c3c6d2', lineHeight: '1.7', margin: '0' } },
+                  { content: { type: 'button', text: 'Learn more →', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", color: '#cabeff', fontSize: '13px', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textDecoration: 'none', letterSpacing: '0.04em' } },
+                ],
               },
-              elements: [
-                {
-                  content: { type: 'heading', level: 'h3', text: '📸' },
-                  styles: { fontSize: '36px', margin: '0' },
-                },
-                {
-                  content: { type: 'heading', level: 'h3', text: 'Astrophotography' },
-                  styles: { fontFamily: '\'Space Grotesk\', sans-serif', fontSize: '20px', fontWeight: '500', color: '#dfe2eb', margin: '0' },
-                },
-                {
-                  content: { type: 'paragraph', text: 'Capture the Milky Way with expert coaching. Equipment provided, all skill levels welcome. Go home with gallery-ready shots.' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '14px', fontWeight: '300', color: '#c3c6d2', lineHeight: '1.7', margin: '0' },
-                },
-                {
-                  content: { type: 'button', text: 'Learn more →', href: '#', variant: 'ghost' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', color: '#cabeff', fontSize: '13px', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textDecoration: 'none', letterSpacing: '0.04em' },
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  },
+            ],
+          },
+        ],
+      },
 
-  {
-    id: 'ppc-bento',
-    label: 'PPC — Night Sky Bento',
-    category: 'ppc',
-    desc: 'Feature highlight grid with stats, quote and ambient glow on dark background',
-    section: {
-      styles: {
-        backgroundColor: '#10141a',
-        padding: '100px 0',
-      },
-      responsive: {
-        tablet: { padding: '72px 0' },
-        mobile: { padding: '56px 0' },
-      },
-      rows: [
-        {
-          styles: { flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '56px' },
-          columns: [
-            {
+      // 4. Stats / Bento
+      {
+        styles: { backgroundColor: '#10141a', padding: '100px 0' },
+        responsive: { tablet: { padding: '72px 0' }, mobile: { padding: '56px 0' } },
+        rows: [
+          {
+            styles: { flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '56px' },
+            columns: [{
               span: { desktop: 8, tablet: 10, mobile: 12 },
               styles: { display: 'flex', flexDirection: 'column', gap: '16px', padding: '0 16px' },
               elements: [
-                {
-                  content: { type: 'paragraph', text: '✦ Why Stellar Utah' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '12px', fontWeight: '500', color: '#cabeff', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0' },
-                },
-                {
-                  content: { type: 'heading', level: 'h2', text: 'The Night Sky, Perfected' },
-                  styles: { fontFamily: '\'EB Garamond\', serif', fontSize: '48px', fontWeight: '400', color: '#dfe2eb', lineHeight: '1.2', margin: '0' },
-                  responsive: { tablet: { fontSize: '38px' }, mobile: { fontSize: '30px' } },
-                },
+                { content: { type: 'paragraph', text: '✦ Why Stellar Utah' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '12px', fontWeight: '500', color: '#cabeff', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0' } },
+                { content: { type: 'heading', level: 'h2', text: 'The Night Sky, Perfected' }, styles: { fontFamily: "'EB Garamond', serif", fontSize: '48px', fontWeight: '400', color: '#dfe2eb', lineHeight: '1.2', margin: '0' }, responsive: { tablet: { fontSize: '38px' }, mobile: { fontSize: '30px' } } },
               ],
-            },
-          ],
-        },
-        {
-          styles: { gap: '20px', justifyContent: 'center', flexWrap: 'wrap' },
-          columns: [
-            {
-              span: { desktop: 6, tablet: 12, mobile: 12 },
-              styles: {
-                backgroundColor: 'rgba(71,25,201,0.15)',
-                border: '1px solid rgba(71,25,201,0.3)',
-                borderRadius: '16px',
-                padding: '48px 40px',
-                backdropFilter: 'blur(20px)',
-                boxShadow: '0 0 60px rgba(71,25,201,0.1)',
+            }],
+          },
+          {
+            styles: { gap: '20px', justifyContent: 'center', flexWrap: 'wrap' },
+            columns: [
+              {
+                span: { desktop: 6, tablet: 12, mobile: 12 },
+                styles: { backgroundColor: 'rgba(71,25,201,0.15)', border: '1px solid rgba(71,25,201,0.3)', borderRadius: '16px', padding: '48px 40px', backdropFilter: 'blur(20px)', boxShadow: '0 0 60px rgba(71,25,201,0.1)' },
+                elements: [
+                  { content: { type: 'heading', level: 'h2', text: '320+' }, styles: { fontFamily: "'Space Grotesk', sans-serif", fontSize: '72px', fontWeight: '700', color: '#cabeff', margin: '0 0 8px', lineHeight: '1' } },
+                  { content: { type: 'heading', level: 'h3', text: 'Clear nights per year' }, styles: { fontFamily: "'EB Garamond', serif", fontSize: '24px', fontWeight: '400', color: '#dfe2eb', margin: '0 0 16px' } },
+                  { content: { type: 'paragraph', text: "Utah's high desert climate gives us more clear-sky nights than virtually anywhere else in North America — including Hawaii." }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '15px', fontWeight: '300', color: '#c3c6d2', lineHeight: '1.7', margin: '0' } },
+                ],
               },
-              elements: [
-                {
-                  content: { type: 'heading', level: 'h2', text: '320+' },
-                  styles: { fontFamily: '\'Space Grotesk\', sans-serif', fontSize: '72px', fontWeight: '700', color: '#cabeff', margin: '0 0 8px', lineHeight: '1' },
-                },
-                {
-                  content: { type: 'heading', level: 'h3', text: 'Clear nights per year' },
-                  styles: { fontFamily: '\'EB Garamond\', serif', fontSize: '24px', fontWeight: '400', color: '#dfe2eb', margin: '0 0 16px' },
-                },
-                {
-                  content: { type: 'paragraph', text: 'Utah\'s high desert climate gives us more clear-sky nights than virtually anywhere else in North America — including Hawaii.' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '15px', fontWeight: '300', color: '#c3c6d2', lineHeight: '1.7', margin: '0' },
-                },
-              ],
-            },
-            {
-              span: { desktop: 6, tablet: 12, mobile: 12 },
-              styles: { display: 'flex', flexDirection: 'column', gap: '20px' },
-              elements: [
-                {
-                  content: { type: 'heading', level: 'h3', text: '"Absolutely the most transcendent experience of my life. The silence, the stars — I cried."' },
-                  styles: { fontFamily: '\'EB Garamond\', serif', fontSize: '22px', fontWeight: '400', fontStyle: 'italic', color: '#dfe2eb', lineHeight: '1.6', margin: '0', backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(202,190,255,0.1)', borderRadius: '12px', padding: '32px 28px' },
-                },
-                {
-                  content: { type: 'paragraph', text: '— Sarah M., Travel & Leisure Contributor' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '13px', color: '#cabeff', letterSpacing: '0.06em', margin: '0', paddingLeft: '4px' },
-                },
-              ],
-            },
-          ],
-        },
-        {
-          styles: { gap: '20px', marginTop: '20px', flexWrap: 'wrap' },
-          columns: [
-            {
-              span: { desktop: 4, tablet: 6, mobile: 12 },
-              styles: { backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(195,198,210,0.1)', borderRadius: '12px', padding: '28px 24px', textAlign: 'center' },
-              elements: [
-                {
-                  content: { type: 'heading', level: 'h3', text: '5★' },
-                  styles: { fontFamily: '\'Space Grotesk\', sans-serif', fontSize: '32px', fontWeight: '700', color: '#cabeff', margin: '0 0 8px' },
-                },
-                {
-                  content: { type: 'paragraph', text: 'Rated on TripAdvisor' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '14px', color: '#c3c6d2', margin: '0' },
-                },
-              ],
-            },
-            {
-              span: { desktop: 4, tablet: 6, mobile: 12 },
-              styles: { backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(195,198,210,0.1)', borderRadius: '12px', padding: '28px 24px', textAlign: 'center' },
-              elements: [
-                {
-                  content: { type: 'heading', level: 'h3', text: '12k+' },
-                  styles: { fontFamily: '\'Space Grotesk\', sans-serif', fontSize: '32px', fontWeight: '700', color: '#cabeff', margin: '0 0 8px' },
-                },
-                {
-                  content: { type: 'paragraph', text: 'Guests Since 2018' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '14px', color: '#c3c6d2', margin: '0' },
-                },
-              ],
-            },
-            {
-              span: { desktop: 4, tablet: 12, mobile: 12 },
-              styles: { backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(195,198,210,0.1)', borderRadius: '12px', padding: '28px 24px', textAlign: 'center' },
-              elements: [
-                {
-                  content: { type: 'heading', level: 'h3', text: 'IDA' },
-                  styles: { fontFamily: '\'Space Grotesk\', sans-serif', fontSize: '32px', fontWeight: '700', color: '#cabeff', margin: '0 0 8px' },
-                },
-                {
-                  content: { type: 'paragraph', text: 'Certified Dark Sky Sanctuary' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '14px', color: '#c3c6d2', margin: '0' },
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  },
+              {
+                span: { desktop: 6, tablet: 12, mobile: 12 },
+                styles: { display: 'flex', flexDirection: 'column', gap: '20px' },
+                elements: [
+                  { content: { type: 'heading', level: 'h3', text: '"Absolutely the most transcendent experience of my life. The silence, the stars — I cried."' }, styles: { fontFamily: "'EB Garamond', serif", fontSize: '22px', fontWeight: '400', fontStyle: 'italic', color: '#dfe2eb', lineHeight: '1.6', margin: '0', backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(202,190,255,0.1)', borderRadius: '12px', padding: '32px 28px' } },
+                  { content: { type: 'paragraph', text: '— Sarah M., Travel & Leisure Contributor' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '13px', color: '#cabeff', letterSpacing: '0.06em', margin: '0', paddingLeft: '4px' } },
+                ],
+              },
+            ],
+          },
+          {
+            styles: { gap: '20px', marginTop: '20px', flexWrap: 'wrap' },
+            columns: [
+              { span: { desktop: 4, tablet: 6, mobile: 12 }, styles: { backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(195,198,210,0.1)', borderRadius: '12px', padding: '28px 24px', textAlign: 'center' }, elements: [
+                { content: { type: 'heading', level: 'h3', text: '5★' }, styles: { fontFamily: "'Space Grotesk', sans-serif", fontSize: '32px', fontWeight: '700', color: '#cabeff', margin: '0 0 8px' } },
+                { content: { type: 'paragraph', text: 'Rated on TripAdvisor' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '14px', color: '#c3c6d2', margin: '0' } },
+              ]},
+              { span: { desktop: 4, tablet: 6, mobile: 12 }, styles: { backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(195,198,210,0.1)', borderRadius: '12px', padding: '28px 24px', textAlign: 'center' }, elements: [
+                { content: { type: 'heading', level: 'h3', text: '12k+' }, styles: { fontFamily: "'Space Grotesk', sans-serif", fontSize: '32px', fontWeight: '700', color: '#cabeff', margin: '0 0 8px' } },
+                { content: { type: 'paragraph', text: 'Guests Since 2018' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '14px', color: '#c3c6d2', margin: '0' } },
+              ]},
+              { span: { desktop: 4, tablet: 12, mobile: 12 }, styles: { backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(195,198,210,0.1)', borderRadius: '12px', padding: '28px 24px', textAlign: 'center' }, elements: [
+                { content: { type: 'heading', level: 'h3', text: 'IDA' }, styles: { fontFamily: "'Space Grotesk', sans-serif", fontSize: '32px', fontWeight: '700', color: '#cabeff', margin: '0 0 8px' } },
+                { content: { type: 'paragraph', text: 'Certified Dark Sky Sanctuary' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '14px', color: '#c3c6d2', margin: '0' } },
+              ]},
+            ],
+          },
+        ],
+      },
 
-  {
-    id: 'ppc-accommodations',
-    label: 'PPC — Luxury Accommodations',
-    category: 'ppc',
-    desc: 'Two-column accommodation showcase with amenity lists on dark background',
-    section: {
-      styles: {
-        backgroundColor: '#0d1017',
-        padding: '100px 0',
-      },
-      responsive: {
-        tablet: { padding: '72px 0' },
-        mobile: { padding: '56px 0' },
-      },
-      rows: [
-        {
-          styles: { flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '56px' },
-          columns: [
-            {
+      // 5. Accommodations
+      {
+        styles: { backgroundColor: '#0d1017', padding: '100px 0' },
+        responsive: { tablet: { padding: '72px 0' }, mobile: { padding: '56px 0' } },
+        rows: [
+          {
+            styles: { flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '56px' },
+            columns: [{
               span: { desktop: 7, tablet: 10, mobile: 12 },
               styles: { display: 'flex', flexDirection: 'column', gap: '16px', padding: '0 16px' },
               elements: [
-                {
-                  content: { type: 'paragraph', text: '✦ Where You\'ll Stay' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '12px', fontWeight: '500', color: '#cabeff', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0' },
-                },
-                {
-                  content: { type: 'heading', level: 'h2', text: 'Sanctuary Suites & Sky Domes' },
-                  styles: { fontFamily: '\'EB Garamond\', serif', fontSize: '48px', fontWeight: '400', color: '#dfe2eb', lineHeight: '1.2', margin: '0' },
-                  responsive: { tablet: { fontSize: '38px' }, mobile: { fontSize: '30px' } },
-                },
-                {
-                  content: { type: 'paragraph', text: 'Every room is oriented for optimal sky viewing. Floor-to-ceiling glass. Smart blackout shades. Zero light intrusion.' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '16px', fontWeight: '300', color: '#c3c6d2', lineHeight: '1.7', margin: '0' },
-                },
+                { content: { type: 'paragraph', text: "✦ Where You'll Stay" }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '12px', fontWeight: '500', color: '#cabeff', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0' } },
+                { content: { type: 'heading', level: 'h2', text: 'Sanctuary Suites & Sky Domes' }, styles: { fontFamily: "'EB Garamond', serif", fontSize: '48px', fontWeight: '400', color: '#dfe2eb', lineHeight: '1.2', margin: '0' }, responsive: { tablet: { fontSize: '38px' }, mobile: { fontSize: '30px' } } },
+                { content: { type: 'paragraph', text: 'Every room is oriented for optimal sky viewing. Floor-to-ceiling glass. Smart blackout shades. Zero light intrusion.' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '16px', fontWeight: '300', color: '#c3c6d2', lineHeight: '1.7', margin: '0' } },
               ],
-            },
-          ],
-        },
-        {
-          styles: { gap: '24px', flexWrap: 'wrap' },
-          columns: [
-            {
-              span: { desktop: 6, tablet: 12, mobile: 12 },
-              styles: {
-                backgroundColor: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(202,190,255,0.12)',
-                borderRadius: '16px',
-                padding: '40px 36px',
-                backdropFilter: 'blur(20px)',
+            }],
+          },
+          {
+            styles: { gap: '24px', flexWrap: 'wrap' },
+            columns: [
+              {
+                span: { desktop: 6, tablet: 12, mobile: 12 },
+                styles: { backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(202,190,255,0.12)', borderRadius: '16px', padding: '40px 36px', backdropFilter: 'blur(20px)' },
+                elements: [
+                  { content: { type: 'heading', level: 'h3', text: 'Celestial Sky Dome' }, styles: { fontFamily: "'Space Grotesk', sans-serif", fontSize: '24px', fontWeight: '600', color: '#dfe2eb', margin: '0 0 8px' } },
+                  { content: { type: 'paragraph', text: 'From $480/night · Sleeps 2' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '13px', color: '#cabeff', margin: '0 0 24px', letterSpacing: '0.04em' } },
+                  { content: { type: 'list', items: [{ id: 'a1', text: '10-foot panoramic skylight ceiling' }, { id: 'a2', text: 'In-floor radiant heating' }, { id: 'a3', text: 'Private hot tub with unobstructed views' }, { id: 'a4', text: 'Telescope setup & star chart' }, { id: 'a5', text: 'Gourmet breakfast delivered' }] }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '15px', color: '#c3c6d2', lineHeight: '2', margin: '0 0 28px', paddingLeft: '20px' } },
+                  { content: { type: 'button', text: 'Check Availability', href: '#book', variant: 'primary' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", backgroundColor: '#cabeff', color: '#10141a', padding: '12px 28px', borderRadius: '4px', fontSize: '14px', fontWeight: '600', border: 'none', letterSpacing: '0.04em', display: 'inline-block', textDecoration: 'none' } },
+                ],
               },
-              elements: [
-                {
-                  content: { type: 'heading', level: 'h3', text: 'Celestial Sky Dome' },
-                  styles: { fontFamily: '\'Space Grotesk\', sans-serif', fontSize: '24px', fontWeight: '600', color: '#dfe2eb', margin: '0 0 8px' },
-                },
-                {
-                  content: { type: 'paragraph', text: 'From $480/night · Sleeps 2' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '13px', color: '#cabeff', margin: '0 0 24px', letterSpacing: '0.04em' },
-                },
-                {
-                  content: { type: 'list', items: [{ id: '1df88326', text: '10-foot panoramic skylight ceiling' }, { id: 'be04f35b', text: 'In-floor radiant heating' }, { id: 'e5b2f9fc', text: 'Private hot tub with unobstructed views' }, { id: '6ef506fb', text: 'Telescope setup & star chart' }, { id: '4e173d02', text: 'Gourmet breakfast delivered' }] },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '15px', color: '#c3c6d2', lineHeight: '2', margin: '0 0 28px', paddingLeft: '20px' },
-                },
-                {
-                  content: { type: 'button', text: 'Check Availability', href: '#book', variant: 'primary' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', backgroundColor: '#cabeff', color: '#10141a', padding: '12px 28px', borderRadius: '4px', fontSize: '14px', fontWeight: '600', border: 'none', letterSpacing: '0.04em', display: 'inline-block', textDecoration: 'none' },
-                },
-              ],
-            },
-            {
-              span: { desktop: 6, tablet: 12, mobile: 12 },
-              styles: {
-                backgroundColor: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(202,190,255,0.12)',
-                borderRadius: '16px',
-                padding: '40px 36px',
-                backdropFilter: 'blur(20px)',
+              {
+                span: { desktop: 6, tablet: 12, mobile: 12 },
+                styles: { backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(202,190,255,0.12)', borderRadius: '16px', padding: '40px 36px', backdropFilter: 'blur(20px)' },
+                elements: [
+                  { content: { type: 'heading', level: 'h3', text: 'Canyon View Suite' }, styles: { fontFamily: "'Space Grotesk', sans-serif", fontSize: '24px', fontWeight: '600', color: '#dfe2eb', margin: '0 0 8px' } },
+                  { content: { type: 'paragraph', text: 'From $320/night · Sleeps 2–4' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '13px', color: '#cabeff', margin: '0 0 24px', letterSpacing: '0.04em' } },
+                  { content: { type: 'list', items: [{ id: 'b1', text: 'Floor-to-ceiling east-facing windows' }, { id: 'b2', text: 'Private wraparound deck' }, { id: 'b3', text: 'Smart blackout shade system' }, { id: 'b4', text: 'Curated minibar & evening snacks' }, { id: 'b5', text: 'Observatory session included' }] }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '15px', color: '#c3c6d2', lineHeight: '2', margin: '0 0 28px', paddingLeft: '20px' } },
+                  { content: { type: 'button', text: 'Check Availability', href: '#book', variant: 'primary' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", backgroundColor: 'transparent', color: '#cabeff', padding: '12px 28px', borderRadius: '4px', fontSize: '14px', fontWeight: '600', border: '1px solid rgba(202,190,255,0.4)', letterSpacing: '0.04em', display: 'inline-block', textDecoration: 'none' } },
+                ],
               },
-              elements: [
-                {
-                  content: { type: 'heading', level: 'h3', text: 'Canyon View Suite' },
-                  styles: { fontFamily: '\'Space Grotesk\', sans-serif', fontSize: '24px', fontWeight: '600', color: '#dfe2eb', margin: '0 0 8px' },
-                },
-                {
-                  content: { type: 'paragraph', text: 'From $320/night · Sleeps 2–4' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '13px', color: '#cabeff', margin: '0 0 24px', letterSpacing: '0.04em' },
-                },
-                {
-                  content: { type: 'list', items: [{ id: 'faff6ea7', text: 'Floor-to-ceiling east-facing windows' }, { id: 'cc455cba', text: 'Private wraparound deck' }, { id: '9f98f61f', text: 'Smart blackout shade system' }, { id: '0e30b02c', text: 'Curated minibar & evening snacks' }, { id: 'd49966bf', text: 'Observatory session included' }] },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '15px', color: '#c3c6d2', lineHeight: '2', margin: '0 0 28px', paddingLeft: '20px' },
-                },
-                {
-                  content: { type: 'button', text: 'Check Availability', href: '#book', variant: 'primary' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', backgroundColor: 'transparent', color: '#cabeff', padding: '12px 28px', borderRadius: '4px', fontSize: '14px', fontWeight: '600', border: '1px solid rgba(202,190,255,0.4)', letterSpacing: '0.04em', display: 'inline-block', textDecoration: 'none' },
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  },
+            ],
+          },
+        ],
+      },
 
-  {
-    id: 'ppc-cta',
-    label: 'PPC — Dark Sky CTA',
-    category: 'ppc',
-    desc: 'Full-width glowing CTA with booking form fields on deep dark background',
-    section: {
-      styles: {
-        backgroundColor: '#10141a',
-        padding: '100px 0',
-        position: 'relative',
-      },
-      responsive: {
-        tablet: { padding: '72px 0' },
-        mobile: { padding: '56px 0' },
-      },
-      rows: [
-        {
+      // 6. CTA
+      {
+        styles: { backgroundColor: '#10141a', padding: '100px 0' },
+        responsive: { tablet: { padding: '72px 0' }, mobile: { padding: '56px 0' } },
+        rows: [{
           styles: { flexDirection: 'column', alignItems: 'center', textAlign: 'center' },
-          columns: [
-            {
-              span: { desktop: 7, tablet: 10, mobile: 12 },
-              styles: {
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '20px',
-                padding: '64px 48px',
-                backgroundColor: 'rgba(71,25,201,0.1)',
-                border: '1px solid rgba(71,25,201,0.25)',
-                borderRadius: '20px',
-                backdropFilter: 'blur(30px)',
-                boxShadow: '0 0 80px rgba(71,25,201,0.15), inset 0 1px 0 rgba(255,255,255,0.06)',
+          columns: [{
+            span: { desktop: 7, tablet: 10, mobile: 12 },
+            styles: { display: 'flex', flexDirection: 'column', gap: '20px', padding: '64px 48px', backgroundColor: 'rgba(71,25,201,0.1)', border: '1px solid rgba(71,25,201,0.25)', borderRadius: '20px', backdropFilter: 'blur(30px)', boxShadow: '0 0 80px rgba(71,25,201,0.15), inset 0 1px 0 rgba(255,255,255,0.06)' },
+            elements: [
+              { content: { type: 'paragraph', text: '✦ Limited Availability' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '12px', fontWeight: '500', color: '#cabeff', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0' } },
+              { content: { type: 'heading', level: 'h2', text: 'The Cosmos Awaits. Will You Answer?' }, styles: { fontFamily: "'EB Garamond', serif", fontSize: '48px', fontWeight: '400', color: '#dfe2eb', lineHeight: '1.2', margin: '0' }, responsive: { tablet: { fontSize: '36px' }, mobile: { fontSize: '28px' } } },
+              { content: { type: 'paragraph', text: 'Peak season books 6 weeks out. Secure your date and receive a complimentary constellation guide and welcome kit.' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '16px', fontWeight: '300', color: '#c3c6d2', lineHeight: '1.7', margin: '0' } },
+              { content: { type: 'button', text: 'Reserve My Night Under the Stars', href: '#book', variant: 'primary' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", backgroundColor: '#cabeff', color: '#10141a', padding: '18px 40px', borderRadius: '4px', fontSize: '15px', fontWeight: '700', border: 'none', letterSpacing: '0.06em', textTransform: 'uppercase', boxShadow: '0 0 40px rgba(202,190,255,0.35)', display: 'inline-block', textDecoration: 'none' } },
+              { content: { type: 'paragraph', text: 'Free cancellation up to 7 days before arrival · No hidden fees' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '13px', color: '#c3c6d2', opacity: '0.7', margin: '0' } },
+            ],
+          }],
+        }],
+      },
+
+      // 7. Footer
+      {
+        styles: { backgroundColor: '#0a0d12', borderTop: '1px solid rgba(195,198,210,0.08)', padding: '56px 0 32px' },
+        responsive: { mobile: { padding: '40px 0 24px' } },
+        rows: [
+          {
+            styles: { justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '40px', marginBottom: '48px' },
+            columns: [
+              {
+                span: { desktop: 4, tablet: 12, mobile: 12 },
+                styles: { display: 'flex', flexDirection: 'column', gap: '16px' },
+                elements: [
+                  { content: { type: 'heading', level: 'h3', text: '✦ Stellar Utah' }, styles: { fontFamily: "'Space Grotesk', sans-serif", fontSize: '20px', fontWeight: '600', color: '#dfe2eb', margin: '0' } },
+                  { content: { type: 'paragraph', text: "Utah's premier dark-sky luxury resort. IDA Gold Tier Certified. Where the universe becomes personal." }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '14px', fontWeight: '300', color: '#c3c6d2', lineHeight: '1.7', margin: '0', maxWidth: '280px' } },
+                ],
               },
-              elements: [
-                {
-                  content: { type: 'paragraph', text: '✦ Limited Availability' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '12px', fontWeight: '500', color: '#cabeff', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0' },
-                },
-                {
-                  content: { type: 'heading', level: 'h2', text: 'The Cosmos Awaits. Will You Answer?' },
-                  styles: { fontFamily: '\'EB Garamond\', serif', fontSize: '48px', fontWeight: '400', color: '#dfe2eb', lineHeight: '1.2', margin: '0' },
-                  responsive: { tablet: { fontSize: '36px' }, mobile: { fontSize: '28px' } },
-                },
-                {
-                  content: { type: 'paragraph', text: 'Peak season books 6 weeks out. Secure your date and receive a complimentary constellation guide and welcome kit.' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '16px', fontWeight: '300', color: '#c3c6d2', lineHeight: '1.7', margin: '0' },
-                },
-                {
-                  content: { type: 'button', text: 'Reserve My Night Under the Stars', href: '#book', variant: 'primary' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', backgroundColor: '#cabeff', color: '#10141a', padding: '18px 40px', borderRadius: '4px', fontSize: '15px', fontWeight: '700', border: 'none', letterSpacing: '0.06em', textTransform: 'uppercase', boxShadow: '0 0 40px rgba(202,190,255,0.35)', display: 'inline-block', textDecoration: 'none' },
-                },
-                {
-                  content: { type: 'paragraph', text: 'Free cancellation up to 7 days before arrival · No hidden fees' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '13px', color: '#c3c6d2', opacity: '0.7', margin: '0', letterSpacing: '0.02em' },
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
+              {
+                span: { desktop: 2, tablet: 4, mobile: 6 },
+                styles: { display: 'flex', flexDirection: 'column', gap: '12px' },
+                elements: [
+                  { content: { type: 'heading', level: 'h4', text: 'Experiences' }, styles: { fontFamily: "'Space Grotesk', sans-serif", fontSize: '12px', fontWeight: '600', color: '#cabeff', letterSpacing: '0.14em', textTransform: 'uppercase', margin: '0 0 4px' } },
+                  { content: { type: 'button', text: 'Observatory', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", color: '#c3c6d2', fontSize: '14px', background: 'none', border: 'none', padding: '0', textDecoration: 'none', display: 'block', textAlign: 'left' } },
+                  { content: { type: 'button', text: 'Night Tours', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", color: '#c3c6d2', fontSize: '14px', background: 'none', border: 'none', padding: '0', textDecoration: 'none', display: 'block', textAlign: 'left' } },
+                  { content: { type: 'button', text: 'Photography', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", color: '#c3c6d2', fontSize: '14px', background: 'none', border: 'none', padding: '0', textDecoration: 'none', display: 'block', textAlign: 'left' } },
+                ],
+              },
+              {
+                span: { desktop: 2, tablet: 4, mobile: 6 },
+                styles: { display: 'flex', flexDirection: 'column', gap: '12px' },
+                elements: [
+                  { content: { type: 'heading', level: 'h4', text: 'Stay' }, styles: { fontFamily: "'Space Grotesk', sans-serif", fontSize: '12px', fontWeight: '600', color: '#cabeff', letterSpacing: '0.14em', textTransform: 'uppercase', margin: '0 0 4px' } },
+                  { content: { type: 'button', text: 'Sky Domes', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", color: '#c3c6d2', fontSize: '14px', background: 'none', border: 'none', padding: '0', textDecoration: 'none', display: 'block', textAlign: 'left' } },
+                  { content: { type: 'button', text: 'Canyon Suites', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", color: '#c3c6d2', fontSize: '14px', background: 'none', border: 'none', padding: '0', textDecoration: 'none', display: 'block', textAlign: 'left' } },
+                  { content: { type: 'button', text: 'Group Retreats', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", color: '#c3c6d2', fontSize: '14px', background: 'none', border: 'none', padding: '0', textDecoration: 'none', display: 'block', textAlign: 'left' } },
+                ],
+              },
+              {
+                span: { desktop: 2, tablet: 4, mobile: 12 },
+                styles: { display: 'flex', flexDirection: 'column', gap: '12px' },
+                elements: [
+                  { content: { type: 'heading', level: 'h4', text: 'Info' }, styles: { fontFamily: "'Space Grotesk', sans-serif", fontSize: '12px', fontWeight: '600', color: '#cabeff', letterSpacing: '0.14em', textTransform: 'uppercase', margin: '0 0 4px' } },
+                  { content: { type: 'button', text: 'About', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", color: '#c3c6d2', fontSize: '14px', background: 'none', border: 'none', padding: '0', textDecoration: 'none', display: 'block', textAlign: 'left' } },
+                  { content: { type: 'button', text: 'FAQ', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", color: '#c3c6d2', fontSize: '14px', background: 'none', border: 'none', padding: '0', textDecoration: 'none', display: 'block', textAlign: 'left' } },
+                  { content: { type: 'button', text: 'Contact', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", color: '#c3c6d2', fontSize: '14px', background: 'none', border: 'none', padding: '0', textDecoration: 'none', display: 'block', textAlign: 'left' } },
+                ],
+              },
+            ],
+          },
+          {
+            styles: { justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', paddingTop: '24px', borderTop: '1px solid rgba(195,198,210,0.08)' },
+            columns: [
+              { span: { desktop: 8, tablet: 8, mobile: 12 }, styles: {}, elements: [
+                { content: { type: 'paragraph', text: '© 2025 Stellar Utah. All rights reserved. IDA Gold Tier Dark Sky Sanctuary.' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '12px', color: '#c3c6d2', opacity: '0.5', margin: '0' } },
+              ]},
+              { span: { desktop: 4, tablet: 4, mobile: 12 }, styles: { display: 'flex', gap: '20px', justifyContent: 'flex-end' }, responsive: { mobile: { justifyContent: 'flex-start' } }, elements: [
+                { content: { type: 'button', text: 'Privacy', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", color: '#c3c6d2', fontSize: '12px', opacity: '0.5', background: 'none', border: 'none', padding: '0', textDecoration: 'none' } },
+                { content: { type: 'button', text: 'Terms', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Hanken Grotesk', sans-serif", color: '#c3c6d2', fontSize: '12px', opacity: '0.5', background: 'none', border: 'none', padding: '0', textDecoration: 'none' } },
+              ]},
+            ],
+          },
+        ],
+      },
+
+    ],
   },
 
-  {
-    id: 'ppc-footer',
-    label: 'PPC — Celestial Footer',
-    category: 'ppc',
-    desc: 'Minimal dark footer with logo, nav links, social links and copyright',
-    section: {
-      styles: {
-        backgroundColor: '#0a0d12',
-        borderTop: '1px solid rgba(195,198,210,0.08)',
-        padding: '56px 0 32px',
-      },
-      responsive: {
-        mobile: { padding: '40px 0 24px' },
-      },
-      rows: [
-        {
-          styles: { justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '40px', marginBottom: '48px' },
-          columns: [
-            {
-              span: { desktop: 4, tablet: 12, mobile: 12 },
-              styles: { display: 'flex', flexDirection: 'column', gap: '16px' },
-              elements: [
-                {
-                  content: { type: 'heading', level: 'h3', text: '✦ Stellar Utah' },
-                  styles: { fontFamily: '\'Space Grotesk\', sans-serif', fontSize: '20px', fontWeight: '600', color: '#dfe2eb', margin: '0', letterSpacing: '-0.01em' },
-                },
-                {
-                  content: { type: 'paragraph', text: 'Utah\'s premier dark-sky luxury resort. IDA Gold Tier Certified. Where the universe becomes personal.' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '14px', fontWeight: '300', color: '#c3c6d2', lineHeight: '1.7', margin: '0', maxWidth: '280px' },
-                },
-              ],
-            },
-            {
-              span: { desktop: 2, tablet: 4, mobile: 6 },
-              styles: { display: 'flex', flexDirection: 'column', gap: '12px' },
-              elements: [
-                {
-                  content: { type: 'heading', level: 'h4', text: 'Experiences' },
-                  styles: { fontFamily: '\'Space Grotesk\', sans-serif', fontSize: '12px', fontWeight: '600', color: '#cabeff', letterSpacing: '0.14em', textTransform: 'uppercase', margin: '0 0 4px' },
-                },
-                { content: { type: 'button', text: 'Observatory', href: '#', variant: 'ghost' }, styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', color: '#c3c6d2', fontSize: '14px', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textDecoration: 'none', display: 'block', textAlign: 'left' } },
-                { content: { type: 'button', text: 'Night Tours', href: '#', variant: 'ghost' }, styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', color: '#c3c6d2', fontSize: '14px', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textDecoration: 'none', display: 'block', textAlign: 'left' } },
-                { content: { type: 'button', text: 'Photography', href: '#', variant: 'ghost' }, styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', color: '#c3c6d2', fontSize: '14px', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textDecoration: 'none', display: 'block', textAlign: 'left' } },
-              ],
-            },
-            {
-              span: { desktop: 2, tablet: 4, mobile: 6 },
-              styles: { display: 'flex', flexDirection: 'column', gap: '12px' },
-              elements: [
-                {
-                  content: { type: 'heading', level: 'h4', text: 'Stay' },
-                  styles: { fontFamily: '\'Space Grotesk\', sans-serif', fontSize: '12px', fontWeight: '600', color: '#cabeff', letterSpacing: '0.14em', textTransform: 'uppercase', margin: '0 0 4px' },
-                },
-                { content: { type: 'button', text: 'Sky Domes', href: '#', variant: 'ghost' }, styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', color: '#c3c6d2', fontSize: '14px', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textDecoration: 'none', display: 'block', textAlign: 'left' } },
-                { content: { type: 'button', text: 'Canyon Suites', href: '#', variant: 'ghost' }, styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', color: '#c3c6d2', fontSize: '14px', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textDecoration: 'none', display: 'block', textAlign: 'left' } },
-                { content: { type: 'button', text: 'Group Retreats', href: '#', variant: 'ghost' }, styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', color: '#c3c6d2', fontSize: '14px', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textDecoration: 'none', display: 'block', textAlign: 'left' } },
-              ],
-            },
-            {
-              span: { desktop: 2, tablet: 4, mobile: 12 },
-              styles: { display: 'flex', flexDirection: 'column', gap: '12px' },
-              elements: [
-                {
-                  content: { type: 'heading', level: 'h4', text: 'Info' },
-                  styles: { fontFamily: '\'Space Grotesk\', sans-serif', fontSize: '12px', fontWeight: '600', color: '#cabeff', letterSpacing: '0.14em', textTransform: 'uppercase', margin: '0 0 4px' },
-                },
-                { content: { type: 'button', text: 'About Us', href: '#', variant: 'ghost' }, styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', color: '#c3c6d2', fontSize: '14px', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textDecoration: 'none', display: 'block', textAlign: 'left' } },
-                { content: { type: 'button', text: 'FAQ', href: '#', variant: 'ghost' }, styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', color: '#c3c6d2', fontSize: '14px', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textDecoration: 'none', display: 'block', textAlign: 'left' } },
-                { content: { type: 'button', text: 'Contact', href: '#', variant: 'ghost' }, styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', color: '#c3c6d2', fontSize: '14px', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textDecoration: 'none', display: 'block', textAlign: 'left' } },
-              ],
-            },
-          ],
-        },
-        {
-          styles: { justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', paddingTop: '24px', borderTop: '1px solid rgba(195,198,210,0.08)' },
-          columns: [
-            {
-              span: { desktop: 6, tablet: 8, mobile: 12 },
-              styles: {},
-              elements: [
-                {
-                  content: { type: 'paragraph', text: '© 2025 Stellar Utah. All rights reserved. IDA Gold Tier Dark Sky Sanctuary.' },
-                  styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '12px', color: '#c3c6d2', opacity: '0.5', margin: '0', letterSpacing: '0.02em' },
-                },
-              ],
-            },
-            {
-              span: { desktop: 6, tablet: 4, mobile: 12 },
-              styles: { display: 'flex', gap: '20px', justifyContent: 'flex-end' },
-              responsive: { mobile: { justifyContent: 'flex-start' } },
-              elements: [
-                { content: { type: 'button', text: 'Privacy', href: '#', variant: 'ghost' }, styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', color: '#c3c6d2', fontSize: '12px', opacity: '0.5', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textDecoration: 'none' } },
-                { content: { type: 'button', text: 'Terms', href: '#', variant: 'ghost' }, styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', color: '#c3c6d2', fontSize: '12px', opacity: '0.5', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textDecoration: 'none' } },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  },
 ]
 
 const _removedHeaderTemplates = [

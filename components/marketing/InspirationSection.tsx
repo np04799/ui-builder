@@ -343,196 +343,68 @@ function HeaderEnterpriseThumb() {
 
 // ─── PPC Thumbnails — Celestial Obsidian ────────────────────────────────────
 
-function PpcHeroThumb() {
+function PpcStellarUtahThumb() {
   return (
-    <svg viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
       <defs>
-        <radialGradient id="ig-ppc-hero-glow" cx="50%" cy="50%" r="60%">
+        <radialGradient id="ig-ppc-glow" cx="50%" cy="30%" r="55%">
           <stop offset="0%" stopColor="#4719c9" stopOpacity="0.4"/>
           <stop offset="100%" stopColor="#10141a" stopOpacity="0"/>
         </radialGradient>
+        <linearGradient id="ig-ppc-card" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.07"/>
+          <stop offset="100%" stopColor="#ffffff" stopOpacity="0.02"/>
+        </linearGradient>
       </defs>
+      {/* Sky bg */}
       <rect width="280" height="160" fill="#10141a"/>
-      <rect width="280" height="160" fill="url(#ig-ppc-hero-glow)"/>
+      <rect width="280" height="160" fill="url(#ig-ppc-glow)"/>
       {/* Stars */}
-      {[[20,18],[60,35],[110,12],[160,28],[200,15],[240,30],[15,60],[250,65],[270,20]].map(([x,y],i) => (
-        <circle key={i} cx={x} cy={y} r="1" fill="#dfe2eb" opacity={0.4 + (i%3)*0.2}/>
+      {[
+        [18,12],[54,8],[91,22],[132,6],[170,15],[210,9],[248,18],
+        [35,38],[74,28],[118,35],[158,26],[200,32],[245,41],
+        [22,55],[66,48],[105,58],[148,44],[194,52],[258,47],
+      ].map(([x,y], i) => (
+        <circle key={i} cx={x} cy={y} r={i%3===0?1.2:0.7} fill="#cabeff" opacity={i%2===0?0.9:0.5}/>
       ))}
-      {/* Badge */}
-      <text x="140" y="42" textAnchor="middle" fill="#cabeff" fontSize="7" fontFamily="sans-serif" opacity="0.9">✦ PREMIER STARGAZING RESORT</text>
-      {/* Headline */}
-      <text x="140" y="68" textAnchor="middle" fill="#dfe2eb" fontSize="16" fontFamily="Georgia, serif" fontWeight="400">Sleep Beneath</text>
-      <text x="140" y="86" textAnchor="middle" fill="#dfe2eb" fontSize="16" fontFamily="Georgia, serif" fontWeight="400">a Thousand Suns</text>
-      {/* Sub */}
-      <text x="140" y="104" textAnchor="middle" fill="#c3c6d2" fontSize="7" fontFamily="sans-serif" opacity="0.8">Luxury dark-sky accommodations in Utah</text>
-      {/* CTA buttons */}
-      <rect x="88" y="113" width="104" height="18" rx="2" fill="#cabeff"/>
-      <text x="140" y="125" textAnchor="middle" fill="#10141a" fontSize="7" fontFamily="sans-serif" fontWeight="700">RESERVE YOUR NIGHT</text>
+      {/* Nav bar */}
+      <rect width="280" height="14" fill="#0a0d12" opacity="0.9"/>
+      <text x="10" y="10" fontFamily="sans-serif" fontSize="6" fontWeight="700" fill="#dfe2eb">✦ Stellar Utah</text>
+      <rect x="230" y="4" width="40" height="6" rx="2" fill="#cabeff"/>
+      <text x="250" y="9" fontFamily="sans-serif" fontSize="4" fill="#10141a" textAnchor="middle" fontWeight="700">Reserve</text>
+      {/* Hero headline */}
+      <text x="140" y="46" fontFamily="serif" fontSize="11" fontWeight="400" fill="#dfe2eb" textAnchor="middle">Sleep Beneath a Thousand Suns</text>
+      <text x="140" y="58" fontFamily="sans-serif" fontSize="5" fill="#c3c6d2" textAnchor="middle">Luxury dark-sky accommodations in Canyon Country</text>
+      {/* CTA row */}
+      <rect x="90" y="63" width="44" height="9" rx="2" fill="#cabeff"/>
+      <text x="112" y="69.5" fontFamily="sans-serif" fontSize="4" fill="#10141a" textAnchor="middle" fontWeight="700">Reserve Now</text>
+      <rect x="140" y="63" width="50" height="9" rx="2" fill="none" stroke="#c3c6d2" strokeWidth="0.6"/>
+      <text x="165" y="69.5" fontFamily="sans-serif" fontSize="4" fill="#c3c6d2" textAnchor="middle">Explore ↓</text>
+      {/* Experiences section */}
+      <rect width="280" height="30" y="80" fill="#0d1017"/>
+      <text x="140" y="91" fontFamily="serif" fontSize="7" fill="#dfe2eb" textAnchor="middle">Curated Celestial Experiences</text>
+      {[0,1,2].map(i => (
+        <g key={i}>
+          <rect x={6 + i*92} y="96" width="82" height="12" rx="4" fill="url(#ig-ppc-card)" stroke="#cabeff" strokeWidth="0.4" strokeOpacity="0.3"/>
+          <text x={47 + i*92} y="104" fontFamily="sans-serif" fontSize="4" fill="#c3c6d2" textAnchor="middle">
+            {['🌌 Observatory','🌠 Night Tour','📸 Astrophoto'][i]}
+          </text>
+        </g>
+      ))}
       {/* Stats row */}
-      <text x="65" y="148" textAnchor="middle" fill="#cabeff" fontSize="6" fontFamily="sans-serif">GOLD TIER</text>
-      <text x="140" y="148" textAnchor="middle" fill="#cabeff" fontSize="6" fontFamily="sans-serif">11,000 FT</text>
-      <text x="215" y="148" textAnchor="middle" fill="#cabeff" fontSize="6" fontFamily="sans-serif">320+ NIGHTS</text>
-    </svg>
-  )
-}
-
-function PpcExperiencesThumb() {
-  return (
-    <svg viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
-      <rect width="280" height="160" fill="#0d1017"/>
-      {/* Header */}
-      <text x="140" y="22" textAnchor="middle" fill="#cabeff" fontSize="6" fontFamily="sans-serif" opacity="0.9">✦ WHAT AWAITS YOU</text>
-      <text x="140" y="40" textAnchor="middle" fill="#dfe2eb" fontSize="13" fontFamily="Georgia, serif">Curated Celestial Experiences</text>
-      {/* Three glass cards */}
-      <rect x="12" y="56" width="78" height="90" rx="6" fill="rgba(255,255,255,0.04)" stroke="#cabeff" strokeWidth="0.5" strokeOpacity="0.3"/>
-      <text x="51" y="76" textAnchor="middle" fill="#dfe2eb" fontSize="14">🌌</text>
-      <text x="51" y="92" textAnchor="middle" fill="#dfe2eb" fontSize="8" fontFamily="sans-serif" fontWeight="600">Observatory</text>
-      <text x="51" y="104" textAnchor="middle" fill="#c3c6d2" fontSize="6" fontFamily="sans-serif">Private telescope</text>
-      <text x="51" y="114" textAnchor="middle" fill="#c3c6d2" fontSize="6" fontFamily="sans-serif">sessions available</text>
-      <text x="51" y="136" textAnchor="middle" fill="#cabeff" fontSize="6" fontFamily="sans-serif">Learn more →</text>
-
-      <rect x="101" y="56" width="78" height="90" rx="6" fill="rgba(202,190,255,0.06)" stroke="#cabeff" strokeWidth="0.5" strokeOpacity="0.5"/>
-      <text x="140" y="76" textAnchor="middle" fill="#dfe2eb" fontSize="14">🌠</text>
-      <text x="140" y="92" textAnchor="middle" fill="#dfe2eb" fontSize="8" fontFamily="sans-serif" fontWeight="600">Constellation</text>
-      <text x="140" y="104" textAnchor="middle" fill="#c3c6d2" fontSize="6" fontFamily="sans-serif">Guided desert</text>
-      <text x="140" y="114" textAnchor="middle" fill="#c3c6d2" fontSize="6" fontFamily="sans-serif">floor tours</text>
-      <text x="140" y="136" textAnchor="middle" fill="#cabeff" fontSize="6" fontFamily="sans-serif">Learn more →</text>
-
-      <rect x="190" y="56" width="78" height="90" rx="6" fill="rgba(255,255,255,0.04)" stroke="#cabeff" strokeWidth="0.5" strokeOpacity="0.3"/>
-      <text x="229" y="76" textAnchor="middle" fill="#dfe2eb" fontSize="14">📸</text>
-      <text x="229" y="92" textAnchor="middle" fill="#dfe2eb" fontSize="8" fontFamily="sans-serif" fontWeight="600">Astrophotography</text>
-      <text x="229" y="104" textAnchor="middle" fill="#c3c6d2" fontSize="6" fontFamily="sans-serif">Capture the</text>
-      <text x="229" y="114" textAnchor="middle" fill="#c3c6d2" fontSize="6" fontFamily="sans-serif">Milky Way</text>
-      <text x="229" y="136" textAnchor="middle" fill="#cabeff" fontSize="6" fontFamily="sans-serif">Learn more →</text>
-    </svg>
-  )
-}
-
-function PpcBentoThumb() {
-  return (
-    <svg viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="ig-ppc-bento-glow" cx="30%" cy="60%" r="50%">
-          <stop offset="0%" stopColor="#4719c9" stopOpacity="0.25"/>
-          <stop offset="100%" stopColor="#10141a" stopOpacity="0"/>
-        </radialGradient>
-      </defs>
-      <rect width="280" height="160" fill="#10141a"/>
-      <rect width="280" height="160" fill="url(#ig-ppc-bento-glow)"/>
-      {/* Title */}
-      <text x="140" y="22" textAnchor="middle" fill="#cabeff" fontSize="6" fontFamily="sans-serif" opacity="0.9">✦ WHY STELLAR UTAH</text>
-      <text x="140" y="38" textAnchor="middle" fill="#dfe2eb" fontSize="12" fontFamily="Georgia, serif">The Night Sky, Perfected</text>
-      {/* Big stat card */}
-      <rect x="12" y="48" width="120" height="70" rx="8" fill="rgba(71,25,201,0.2)" stroke="#4719c9" strokeWidth="0.8" strokeOpacity="0.5"/>
-      <text x="72" y="78" textAnchor="middle" fill="#cabeff" fontSize="22" fontFamily="sans-serif" fontWeight="700">320+</text>
-      <text x="72" y="92" textAnchor="middle" fill="#dfe2eb" fontSize="8" fontFamily="Georgia, serif">Clear nights per year</text>
-      <text x="72" y="108" textAnchor="middle" fill="#c3c6d2" fontSize="5.5" fontFamily="sans-serif">More than Hawaii</text>
-      {/* Quote card */}
-      <rect x="144" y="48" width="124" height="70" rx="8" fill="rgba(255,255,255,0.04)" stroke="#cabeff" strokeWidth="0.5" strokeOpacity="0.2"/>
-      <text x="206" y="70" textAnchor="middle" fill="#dfe2eb" fontSize="6.5" fontFamily="Georgia, serif" fontStyle="italic">"The most transcendent</text>
-      <text x="206" y="82" textAnchor="middle" fill="#dfe2eb" fontSize="6.5" fontFamily="Georgia, serif" fontStyle="italic">experience of my life."</text>
-      <text x="206" y="98" textAnchor="middle" fill="#cabeff" fontSize="5.5" fontFamily="sans-serif">— Travel &amp; Leisure</text>
-      {/* Stat pills */}
-      <rect x="12" y="128" width="78" height="24" rx="6" fill="rgba(255,255,255,0.04)" stroke="#c3c6d2" strokeWidth="0.4" strokeOpacity="0.2"/>
-      <text x="51" y="143" textAnchor="middle" fill="#cabeff" fontSize="8" fontFamily="sans-serif" fontWeight="700">5★</text>
-      <rect x="101" y="128" width="78" height="24" rx="6" fill="rgba(255,255,255,0.04)" stroke="#c3c6d2" strokeWidth="0.4" strokeOpacity="0.2"/>
-      <text x="140" y="143" textAnchor="middle" fill="#cabeff" fontSize="8" fontFamily="sans-serif" fontWeight="700">12k+</text>
-      <rect x="190" y="128" width="78" height="24" rx="6" fill="rgba(255,255,255,0.04)" stroke="#c3c6d2" strokeWidth="0.4" strokeOpacity="0.2"/>
-      <text x="229" y="143" textAnchor="middle" fill="#cabeff" fontSize="8" fontFamily="sans-serif" fontWeight="700">IDA</text>
-    </svg>
-  )
-}
-
-function PpcAccommodationsThumb() {
-  return (
-    <svg viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
-      <rect width="280" height="160" fill="#0d1017"/>
-      {/* Header */}
-      <text x="140" y="20" textAnchor="middle" fill="#cabeff" fontSize="6" fontFamily="sans-serif" opacity="0.9">✦ WHERE YOU'LL STAY</text>
-      <text x="140" y="36" textAnchor="middle" fill="#dfe2eb" fontSize="11" fontFamily="Georgia, serif">Sanctuary Suites &amp; Sky Domes</text>
-      {/* Two room cards */}
-      <rect x="12" y="48" width="122" height="100" rx="8" fill="rgba(255,255,255,0.04)" stroke="#cabeff" strokeWidth="0.5" strokeOpacity="0.3"/>
-      <text x="73" y="66" textAnchor="middle" fill="#dfe2eb" fontSize="9" fontFamily="sans-serif" fontWeight="600">Celestial Sky Dome</text>
-      <text x="73" y="78" textAnchor="middle" fill="#cabeff" fontSize="6" fontFamily="sans-serif">From $480/night</text>
-      <text x="20" y="92" fill="#c3c6d2" fontSize="5.5" fontFamily="sans-serif">• Panoramic skylight ceiling</text>
-      <text x="20" y="102" fill="#c3c6d2" fontSize="5.5" fontFamily="sans-serif">• Private hot tub</text>
-      <text x="20" y="112" fill="#c3c6d2" fontSize="5.5" fontFamily="sans-serif">• Telescope &amp; star chart</text>
-      <text x="20" y="122" fill="#c3c6d2" fontSize="5.5" fontFamily="sans-serif">• Gourmet breakfast</text>
-      <rect x="24" y="133" width="98" height="10" rx="2" fill="#cabeff"/>
-      <text x="73" y="141" textAnchor="middle" fill="#10141a" fontSize="5.5" fontFamily="sans-serif" fontWeight="700">CHECK AVAILABILITY</text>
-
-      <rect x="146" y="48" width="122" height="100" rx="8" fill="rgba(255,255,255,0.04)" stroke="#cabeff" strokeWidth="0.5" strokeOpacity="0.3"/>
-      <text x="207" y="66" textAnchor="middle" fill="#dfe2eb" fontSize="9" fontFamily="sans-serif" fontWeight="600">Canyon View Suite</text>
-      <text x="207" y="78" textAnchor="middle" fill="#cabeff" fontSize="6" fontFamily="sans-serif">From $320/night</text>
-      <text x="154" y="92" fill="#c3c6d2" fontSize="5.5" fontFamily="sans-serif">• Floor-to-ceiling windows</text>
-      <text x="154" y="102" fill="#c3c6d2" fontSize="5.5" fontFamily="sans-serif">• Wraparound deck</text>
-      <text x="154" y="112" fill="#c3c6d2" fontSize="5.5" fontFamily="sans-serif">• Smart blackout shades</text>
-      <text x="154" y="122" fill="#c3c6d2" fontSize="5.5" fontFamily="sans-serif">• Observatory session</text>
-      <rect x="158" y="133" width="98" height="10" rx="2" fill="transparent" stroke="#cabeff" strokeWidth="0.8"/>
-      <text x="207" y="141" textAnchor="middle" fill="#cabeff" fontSize="5.5" fontFamily="sans-serif" fontWeight="700">CHECK AVAILABILITY</text>
-    </svg>
-  )
-}
-
-function PpcCtaThumb() {
-  return (
-    <svg viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="ig-ppc-cta-glow" cx="50%" cy="50%" r="60%">
-          <stop offset="0%" stopColor="#4719c9" stopOpacity="0.3"/>
-          <stop offset="100%" stopColor="#10141a" stopOpacity="0"/>
-        </radialGradient>
-      </defs>
-      <rect width="280" height="160" fill="#10141a"/>
-      {/* Glow card */}
-      <rect x="28" y="16" width="224" height="128" rx="12" fill="rgba(71,25,201,0.12)" stroke="#4719c9" strokeWidth="0.8" strokeOpacity="0.4"/>
-      <rect x="28" y="16" width="224" height="128" rx="12" fill="url(#ig-ppc-cta-glow)"/>
-      {/* Stars */}
-      {[[50,30],[220,28],[240,90],[42,110]].map(([x,y],i) => (
-        <circle key={i} cx={x} cy={y} r="1" fill="#cabeff" opacity="0.5"/>
+      <rect width="280" height="22" y="112" fill="#10141a"/>
+      {[['320+','Clear Nights'],['5★','Rated'],['12k+','Guests'],['IDA','Certified']].map(([num, lbl], i) => (
+        <g key={i}>
+          <text x={23 + i*65} y="121" fontFamily="sans-serif" fontSize="6" fontWeight="700" fill="#cabeff" textAnchor="middle">{num}</text>
+          <text x={23 + i*65} y="129" fontFamily="sans-serif" fontSize="3.5" fill="#c3c6d2" textAnchor="middle">{lbl}</text>
+        </g>
       ))}
-      <text x="140" y="42" textAnchor="middle" fill="#cabeff" fontSize="6" fontFamily="sans-serif" opacity="0.9">✦ LIMITED AVAILABILITY</text>
-      <text x="140" y="62" textAnchor="middle" fill="#dfe2eb" fontSize="13" fontFamily="Georgia, serif">The Cosmos Awaits.</text>
-      <text x="140" y="78" textAnchor="middle" fill="#dfe2eb" fontSize="13" fontFamily="Georgia, serif">Will You Answer?</text>
-      <text x="140" y="96" textAnchor="middle" fill="#c3c6d2" fontSize="6.5" fontFamily="sans-serif">Peak season books 6 weeks out.</text>
-      <rect x="52" y="108" width="176" height="20" rx="3" fill="#cabeff"/>
-      <text x="140" y="121" textAnchor="middle" fill="#10141a" fontSize="7" fontFamily="sans-serif" fontWeight="700">RESERVE MY NIGHT UNDER THE STARS</text>
-      <text x="140" y="142" textAnchor="middle" fill="#c3c6d2" fontSize="5.5" fontFamily="sans-serif" opacity="0.6">Free cancellation · No hidden fees</text>
+      {/* Footer */}
+      <rect width="280" height="14" y="146" fill="#0a0d12"/>
+      <text x="14" y="155" fontFamily="sans-serif" fontSize="4" fill="#c3c6d2" opacity="0.5">✦ Stellar Utah · Full Landing Page · 7 Sections</text>
     </svg>
   )
 }
-
-function PpcFooterThumb() {
-  return (
-    <svg viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
-      <rect width="280" height="160" fill="#0a0d12"/>
-      <line x1="0" y1="0" x2="280" y2="0" stroke="#c3c6d2" strokeWidth="0.5" strokeOpacity="0.15"/>
-      {/* Logo + tagline */}
-      <text x="16" y="24" fill="#dfe2eb" fontSize="10" fontFamily="sans-serif" fontWeight="600">✦ Stellar Utah</text>
-      <text x="16" y="38" fill="#c3c6d2" fontSize="6" fontFamily="sans-serif" opacity="0.7">Utah's premier dark-sky luxury resort.</text>
-      <text x="16" y="48" fill="#c3c6d2" fontSize="6" fontFamily="sans-serif" opacity="0.7">IDA Gold Tier Certified.</text>
-      {/* Nav columns */}
-      <text x="140" y="20" fill="#cabeff" fontSize="6" fontFamily="sans-serif" fontWeight="600" letterSpacing="2">EXPERIENCES</text>
-      <text x="140" y="34" fill="#c3c6d2" fontSize="6.5" fontFamily="sans-serif">Observatory</text>
-      <text x="140" y="44" fill="#c3c6d2" fontSize="6.5" fontFamily="sans-serif">Night Tours</text>
-      <text x="140" y="54" fill="#c3c6d2" fontSize="6.5" fontFamily="sans-serif">Photography</text>
-      <text x="198" y="20" fill="#cabeff" fontSize="6" fontFamily="sans-serif" fontWeight="600" letterSpacing="2">STAY</text>
-      <text x="198" y="34" fill="#c3c6d2" fontSize="6.5" fontFamily="sans-serif">Sky Domes</text>
-      <text x="198" y="44" fill="#c3c6d2" fontSize="6.5" fontFamily="sans-serif">Canyon Suites</text>
-      <text x="198" y="54" fill="#c3c6d2" fontSize="6.5" fontFamily="sans-serif">Group Retreats</text>
-      <text x="242" y="20" fill="#cabeff" fontSize="6" fontFamily="sans-serif" fontWeight="600" letterSpacing="2">INFO</text>
-      <text x="242" y="34" fill="#c3c6d2" fontSize="6.5" fontFamily="sans-serif">About</text>
-      <text x="242" y="44" fill="#c3c6d2" fontSize="6.5" fontFamily="sans-serif">FAQ</text>
-      <text x="242" y="54" fill="#c3c6d2" fontSize="6.5" fontFamily="sans-serif">Contact</text>
-      {/* Divider */}
-      <line x1="12" y1="70" x2="268" y2="70" stroke="#c3c6d2" strokeWidth="0.4" strokeOpacity="0.15"/>
-      {/* Copyright */}
-      <text x="16" y="84" fill="#c3c6d2" fontSize="5.5" fontFamily="sans-serif" opacity="0.5">© 2025 Stellar Utah. All rights reserved. IDA Gold Tier Dark Sky Sanctuary.</text>
-      <text x="200" y="84" fill="#c3c6d2" fontSize="5.5" fontFamily="sans-serif" opacity="0.5">Privacy · Terms</text>
-    </svg>
-  )
-}
-
 
 const THUMB_MAP: Record<string, React.ReactNode> = {
   'banner-hero-gradient':    <BannerGradientThumb />,
@@ -559,12 +431,7 @@ const THUMB_MAP: Record<string, React.ReactNode> = {
   'header-minimal-center':   <HeaderMinimalThumb />,
   'header-saas-transparent': <HeaderTransparentThumb />,
   'header-enterprise-dark':  <HeaderEnterpriseThumb />,
-  'ppc-hero':            <PpcHeroThumb />,
-  'ppc-experiences':     <PpcExperiencesThumb />,
-  'ppc-bento':           <PpcBentoThumb />,
-  'ppc-accommodations':  <PpcAccommodationsThumb />,
-  'ppc-cta':             <PpcCtaThumb />,
-  'ppc-footer':          <PpcFooterThumb />,
+  'ppc-stellar-utah':   <PpcStellarUtahThumb />,
 }
 
 // ─── Category badge colours ────────────────────────────────────────────────────
@@ -650,16 +517,31 @@ function FrameworkPickerModal({ template, onClose }: ModalProps) {
     setError(null)
 
     try {
-      // Materialize template into normalized store nodes
-      const { section, rows, columns, elements } = materializeTemplate(template.section)
+      // Materialize template into normalized store nodes (single or multi-section)
+      const templateSections = template.sections ?? (template.section ? [template.section] : [])
+      const materialized = templateSections.map(s => materializeTemplate(s))
+
+      const allSections: Record<string, ReturnType<typeof materializeTemplate>['section']> = {}
+      const allRows: Record<string, ReturnType<typeof materializeTemplate>['rows'][number]> = {}
+      const allColumns: Record<string, ReturnType<typeof materializeTemplate>['columns'][number]> = {}
+      const allElements: Record<string, ReturnType<typeof materializeTemplate>['elements'][number]> = {}
+      const sectionOrder: string[] = []
+
+      for (const { section, rows, columns, elements } of materialized) {
+        allSections[section.id] = section
+        sectionOrder.push(section.id)
+        rows.forEach(r => { allRows[r.id] = r })
+        columns.forEach(c => { allColumns[c.id] = c })
+        elements.forEach(e => { allElements[e.id] = e })
+      }
 
       // Assemble a minimal BuilderStoreState
       const state: BuilderStoreState = {
-        sections:  { [section.id]: section },
-        rows:      Object.fromEntries(rows.map(r => [r.id, r])),
-        columns:   Object.fromEntries(columns.map(c => [c.id, c])),
-        elements:  Object.fromEntries(elements.map(e => [e.id, e])),
-        sectionOrder: [section.id],
+        sections:  allSections,
+        rows:      allRows,
+        columns:   allColumns,
+        elements:  allElements,
+        sectionOrder,
         projectMeta: {
           id: crypto.randomUUID(),
           name: template.label,
@@ -1000,13 +882,29 @@ export default function InspirationSection() {
   const [modalTemplate, setModalTemplate] = useState<Template | null>(null)
 
   function handlePreview(tpl: Template) {
-    const { section, rows, columns, elements } = materializeTemplate(tpl.section)
+    const templateSections = tpl.sections ?? (tpl.section ? [tpl.section] : [])
+    const materialized = templateSections.map(s => materializeTemplate(s))
+
+    const allSections: Record<string, ReturnType<typeof materializeTemplate>['section']> = {}
+    const allRows: Record<string, ReturnType<typeof materializeTemplate>['rows'][number]> = {}
+    const allColumns: Record<string, ReturnType<typeof materializeTemplate>['columns'][number]> = {}
+    const allElements: Record<string, ReturnType<typeof materializeTemplate>['elements'][number]> = {}
+    const sectionOrder: string[] = []
+
+    for (const { section, rows, columns, elements } of materialized) {
+      allSections[section.id] = section
+      sectionOrder.push(section.id)
+      rows.forEach(r => { allRows[r.id] = r })
+      columns.forEach(c => { allColumns[c.id] = c })
+      elements.forEach(e => { allElements[e.id] = e })
+    }
+
     const state: BuilderStoreState = {
-      sections:  { [section.id]: section },
-      rows:      Object.fromEntries(rows.map(r => [r.id, r])),
-      columns:   Object.fromEntries(columns.map(c => [c.id, c])),
-      elements:  Object.fromEntries(elements.map(e => [e.id, e])),
-      sectionOrder: [section.id],
+      sections:  allSections,
+      rows:      allRows,
+      columns:   allColumns,
+      elements:  allElements,
+      sectionOrder,
       projectMeta: {
         id: crypto.randomUUID(),
         name: tpl.label,

@@ -658,7 +658,7 @@ function WebTemplatesTab() {
     const tpl = TEMPLATES.find((t) => t.id === templateId)
     if (!tpl) return
     setInserting(templateId)
-    insertTemplate(materializeTemplate(tpl.section))
+    insertTemplate(materializeTemplate(tpl.section ?? tpl.sections?.[0]!))
     setTimeout(() => setInserting(null), 800)
   }
 

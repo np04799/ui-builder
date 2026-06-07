@@ -241,7 +241,7 @@ export default function Canvas() {
       }
     } else if (payload.type === 'template') {
       const tpl = TEMPLATES.find((t) => t.id === payload.templateId)
-      if (tpl) insertTemplate(materializeTemplate(tpl.section))
+      if (tpl) insertTemplate(materializeTemplate(tpl.section ?? tpl.sections?.[0]!))
     }
     // Section drag handled by individual drop zones below
     setDragOverSectionId(null)
