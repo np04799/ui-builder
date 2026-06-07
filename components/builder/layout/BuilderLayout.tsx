@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { useUndoRedo } from '@/hooks/useUndoRedo'
 import { useBuilderStore } from '@/store/builder.store'
+import { BUILDER_EDIT_KEY } from '@/components/marketing/InspirationSection'
 import Toolbar from '@/components/builder/toolbar/Toolbar'
 import LeftSidebar from '@/components/builder/panels/LeftSidebar'
 import PropertiesPanel from '@/components/builder/panels/PropertiesPanel'
@@ -19,6 +20,32 @@ export default function BuilderLayout() {
   const rightPanelVisible = useBuilderStore((s) => s.rightPanelVisible)
   const canvasZoom = useBuilderStore((s) => s.canvasZoom)
   const projectMeta = useBuilderStore((s) => s.projectMeta)
+
+  // ── Load template from InspirationSection Edit button ────────────────────
+  useEffect(() => {
+    const raw = localStorage.getItem(BUILDER_EDIT_KEY)
+    if (!raw) return
+    try {
+      const payload = JSON.parse(raw)
+      useBuilderStore.setState({
+        sections:    payload.sections    ?? {},
+        rows:        payload.rows        ?? {},
+        columns:     payload.columns     ?? {},
+        elements:    payload.elements    ?? {},
+        sectionOrder: payload.sectionOrder ?? [],
+        projectMeta: payload.projectMeta ?? null,
+        mode:        payload.mode        ?? 'custom',
+        canvasWidth: payload.canvasWidth ?? '100%',
+        projectName: payload.projectName ?? payload.projectMeta?.name ?? 'Template',
+        selectedId:  null,
+        editingId:   null,
+        _history:    [],
+        _future:     [],
+      })
+    } catch { /* ignore parse errors */ }
+    finally { localStorage.removeItem(BUILDER_EDIT_KEY) }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // ── Global keyboard shortcuts ─────────────────────────────────────────────
   useEffect(() => {

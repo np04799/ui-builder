@@ -1,12 +1,14 @@
 'use client'
 
 import React, { useState, useEffect, useRef, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 import { TEMPLATES, materializeTemplate } from '@/lib/templates'
 import type { Template } from '@/lib/templates'
 import type { BuilderMode } from '@/types/builder.types'
 import type { BuilderStoreState } from '@/types/store.types'
 
 export const INSPIRATION_PREVIEW_KEY = 'builderpro_inspiration_preview'
+export const BUILDER_EDIT_KEY = 'bp_edit_template'
 
 // ─── SVG Thumbnails (mirrored from TemplatesPanel — marketing context) ─────────
 
@@ -751,7 +753,7 @@ function FrameworkPickerModal({ template, onClose }: ModalProps) {
 
 // ─── Template Card ─────────────────────────────────────────────────────────────
 
-function TemplateCard({ tpl, onDownload, onPreview }: { tpl: Template; onDownload: (t: Template) => void; onPreview: (t: Template) => void }) {
+function TemplateCard({ tpl, onDownload, onPreview, onEdit }: { tpl: Template; onDownload: (t: Template) => void; onPreview: (t: Template) => void; onEdit: (t: Template) => void }) {
   const [hovered, setHovered] = useState(false)
   const catStyle = CATEGORY_COLORS[tpl.category] ?? { bg: '#f3f4f6', color: '#374151' }
 
@@ -816,16 +818,17 @@ function TemplateCard({ tpl, onDownload, onPreview }: { tpl: Template; onDownloa
         }}>{tpl.desc}</p>
 
         {/* Action buttons */}
-        <div style={{ marginTop: 'auto', paddingTop: 4, display: 'flex', gap: 7 }}>
+        <div style={{ marginTop: 'auto', paddingTop: 4, display: 'flex', gap: 6 }}>
           {/* Preview */}
           <button
             onClick={() => onPreview(tpl)}
+            title="Preview template"
             style={{
               flex: 1, height: 34, borderRadius: 8,
               border: '1.5px solid var(--color-border)',
               backgroundColor: 'var(--color-bg)',
               color: 'var(--color-text-primary)', fontSize: '0.8125rem', fontWeight: 600,
-              cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5,
+              cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4,
               transition: 'border-color 120ms, color 120ms',
             }}
             onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--color-primary)'; e.currentTarget.style.color = 'var(--color-primary)' }}
@@ -837,14 +840,35 @@ function TemplateCard({ tpl, onDownload, onPreview }: { tpl: Template; onDownloa
             </svg>
             Preview
           </button>
+          {/* Edit in Builder */}
+          <button
+            onClick={() => onEdit(tpl)}
+            title="Open in builder to edit"
+            style={{
+              flex: 1, height: 34, borderRadius: 8,
+              border: '1.5px solid rgba(202,190,255,0.4)',
+              backgroundColor: 'rgba(202,190,255,0.08)',
+              color: 'var(--color-primary)', fontSize: '0.8125rem', fontWeight: 600,
+              cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4,
+              transition: 'background 120ms, border-color 120ms',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'rgba(202,190,255,0.16)'; e.currentTarget.style.borderColor = 'var(--color-primary)' }}
+            onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'rgba(202,190,255,0.08)'; e.currentTarget.style.borderColor = 'rgba(202,190,255,0.4)' }}
+          >
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M11.5 2.5a2.121 2.121 0 013 3L5 15l-4 1 1-4 9.5-9.5z" />
+            </svg>
+            Edit
+          </button>
           {/* Download */}
           <button
             onClick={() => onDownload(tpl)}
+            title="Download as code"
             style={{
               flex: 1, height: 34, borderRadius: 8, border: 'none',
               backgroundColor: 'var(--color-primary)',
               color: '#fff', fontSize: '0.8125rem', fontWeight: 600,
-              cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5,
+              cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4,
               transition: 'opacity 150ms',
             }}
             onMouseEnter={e => (e.currentTarget.style.opacity = '0.88')}
@@ -897,6 +921,7 @@ const CATEGORIES: { label: string; value: Category }[] = [
 export default function InspirationSection() {
   const [activeCategory, setActiveCategory] = useState<Category>('all')
   const [modalTemplate, setModalTemplate] = useState<Template | null>(null)
+  const router = useRouter()
   const headingReveal = useScrollReveal(0.1)
   const pillsReveal   = useScrollReveal(0.1)
   const ctaReveal     = useScrollReveal(0.1)
@@ -973,6 +998,53 @@ export default function InspirationSection() {
     }
     localStorage.setItem(INSPIRATION_PREVIEW_KEY, JSON.stringify(state))
     window.open('/preview', '_blank', 'noopener')
+  }
+
+  function handleEdit(tpl: Template) {
+    const templateSections = tpl.sections ?? (tpl.section ? [tpl.section] : [])
+    const materialized = templateSections.map(s => materializeTemplate(s))
+
+    const allSections: Record<string, ReturnType<typeof materializeTemplate>['section']> = {}
+    const allRows: Record<string, ReturnType<typeof materializeTemplate>['rows'][number]> = {}
+    const allColumns: Record<string, ReturnType<typeof materializeTemplate>['columns'][number]> = {}
+    const allElements: Record<string, ReturnType<typeof materializeTemplate>['elements'][number]> = {}
+    const sectionOrder: string[] = []
+
+    for (const { section, rows, columns, elements } of materialized) {
+      allSections[section.id] = section
+      sectionOrder.push(section.id)
+      rows.forEach(r => { allRows[r.id] = r })
+      columns.forEach(c => { allColumns[c.id] = c })
+      elements.forEach(e => { allElements[e.id] = e })
+    }
+
+    const state: BuilderStoreState = {
+      sections:  allSections,
+      rows:      allRows,
+      columns:   allColumns,
+      elements:  allElements,
+      sectionOrder,
+      projectMeta: {
+        id: crypto.randomUUID(),
+        name: tpl.label,
+        createdAt: new Date().toISOString(),
+      },
+      mode: 'custom',
+      responsiveMode: 'desktop',
+      selectedId: null,
+      editingId: null,
+      dragState: null,
+      canvasWidth: '100%',
+      projectName: tpl.label,
+      leftPanelVisible: true,
+      rightPanelVisible: true,
+      canvasZoom: 1,
+      clipboard: null,
+      _history: [],
+      _future: [],
+    }
+    localStorage.setItem(BUILDER_EDIT_KEY, JSON.stringify(state))
+    router.push('/builder')
   }
 
   const filtered = activeCategory === 'all'
@@ -1087,6 +1159,7 @@ export default function InspirationSection() {
                     tpl={tpl}
                     onDownload={setModalTemplate}
                     onPreview={handlePreview}
+                    onEdit={handleEdit}
                   />
                 </div>
               )

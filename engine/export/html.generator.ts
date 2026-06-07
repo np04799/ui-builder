@@ -378,7 +378,7 @@ function renderSection(section: BuilderSection, fw: ReturnType<typeof frameworkM
   const sectionClasses = [customClass, section.classNames].filter(Boolean).join(' ')
   const id = section.htmlId ? ` id="${section.htmlId}"` : ''
   const rows = section.rows.map(r => renderRow(r, fw)).join('\n')
-  return `<section class="${sectionClasses}"${id}>\n  <div class="${fw.containerClass}">\n${rows}\n  </div>\n</section>`
+  return `<section class="${sectionClasses}"${id} data-anim="fade-up">\n  <div class="${fw.containerClass}">\n${rows}\n  </div>\n</section>`
 }
 
 // ─── CSS generator ────────────────────────────────────────────────────────────
@@ -601,6 +601,46 @@ document.querySelectorAll('.navbar-toggle').forEach(btn => {
 })
 <\/script>`
 
+const EXPORT_ANIM_CSS = `
+/* ─── Scroll-reveal animations ─────────────────────────────────────────────── */
+@keyframes _bp_fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes _bp_scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+[data-anim] { opacity: 0; }
+[data-anim="fade-up"].bp-visible   { animation: _bp_fadeUp  0.6s cubic-bezier(0.22,1,0.36,1) both; }
+[data-anim="scale-in"].bp-visible  { animation: _bp_scaleIn 0.55s cubic-bezier(0.22,1,0.36,1) both; }
+[data-anim-delay="1"].bp-visible { animation-delay: 80ms; }
+[data-anim-delay="2"].bp-visible { animation-delay: 160ms; }
+[data-anim-delay="3"].bp-visible { animation-delay: 240ms; }
+[data-anim-delay="4"].bp-visible { animation-delay: 320ms; }
+
+/* ─── Hover effects ────────────────────────────────────────────────────────── */
+a[href], button { transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease; }
+a[href]:hover, button:hover { transform: translateY(-2px); opacity: 0.9; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-anim] { opacity: 1 !important; animation: none !important; }
+}
+`
+
+const EXPORT_ANIM_JS = `<script>
+(function() {
+  var els = document.querySelectorAll('[data-anim]');
+  if (!els.length) return;
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) { e.target.classList.add('bp-visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(function(el) { io.observe(el); });
+})();
+</script>`
+
 // ─── Main HTML assembler ───────────────────────────────────────────────────────
 
 export function generateHTML(project: BuilderProject): string {
@@ -623,12 +663,14 @@ export function generateHTML(project: BuilderProject): string {
   ${iconsCDN}
   ${googleFonts ? googleFonts + '\n  ' : ''}${fw.head}
   <link rel="stylesheet" href="styles.css">
+  <style>${EXPORT_ANIM_CSS}</style>
 </head>
 <body${fw.bodyClass ? ` class="${fw.bodyClass}"` : ''}>
 
 ${body}
 
 ${INTERACTIVE_JS}
+${EXPORT_ANIM_JS}
 </body>
 </html>`
 }

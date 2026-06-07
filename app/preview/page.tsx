@@ -59,6 +59,63 @@ export default function PreviewPage() {
     }
   }, [state?.projectMeta?.branding])
 
+
+  // Scroll-reveal animations for preview
+  useEffect(() => {
+    if (!state) return
+    const styleId = 'bp-preview-anim-css'
+    if (!document.getElementById(styleId)) {
+      const style = document.createElement('style')
+      style.id = styleId
+      style.textContent = `
+        @keyframes _bp_fadeUp {
+          from { opacity: 0; transform: translateY(24px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes _bp_scaleIn {
+          from { opacity: 0; transform: scale(0.96); }
+          to   { opacity: 1; transform: scale(1); }
+        }
+        [data-preview-anim] { opacity: 0; }
+        [data-preview-anim="fade-up"].bp-vis  { animation: _bp_fadeUp  0.55s cubic-bezier(0.22,1,0.36,1) both; }
+        [data-preview-anim="scale-in"].bp-vis { animation: _bp_scaleIn 0.5s cubic-bezier(0.22,1,0.36,1) both; }
+        [data-preview-delay="1"].bp-vis { animation-delay: 80ms; }
+        [data-preview-delay="2"].bp-vis { animation-delay: 160ms; }
+        [data-preview-delay="3"].bp-vis { animation-delay: 240ms; }
+        a[href], button { transition: transform 0.2s ease, opacity 0.2s ease; }
+        a[href]:hover, button:hover { transform: translateY(-2px); opacity: 0.88; }
+        @media (prefers-reduced-motion: reduce) {
+          [data-preview-anim] { opacity: 1 !important; animation: none !important; }
+        }
+      `
+      document.head.appendChild(style)
+    }
+
+    // Small delay to let sections render, then observe
+    const timer = setTimeout(() => {
+      const targets = document.querySelectorAll<HTMLElement>('[data-preview-anim]')
+      if (!targets.length) return
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(e => {
+            if (e.isIntersecting) {
+              e.target.classList.add('bp-vis')
+              io.unobserve(e.target)
+            }
+          })
+        },
+        { threshold: 0.08, rootMargin: '0px 0px -30px 0px' }
+      )
+      targets.forEach(el => io.observe(el))
+      return () => io.disconnect()
+    }, 100)
+
+    return () => {
+      clearTimeout(timer)
+      document.getElementById(styleId)?.remove()
+    }
+  }, [state])
+
   if (!state) {
     return (
       <div style={{ padding: 48, textAlign: 'center', color: '#888', fontFamily: 'sans-serif' }}>
@@ -79,6 +136,7 @@ export default function PreviewPage() {
         return (
           <section
             key={sectionId}
+            data-preview-anim="fade-up"
             style={{
               width: '100%',
               padding: '40px 24px',
