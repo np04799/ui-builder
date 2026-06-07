@@ -29,6 +29,79 @@ const BP = {
   mobile: 390,
 } as const
 
+// ─── Google Fonts registry ────────────────────────────────────────────────────
+
+/** Map of font family names to their Google Fonts query string */
+const GOOGLE_FONTS_MAP: Record<string, string> = {
+  'EB Garamond': 'EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400',
+  'Hanken Grotesk': 'Hanken+Grotesk:wght@300;400;500;600;700',
+  'Space Grotesk': 'Space+Grotesk:wght@300;400;500;600;700',
+  'Playfair Display': 'Playfair+Display:ital,wght@0,400;0,700;1,400',
+  'Merriweather': 'Merriweather:ital,wght@0,300;0,400;0,700;1,300',
+  'Lato': 'Lato:wght@300;400;700;900',
+  'Poppins': 'Poppins:wght@300;400;500;600;700',
+  'Nunito': 'Nunito:wght@300;400;600;700',
+  'Raleway': 'Raleway:wght@300;400;500;600;700',
+  'Oswald': 'Oswald:wght@300;400;500;600;700',
+  'Montserrat': 'Montserrat:wght@300;400;500;600;700',
+  'Open Sans': 'Open+Sans:wght@300;400;600;700',
+  'Source Sans Pro': 'Source+Sans+Pro:wght@300;400;600;700',
+  'Ubuntu': 'Ubuntu:wght@300;400;500;700',
+  'Fira Sans': 'Fira+Sans:wght@300;400;500;600;700',
+  'Work Sans': 'Work+Sans:wght@300;400;500;600;700',
+  'DM Sans': 'DM+Sans:wght@300;400;500;600;700',
+  'Manrope': 'Manrope:wght@300;400;500;600;700',
+  'Plus Jakarta Sans': 'Plus+Jakarta+Sans:wght@300;400;500;600;700',
+}
+
+/** System/framework fonts that do NOT need a Google Fonts import */
+const SYSTEM_FONTS = new Set([
+  'Inter', 'Roboto', 'system-ui', 'sans-serif', 'serif', 'monospace',
+  'Arial', 'Helvetica', 'Georgia', 'Verdana', 'Tahoma', 'Trebuchet MS',
+  'Times New Roman', 'Courier New', 'inherit', 'initial', 'unset',
+])
+
+/**
+ * Scan all element/node styles in a project and collect Google Fonts <link> tags
+ * for any non-system font families referenced.
+ */
+function collectGoogleFontLinks(project: BuilderProject): string {
+  const needed = new Set<string>()
+
+  function scanStyles(styles: StyleMap) {
+    const raw = styles['fontFamily'] ?? styles['font-family']
+    if (!raw) return
+    // fontFamily may be comma-separated stack; check each token
+    raw.split(',').forEach(token => {
+      const name = token.trim().replace(/^['"]|['"]$/g, '')
+      if (!SYSTEM_FONTS.has(name) && GOOGLE_FONTS_MAP[name]) {
+        needed.add(name)
+      }
+    })
+  }
+
+  for (const section of project.sections) {
+    scanStyles(section.styles)
+    for (const row of section.rows) {
+      scanStyles(row.styles)
+      for (const col of row.columns) {
+        scanStyles(col.styles)
+        for (const el of col.elements) {
+          scanStyles(el.styles)
+        }
+      }
+    }
+  }
+
+  if (needed.size === 0) return ''
+
+  const families = Array.from(needed)
+    .map(name => GOOGLE_FONTS_MAP[name])
+    .join('&family=')
+
+  return `<link rel="preconnect" href="https://fonts.googleapis.com">\n  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=${families}&display=swap">`
+}
+
 // ─── CSS utilities ────────────────────────────────────────────────────────────
 
 /** Convert camelCase CSS property names to kebab-case */
@@ -36,17 +109,34 @@ function toKebab(prop: string): string {
   return prop.replace(/([A-Z])/g, (m) => `-${m.toLowerCase()}`)
 }
 
-/** Render a StyleMap as CSS declarations string */
+/** Render a StyleMap as CSS declarations string.
+ *  DEF-03 fix: auto-emit -webkit- prefix for backdrop-filter.
+ */
 function styleMapToCSS(styles: StyleMap, indent = '  '): string {
-  return Object.entries(styles)
-    .filter(([, v]) => v !== undefined && v !== '')
-    .map(([k, v]) => `${indent}${toKebab(k)}: ${v};`)
-    .join('\n')
+  const lines: string[] = []
+  for (const [k, v] of Object.entries(styles)) {
+    if (v === undefined || v === '') continue
+    const prop = toKebab(k)
+    lines.push(`${indent}${prop}: ${v};`)
+    // DEF-03: vendor prefix for backdrop-filter (Safari support)
+    if (prop === 'backdrop-filter') {
+      lines.push(`${indent}-webkit-backdrop-filter: ${v};`)
+    }
+  }
+  return lines.join('\n')
 }
 
 /** Slugify an id for use as CSS class name */
 function slug(id: string): string {
   return `bp-${id.replace(/[^a-z0-9]/gi, '-').toLowerCase()}`
+}
+
+// ─── Tailwind span → canonical fraction map (DEF-04) ─────────────────────────
+
+const TW_SPAN_MAP: Record<number, string> = {
+  1: '1/12', 2: '1/6', 3: '1/4', 4: '1/3',
+  5: '5/12', 6: '1/2', 7: '7/12', 8: '2/3',
+  9: '3/4', 10: '5/6', 11: '11/12', 12: 'full',
 }
 
 // ─── Framework helpers ────────────────────────────────────────────────────────
@@ -72,8 +162,9 @@ function frameworkMeta(mode: BuilderMode): {
         head: `<script src="https://cdn.tailwindcss.com"><\/script>`,
         bodyClass: '',
         containerClass: 'container mx-auto px-4',
+        // DEF-04: use canonical Tailwind fractions, not /12 arbitrary values
         rowClass: 'flex flex-wrap gap-4',
-        colClass: (span) => (span ? `w-${span}/12` : 'flex-1'),
+        colClass: (span) => span ? `w-${TW_SPAN_MAP[span] ?? '1/2'}` : 'flex-1',
       }
     case 'mui':
       return {
@@ -99,7 +190,6 @@ function frameworkMeta(mode: BuilderMode): {
 function renderElement(el: BuilderElement): string {
   const c = el.content
   const id = el.htmlId ? ` id="${el.htmlId}"` : ''
-  const cls = el.classNames ? ` class="${el.classNames}"` : ''
   const customCls = ` class="${[el.classNames, slug(el.id)].filter(Boolean).join(' ')}"`
 
   switch (c.type) {
@@ -231,7 +321,7 @@ function renderElement(el: BuilderElement): string {
     }
 
     case 'accordion': {
-      const items = c.items.map((item, i) =>
+      const items = c.items.map((item) =>
         `<div class="accordion-item${item.defaultOpen ? ' open' : ''}">
     <button class="accordion-trigger">${escHtml(item.title)}</button>
     <div class="accordion-content">${escHtml(item.content)}</div>
@@ -240,9 +330,13 @@ function renderElement(el: BuilderElement): string {
       return `<div${id}${customCls}>\n  ${items}\n</div>`
     }
 
-    default:
-      // Graceful fallback for unsupported types
-      return `<!-- element type "${(c as ElementContent).type}" not exported -->`
+    default: {
+      // DEF-05: styled fallback — preserve layout/background even for unsupported element types
+      const styleAttr = Object.keys(el.styles).length
+        ? ` style="${Object.entries(el.styles).map(([k, v]) => `${toKebab(k)}:${v}`).join(';')}"`
+        : ''
+      return `<div${id}${customCls}${styleAttr} data-element-type="${(c as ElementContent).type}"></div>`
+    }
   }
 }
 
@@ -269,12 +363,22 @@ function renderRow(row: BuilderRow, fw: ReturnType<typeof frameworkMeta>): strin
   return `<div class="${classes}"${id}>\n${cols}\n</div>`
 }
 
+/**
+ * DEF-01: Section structure fix.
+ * Section-level styles (background, minHeight, padding) must apply to a full-width
+ * wrapper, not the constrained container. Structure is now:
+ *   <section class="bp-{id} [user-classNames]">   ← full-width, receives bg/padding styles
+ *     <div class="container [fw-containerClass]">  ← constrains content width
+ *       <rows/>
+ *     </div>
+ *   </section>
+ */
 function renderSection(section: BuilderSection, fw: ReturnType<typeof frameworkMeta>): string {
   const customClass = slug(section.id)
-  const classes = [fw.containerClass, section.classNames, customClass].filter(Boolean).join(' ')
+  const sectionClasses = [customClass, section.classNames].filter(Boolean).join(' ')
   const id = section.htmlId ? ` id="${section.htmlId}"` : ''
   const rows = section.rows.map(r => renderRow(r, fw)).join('\n')
-  return `<section class="${classes}"${id}>\n${rows}\n</section>`
+  return `<section class="${sectionClasses}"${id}>\n  <div class="${fw.containerClass}">\n${rows}\n  </div>\n</section>`
 }
 
 // ─── CSS generator ────────────────────────────────────────────────────────────
@@ -338,6 +442,8 @@ function buildCSS(mode: BuilderMode, rules: CSSRule[]): string {
 *, *::before, *::after { box-sizing: border-box; }
 body { margin: 0; font-family: Inter, system-ui, sans-serif; }
 img, video, iframe { max-width: 100%; display: block; }
+/* DEF-01: sections are full-width wrappers */
+section { width: 100%; }
 `
 
   const frameworkBase = buildFrameworkBaseCSS(mode)
@@ -465,12 +571,32 @@ document.querySelectorAll('.accordion-trigger').forEach(btn => {
   })
 })
 
-// Mobile navbar
+// Mobile navbar — DEF-06: close on outside click or Escape
 document.querySelectorAll('.navbar-toggle').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const menu = btn.closest('nav').querySelector('.navbar-menu')
-    menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex'
+  const nav = btn.closest('nav')
+  const menu = nav.querySelector('.navbar-menu')
+
+  function openMenu() {
+    menu.style.display = 'flex'
     menu.style.flexDirection = 'column'
+    btn.setAttribute('aria-expanded', 'true')
+  }
+  function closeMenu() {
+    menu.style.display = 'none'
+    btn.setAttribute('aria-expanded', 'false')
+  }
+
+  btn.addEventListener('click', e => {
+    e.stopPropagation()
+    menu.style.display === 'flex' ? closeMenu() : openMenu()
+  })
+
+  document.addEventListener('click', e => {
+    if (!nav.contains(e.target)) closeMenu()
+  })
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeMenu()
   })
 })
 <\/script>`
@@ -485,6 +611,8 @@ export function generateHTML(project: BuilderProject): string {
   const body = project.sections.map(s => renderSection(s, fw)).join('\n\n')
 
   const iconsCDN = `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">`
+  // DEF-02: inject Google Fonts for any non-system font families used in styles
+  const googleFonts = collectGoogleFontLinks(project)
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -493,7 +621,7 @@ export function generateHTML(project: BuilderProject): string {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${escHtml(project.name)}</title>
   ${iconsCDN}
-  ${fw.head}
+  ${googleFonts ? googleFonts + '\n  ' : ''}${fw.head}
   <link rel="stylesheet" href="styles.css">
 </head>
 <body${fw.bodyClass ? ` class="${fw.bodyClass}"` : ''}>

@@ -341,6 +341,199 @@ function HeaderEnterpriseThumb() {
   )
 }
 
+// ─── PPC Thumbnails — Celestial Obsidian ────────────────────────────────────
+
+function PpcHeroThumb() {
+  return (
+    <svg viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="ig-ppc-hero-glow" cx="50%" cy="50%" r="60%">
+          <stop offset="0%" stopColor="#4719c9" stopOpacity="0.4"/>
+          <stop offset="100%" stopColor="#10141a" stopOpacity="0"/>
+        </radialGradient>
+      </defs>
+      <rect width="280" height="160" fill="#10141a"/>
+      <rect width="280" height="160" fill="url(#ig-ppc-hero-glow)"/>
+      {/* Stars */}
+      {[[20,18],[60,35],[110,12],[160,28],[200,15],[240,30],[15,60],[250,65],[270,20]].map(([x,y],i) => (
+        <circle key={i} cx={x} cy={y} r="1" fill="#dfe2eb" opacity={0.4 + (i%3)*0.2}/>
+      ))}
+      {/* Badge */}
+      <text x="140" y="42" textAnchor="middle" fill="#cabeff" fontSize="7" fontFamily="sans-serif" opacity="0.9">✦ PREMIER STARGAZING RESORT</text>
+      {/* Headline */}
+      <text x="140" y="68" textAnchor="middle" fill="#dfe2eb" fontSize="16" fontFamily="Georgia, serif" fontWeight="400">Sleep Beneath</text>
+      <text x="140" y="86" textAnchor="middle" fill="#dfe2eb" fontSize="16" fontFamily="Georgia, serif" fontWeight="400">a Thousand Suns</text>
+      {/* Sub */}
+      <text x="140" y="104" textAnchor="middle" fill="#c3c6d2" fontSize="7" fontFamily="sans-serif" opacity="0.8">Luxury dark-sky accommodations in Utah</text>
+      {/* CTA buttons */}
+      <rect x="88" y="113" width="104" height="18" rx="2" fill="#cabeff"/>
+      <text x="140" y="125" textAnchor="middle" fill="#10141a" fontSize="7" fontFamily="sans-serif" fontWeight="700">RESERVE YOUR NIGHT</text>
+      {/* Stats row */}
+      <text x="65" y="148" textAnchor="middle" fill="#cabeff" fontSize="6" fontFamily="sans-serif">GOLD TIER</text>
+      <text x="140" y="148" textAnchor="middle" fill="#cabeff" fontSize="6" fontFamily="sans-serif">11,000 FT</text>
+      <text x="215" y="148" textAnchor="middle" fill="#cabeff" fontSize="6" fontFamily="sans-serif">320+ NIGHTS</text>
+    </svg>
+  )
+}
+
+function PpcExperiencesThumb() {
+  return (
+    <svg viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
+      <rect width="280" height="160" fill="#0d1017"/>
+      {/* Header */}
+      <text x="140" y="22" textAnchor="middle" fill="#cabeff" fontSize="6" fontFamily="sans-serif" opacity="0.9">✦ WHAT AWAITS YOU</text>
+      <text x="140" y="40" textAnchor="middle" fill="#dfe2eb" fontSize="13" fontFamily="Georgia, serif">Curated Celestial Experiences</text>
+      {/* Three glass cards */}
+      <rect x="12" y="56" width="78" height="90" rx="6" fill="rgba(255,255,255,0.04)" stroke="#cabeff" strokeWidth="0.5" strokeOpacity="0.3"/>
+      <text x="51" y="76" textAnchor="middle" fill="#dfe2eb" fontSize="14">🌌</text>
+      <text x="51" y="92" textAnchor="middle" fill="#dfe2eb" fontSize="8" fontFamily="sans-serif" fontWeight="600">Observatory</text>
+      <text x="51" y="104" textAnchor="middle" fill="#c3c6d2" fontSize="6" fontFamily="sans-serif">Private telescope</text>
+      <text x="51" y="114" textAnchor="middle" fill="#c3c6d2" fontSize="6" fontFamily="sans-serif">sessions available</text>
+      <text x="51" y="136" textAnchor="middle" fill="#cabeff" fontSize="6" fontFamily="sans-serif">Learn more →</text>
+
+      <rect x="101" y="56" width="78" height="90" rx="6" fill="rgba(202,190,255,0.06)" stroke="#cabeff" strokeWidth="0.5" strokeOpacity="0.5"/>
+      <text x="140" y="76" textAnchor="middle" fill="#dfe2eb" fontSize="14">🌠</text>
+      <text x="140" y="92" textAnchor="middle" fill="#dfe2eb" fontSize="8" fontFamily="sans-serif" fontWeight="600">Constellation</text>
+      <text x="140" y="104" textAnchor="middle" fill="#c3c6d2" fontSize="6" fontFamily="sans-serif">Guided desert</text>
+      <text x="140" y="114" textAnchor="middle" fill="#c3c6d2" fontSize="6" fontFamily="sans-serif">floor tours</text>
+      <text x="140" y="136" textAnchor="middle" fill="#cabeff" fontSize="6" fontFamily="sans-serif">Learn more →</text>
+
+      <rect x="190" y="56" width="78" height="90" rx="6" fill="rgba(255,255,255,0.04)" stroke="#cabeff" strokeWidth="0.5" strokeOpacity="0.3"/>
+      <text x="229" y="76" textAnchor="middle" fill="#dfe2eb" fontSize="14">📸</text>
+      <text x="229" y="92" textAnchor="middle" fill="#dfe2eb" fontSize="8" fontFamily="sans-serif" fontWeight="600">Astrophotography</text>
+      <text x="229" y="104" textAnchor="middle" fill="#c3c6d2" fontSize="6" fontFamily="sans-serif">Capture the</text>
+      <text x="229" y="114" textAnchor="middle" fill="#c3c6d2" fontSize="6" fontFamily="sans-serif">Milky Way</text>
+      <text x="229" y="136" textAnchor="middle" fill="#cabeff" fontSize="6" fontFamily="sans-serif">Learn more →</text>
+    </svg>
+  )
+}
+
+function PpcBentoThumb() {
+  return (
+    <svg viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="ig-ppc-bento-glow" cx="30%" cy="60%" r="50%">
+          <stop offset="0%" stopColor="#4719c9" stopOpacity="0.25"/>
+          <stop offset="100%" stopColor="#10141a" stopOpacity="0"/>
+        </radialGradient>
+      </defs>
+      <rect width="280" height="160" fill="#10141a"/>
+      <rect width="280" height="160" fill="url(#ig-ppc-bento-glow)"/>
+      {/* Title */}
+      <text x="140" y="22" textAnchor="middle" fill="#cabeff" fontSize="6" fontFamily="sans-serif" opacity="0.9">✦ WHY STELLAR UTAH</text>
+      <text x="140" y="38" textAnchor="middle" fill="#dfe2eb" fontSize="12" fontFamily="Georgia, serif">The Night Sky, Perfected</text>
+      {/* Big stat card */}
+      <rect x="12" y="48" width="120" height="70" rx="8" fill="rgba(71,25,201,0.2)" stroke="#4719c9" strokeWidth="0.8" strokeOpacity="0.5"/>
+      <text x="72" y="78" textAnchor="middle" fill="#cabeff" fontSize="22" fontFamily="sans-serif" fontWeight="700">320+</text>
+      <text x="72" y="92" textAnchor="middle" fill="#dfe2eb" fontSize="8" fontFamily="Georgia, serif">Clear nights per year</text>
+      <text x="72" y="108" textAnchor="middle" fill="#c3c6d2" fontSize="5.5" fontFamily="sans-serif">More than Hawaii</text>
+      {/* Quote card */}
+      <rect x="144" y="48" width="124" height="70" rx="8" fill="rgba(255,255,255,0.04)" stroke="#cabeff" strokeWidth="0.5" strokeOpacity="0.2"/>
+      <text x="206" y="70" textAnchor="middle" fill="#dfe2eb" fontSize="6.5" fontFamily="Georgia, serif" fontStyle="italic">"The most transcendent</text>
+      <text x="206" y="82" textAnchor="middle" fill="#dfe2eb" fontSize="6.5" fontFamily="Georgia, serif" fontStyle="italic">experience of my life."</text>
+      <text x="206" y="98" textAnchor="middle" fill="#cabeff" fontSize="5.5" fontFamily="sans-serif">— Travel &amp; Leisure</text>
+      {/* Stat pills */}
+      <rect x="12" y="128" width="78" height="24" rx="6" fill="rgba(255,255,255,0.04)" stroke="#c3c6d2" strokeWidth="0.4" strokeOpacity="0.2"/>
+      <text x="51" y="143" textAnchor="middle" fill="#cabeff" fontSize="8" fontFamily="sans-serif" fontWeight="700">5★</text>
+      <rect x="101" y="128" width="78" height="24" rx="6" fill="rgba(255,255,255,0.04)" stroke="#c3c6d2" strokeWidth="0.4" strokeOpacity="0.2"/>
+      <text x="140" y="143" textAnchor="middle" fill="#cabeff" fontSize="8" fontFamily="sans-serif" fontWeight="700">12k+</text>
+      <rect x="190" y="128" width="78" height="24" rx="6" fill="rgba(255,255,255,0.04)" stroke="#c3c6d2" strokeWidth="0.4" strokeOpacity="0.2"/>
+      <text x="229" y="143" textAnchor="middle" fill="#cabeff" fontSize="8" fontFamily="sans-serif" fontWeight="700">IDA</text>
+    </svg>
+  )
+}
+
+function PpcAccommodationsThumb() {
+  return (
+    <svg viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
+      <rect width="280" height="160" fill="#0d1017"/>
+      {/* Header */}
+      <text x="140" y="20" textAnchor="middle" fill="#cabeff" fontSize="6" fontFamily="sans-serif" opacity="0.9">✦ WHERE YOU'LL STAY</text>
+      <text x="140" y="36" textAnchor="middle" fill="#dfe2eb" fontSize="11" fontFamily="Georgia, serif">Sanctuary Suites &amp; Sky Domes</text>
+      {/* Two room cards */}
+      <rect x="12" y="48" width="122" height="100" rx="8" fill="rgba(255,255,255,0.04)" stroke="#cabeff" strokeWidth="0.5" strokeOpacity="0.3"/>
+      <text x="73" y="66" textAnchor="middle" fill="#dfe2eb" fontSize="9" fontFamily="sans-serif" fontWeight="600">Celestial Sky Dome</text>
+      <text x="73" y="78" textAnchor="middle" fill="#cabeff" fontSize="6" fontFamily="sans-serif">From $480/night</text>
+      <text x="20" y="92" fill="#c3c6d2" fontSize="5.5" fontFamily="sans-serif">• Panoramic skylight ceiling</text>
+      <text x="20" y="102" fill="#c3c6d2" fontSize="5.5" fontFamily="sans-serif">• Private hot tub</text>
+      <text x="20" y="112" fill="#c3c6d2" fontSize="5.5" fontFamily="sans-serif">• Telescope &amp; star chart</text>
+      <text x="20" y="122" fill="#c3c6d2" fontSize="5.5" fontFamily="sans-serif">• Gourmet breakfast</text>
+      <rect x="24" y="133" width="98" height="10" rx="2" fill="#cabeff"/>
+      <text x="73" y="141" textAnchor="middle" fill="#10141a" fontSize="5.5" fontFamily="sans-serif" fontWeight="700">CHECK AVAILABILITY</text>
+
+      <rect x="146" y="48" width="122" height="100" rx="8" fill="rgba(255,255,255,0.04)" stroke="#cabeff" strokeWidth="0.5" strokeOpacity="0.3"/>
+      <text x="207" y="66" textAnchor="middle" fill="#dfe2eb" fontSize="9" fontFamily="sans-serif" fontWeight="600">Canyon View Suite</text>
+      <text x="207" y="78" textAnchor="middle" fill="#cabeff" fontSize="6" fontFamily="sans-serif">From $320/night</text>
+      <text x="154" y="92" fill="#c3c6d2" fontSize="5.5" fontFamily="sans-serif">• Floor-to-ceiling windows</text>
+      <text x="154" y="102" fill="#c3c6d2" fontSize="5.5" fontFamily="sans-serif">• Wraparound deck</text>
+      <text x="154" y="112" fill="#c3c6d2" fontSize="5.5" fontFamily="sans-serif">• Smart blackout shades</text>
+      <text x="154" y="122" fill="#c3c6d2" fontSize="5.5" fontFamily="sans-serif">• Observatory session</text>
+      <rect x="158" y="133" width="98" height="10" rx="2" fill="transparent" stroke="#cabeff" strokeWidth="0.8"/>
+      <text x="207" y="141" textAnchor="middle" fill="#cabeff" fontSize="5.5" fontFamily="sans-serif" fontWeight="700">CHECK AVAILABILITY</text>
+    </svg>
+  )
+}
+
+function PpcCtaThumb() {
+  return (
+    <svg viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="ig-ppc-cta-glow" cx="50%" cy="50%" r="60%">
+          <stop offset="0%" stopColor="#4719c9" stopOpacity="0.3"/>
+          <stop offset="100%" stopColor="#10141a" stopOpacity="0"/>
+        </radialGradient>
+      </defs>
+      <rect width="280" height="160" fill="#10141a"/>
+      {/* Glow card */}
+      <rect x="28" y="16" width="224" height="128" rx="12" fill="rgba(71,25,201,0.12)" stroke="#4719c9" strokeWidth="0.8" strokeOpacity="0.4"/>
+      <rect x="28" y="16" width="224" height="128" rx="12" fill="url(#ig-ppc-cta-glow)"/>
+      {/* Stars */}
+      {[[50,30],[220,28],[240,90],[42,110]].map(([x,y],i) => (
+        <circle key={i} cx={x} cy={y} r="1" fill="#cabeff" opacity="0.5"/>
+      ))}
+      <text x="140" y="42" textAnchor="middle" fill="#cabeff" fontSize="6" fontFamily="sans-serif" opacity="0.9">✦ LIMITED AVAILABILITY</text>
+      <text x="140" y="62" textAnchor="middle" fill="#dfe2eb" fontSize="13" fontFamily="Georgia, serif">The Cosmos Awaits.</text>
+      <text x="140" y="78" textAnchor="middle" fill="#dfe2eb" fontSize="13" fontFamily="Georgia, serif">Will You Answer?</text>
+      <text x="140" y="96" textAnchor="middle" fill="#c3c6d2" fontSize="6.5" fontFamily="sans-serif">Peak season books 6 weeks out.</text>
+      <rect x="52" y="108" width="176" height="20" rx="3" fill="#cabeff"/>
+      <text x="140" y="121" textAnchor="middle" fill="#10141a" fontSize="7" fontFamily="sans-serif" fontWeight="700">RESERVE MY NIGHT UNDER THE STARS</text>
+      <text x="140" y="142" textAnchor="middle" fill="#c3c6d2" fontSize="5.5" fontFamily="sans-serif" opacity="0.6">Free cancellation · No hidden fees</text>
+    </svg>
+  )
+}
+
+function PpcFooterThumb() {
+  return (
+    <svg viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
+      <rect width="280" height="160" fill="#0a0d12"/>
+      <line x1="0" y1="0" x2="280" y2="0" stroke="#c3c6d2" strokeWidth="0.5" strokeOpacity="0.15"/>
+      {/* Logo + tagline */}
+      <text x="16" y="24" fill="#dfe2eb" fontSize="10" fontFamily="sans-serif" fontWeight="600">✦ Stellar Utah</text>
+      <text x="16" y="38" fill="#c3c6d2" fontSize="6" fontFamily="sans-serif" opacity="0.7">Utah's premier dark-sky luxury resort.</text>
+      <text x="16" y="48" fill="#c3c6d2" fontSize="6" fontFamily="sans-serif" opacity="0.7">IDA Gold Tier Certified.</text>
+      {/* Nav columns */}
+      <text x="140" y="20" fill="#cabeff" fontSize="6" fontFamily="sans-serif" fontWeight="600" letterSpacing="2">EXPERIENCES</text>
+      <text x="140" y="34" fill="#c3c6d2" fontSize="6.5" fontFamily="sans-serif">Observatory</text>
+      <text x="140" y="44" fill="#c3c6d2" fontSize="6.5" fontFamily="sans-serif">Night Tours</text>
+      <text x="140" y="54" fill="#c3c6d2" fontSize="6.5" fontFamily="sans-serif">Photography</text>
+      <text x="198" y="20" fill="#cabeff" fontSize="6" fontFamily="sans-serif" fontWeight="600" letterSpacing="2">STAY</text>
+      <text x="198" y="34" fill="#c3c6d2" fontSize="6.5" fontFamily="sans-serif">Sky Domes</text>
+      <text x="198" y="44" fill="#c3c6d2" fontSize="6.5" fontFamily="sans-serif">Canyon Suites</text>
+      <text x="198" y="54" fill="#c3c6d2" fontSize="6.5" fontFamily="sans-serif">Group Retreats</text>
+      <text x="242" y="20" fill="#cabeff" fontSize="6" fontFamily="sans-serif" fontWeight="600" letterSpacing="2">INFO</text>
+      <text x="242" y="34" fill="#c3c6d2" fontSize="6.5" fontFamily="sans-serif">About</text>
+      <text x="242" y="44" fill="#c3c6d2" fontSize="6.5" fontFamily="sans-serif">FAQ</text>
+      <text x="242" y="54" fill="#c3c6d2" fontSize="6.5" fontFamily="sans-serif">Contact</text>
+      {/* Divider */}
+      <line x1="12" y1="70" x2="268" y2="70" stroke="#c3c6d2" strokeWidth="0.4" strokeOpacity="0.15"/>
+      {/* Copyright */}
+      <text x="16" y="84" fill="#c3c6d2" fontSize="5.5" fontFamily="sans-serif" opacity="0.5">© 2025 Stellar Utah. All rights reserved. IDA Gold Tier Dark Sky Sanctuary.</text>
+      <text x="200" y="84" fill="#c3c6d2" fontSize="5.5" fontFamily="sans-serif" opacity="0.5">Privacy · Terms</text>
+    </svg>
+  )
+}
+
+
 const THUMB_MAP: Record<string, React.ReactNode> = {
   'banner-hero-gradient':    <BannerGradientThumb />,
   'banner-dark-announcement':<BannerDarkThumb />,
@@ -366,6 +559,12 @@ const THUMB_MAP: Record<string, React.ReactNode> = {
   'header-minimal-center':   <HeaderMinimalThumb />,
   'header-saas-transparent': <HeaderTransparentThumb />,
   'header-enterprise-dark':  <HeaderEnterpriseThumb />,
+  'ppc-hero':            <PpcHeroThumb />,
+  'ppc-experiences':     <PpcExperiencesThumb />,
+  'ppc-bento':           <PpcBentoThumb />,
+  'ppc-accommodations':  <PpcAccommodationsThumb />,
+  'ppc-cta':             <PpcCtaThumb />,
+  'ppc-footer':          <PpcFooterThumb />,
 }
 
 // ─── Category badge colours ────────────────────────────────────────────────────
@@ -375,6 +574,7 @@ const CATEGORY_COLORS: Record<string, { bg: string; color: string }> = {
   cta:    { bg: '#f0fdf4', color: '#16a34a' },
   form:   { bg: '#fdf4ff', color: '#9333ea' },
   header: { bg: '#fff7ed', color: '#ea580c' },
+  ppc:    { bg: '#1a1030', color: '#cabeff' },
 }
 
 // Framework metadata
@@ -782,7 +982,7 @@ function TemplateCard({ tpl, onDownload, onPreview }: { tpl: Template; onDownloa
 
 // ─── Category filter ───────────────────────────────────────────────────────────
 
-type Category = 'all' | 'header' | 'banner' | 'cta' | 'form'
+type Category = 'all' | 'header' | 'banner' | 'cta' | 'form' | 'ppc'
 
 const CATEGORIES: { label: string; value: Category }[] = [
   { label: 'All', value: 'all' },
@@ -790,6 +990,7 @@ const CATEGORIES: { label: string; value: Category }[] = [
   { label: 'Banner', value: 'banner' },
   { label: 'CTA', value: 'cta' },
   { label: 'Form', value: 'form' },
+  { label: 'PPC', value: 'ppc' },
 ]
 
 // ─── Inspiration Section ───────────────────────────────────────────────────────
