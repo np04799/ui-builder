@@ -131,3 +131,97 @@ body {
   .hide-on-mobile { display: none !important; }
   .show-on-mobile { display: flex !important; }
 }
+
+/* ── Scroll-reveal & hover animations ─────────────────────────────────────── */
+
+/* Entrance keyframes */
+@keyframes bp-fade-up {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes bp-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes bp-scale-in {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Initial hidden state */
+.anim-hidden {
+  opacity: 0;
+}
+
+/* Triggered states */
+.anim-fade-up {
+  animation: bp-fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.anim-fade-in {
+  animation: bp-fade-in 0.5s ease both;
+}
+.anim-scale-in {
+  animation: bp-scale-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Stagger delays */
+.anim-delay-1 { animation-delay: 80ms; }
+.anim-delay-2 { animation-delay: 160ms; }
+.anim-delay-3 { animation-delay: 240ms; }
+.anim-delay-4 { animation-delay: 320ms; }
+.anim-delay-5 { animation-delay: 400ms; }
+.anim-delay-6 { animation-delay: 480ms; }
+
+/* ── Template card hover ───────────────────────────────────────────────────── */
+.tpl-card {
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.2s ease;
+  will-change: transform;
+}
+.tpl-card:hover {
+  transform: translateY(-6px) scale(1.015);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.18), 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: var(--color-primary) !important;
+}
+
+/* ── Category pill hover ──────────────────────────────────────────────────── */
+.cat-pill {
+  transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease,
+              box-shadow 0.18s ease;
+}
+.cat-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* ── CTA button pulse glow on hover ──────────────────────────────────────── */
+.btn-primary-glow {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+.btn-primary-glow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(var(--color-primary-rgb, 99, 102, 241), 0.35);
+  opacity: 0.92;
+}
+
+/* ── Hero section ─────────────────────────────────────────────────────────── */
+.hero-title {
+  animation: bp-fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+}
+.hero-sub {
+  animation: bp-fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.22s both;
+}
+.hero-cta {
+  animation: bp-fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.34s both;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .anim-hidden, .anim-fade-up, .anim-fade-in, .anim-scale-in,
+  .hero-title, .hero-sub, .hero-cta {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

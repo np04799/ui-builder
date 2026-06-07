@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { TEMPLATES, materializeTemplate } from '@/lib/templates'
 import type { Template } from '@/lib/templates'
 import type { BuilderMode } from '@/types/builder.types'
@@ -862,6 +862,23 @@ function TemplateCard({ tpl, onDownload, onPreview }: { tpl: Template; onDownloa
   )
 }
 
+// ─── Scroll-reveal hook ────────────────────────────────────────────────────────
+function useScrollReveal(threshold = 0.12) {
+  const ref = useRef<HTMLElement | null>(null)
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect() } },
+      { threshold, rootMargin: '0px 0px -40px 0px' }
+    )
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [threshold])
+  return { ref, visible }
+}
+
 // ─── Category filter ───────────────────────────────────────────────────────────
 
 type Category = 'all' | 'header' | 'banner' | 'cta' | 'form' | 'ppc'
@@ -880,6 +897,36 @@ const CATEGORIES: { label: string; value: Category }[] = [
 export default function InspirationSection() {
   const [activeCategory, setActiveCategory] = useState<Category>('all')
   const [modalTemplate, setModalTemplate] = useState<Template | null>(null)
+  const headingReveal = useScrollReveal(0.1)
+  const pillsReveal   = useScrollReveal(0.1)
+  const ctaReveal     = useScrollReveal(0.1)
+  // stagger card visibility
+  const [visibleCards, setVisibleCards] = useState<Set<string>>(new Set())
+  const cardObserverRef = useRef<IntersectionObserver | null>(null)
+  const cardRefs = useRef<Map<string, HTMLElement>>(new Map())
+
+  const observeCard = useCallback((id: string, el: HTMLElement | null) => {
+    if (!el) { cardRefs.current.delete(id); return }
+    cardRefs.current.set(id, el)
+    if (!cardObserverRef.current) {
+      cardObserverRef.current = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const cardId = (entry.target as HTMLElement).dataset.cardId
+              if (cardId) setVisibleCards(prev => new Set(prev).add(cardId))
+            }
+          })
+        },
+        { threshold: 0.08, rootMargin: '0px 0px -20px 0px' }
+      )
+    }
+    cardObserverRef.current.observe(el)
+  }, [])
+
+  useEffect(() => {
+    return () => { cardObserverRef.current?.disconnect() }
+  }, [])
 
   function handlePreview(tpl: Template) {
     const templateSections = tpl.sections ?? (tpl.section ? [tpl.section] : [])
@@ -946,7 +993,11 @@ export default function InspirationSection() {
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
 
           {/* Heading */}
-          <div style={{ textAlign: 'center', marginBottom: 48 }}>
+          <div
+            ref={headingReveal.ref as React.RefObject<HTMLDivElement>}
+            className={headingReveal.visible ? 'anim-fade-up' : 'anim-hidden'}
+            style={{ textAlign: 'center', marginBottom: 48 }}
+          >
             <span style={{
               display: 'inline-block', marginBottom: 12,
               fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.08em',
@@ -977,16 +1028,21 @@ export default function InspirationSection() {
           </div>
 
           {/* Category pills */}
-          <div style={{
-            display: 'flex', flexWrap: 'wrap', gap: 8,
-            justifyContent: 'center', marginBottom: 36,
-          }}>
+          <div
+            ref={pillsReveal.ref as React.RefObject<HTMLDivElement>}
+            className={pillsReveal.visible ? 'anim-fade-up' : 'anim-hidden'}
+            style={{
+              display: 'flex', flexWrap: 'wrap', gap: 8,
+              justifyContent: 'center', marginBottom: 36,
+            }}
+          >
             {CATEGORIES.map(cat => {
               const active = activeCategory === cat.value
               return (
                 <button
                   key={cat.value}
                   onClick={() => setActiveCategory(cat.value)}
+                  className="cat-pill"
                   style={{
                     height: 34, padding: '0 16px', borderRadius: 8,
                     border: active ? '1.5px solid var(--color-primary)' : '1px solid var(--color-border)',
@@ -1016,14 +1072,25 @@ export default function InspirationSection() {
           }}
             className="inspiration-grid"
           >
-            {filtered.map(tpl => (
-              <TemplateCard
-                key={tpl.id}
-                tpl={tpl}
-                onDownload={setModalTemplate}
-                onPreview={handlePreview}
-              />
-            ))}
+            {filtered.map((tpl, idx) => {
+              const isVis = visibleCards.has(tpl.id)
+              const delay = (idx % 3) * 80  // stagger by column
+              return (
+                <div
+                  key={tpl.id}
+                  data-card-id={tpl.id}
+                  ref={el => observeCard(tpl.id, el)}
+                  className={`tpl-card ${isVis ? 'anim-scale-in' : 'anim-hidden'}`}
+                  style={{ animationDelay: isVis ? `${delay}ms` : undefined, borderRadius: 12 }}
+                >
+                  <TemplateCard
+                    tpl={tpl}
+                    onDownload={setModalTemplate}
+                    onPreview={handlePreview}
+                  />
+                </div>
+              )
+            })}
           </div>
 
           {/* Empty state */}
@@ -1034,12 +1101,16 @@ export default function InspirationSection() {
           )}
 
           {/* CTA nudge */}
-          <div style={{
-            marginTop: 56, textAlign: 'center',
-            padding: '32px 24px',
-            borderRadius: 16, border: '1px solid var(--color-border)',
-            backgroundColor: 'var(--color-surface)',
-          }}>
+          <div
+            ref={ctaReveal.ref as React.RefObject<HTMLDivElement>}
+            className={ctaReveal.visible ? 'anim-fade-up' : 'anim-hidden'}
+            style={{
+              marginTop: 56, textAlign: 'center',
+              padding: '32px 24px',
+              borderRadius: 16, border: '1px solid var(--color-border)',
+              backgroundColor: 'var(--color-surface)',
+            }}
+          >
             <p style={{ margin: '0 0 16px', fontSize: '1rem', fontWeight: 600, color: 'var(--color-text-primary)' }}>
               Want to build something custom?
             </p>
@@ -1048,15 +1119,13 @@ export default function InspirationSection() {
             </p>
             <a
               href="/builder"
+              className="btn-primary-glow"
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 8,
                 height: 42, padding: '0 24px', borderRadius: 10, border: 'none',
                 backgroundColor: 'var(--color-primary)', color: '#fff',
                 fontSize: '0.9rem', fontWeight: 700, textDecoration: 'none',
-                transition: 'opacity 150ms',
               }}
-              onMouseEnter={e => (e.currentTarget.style.opacity = '0.88')}
-              onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
             >
               Open Builder →
             </a>

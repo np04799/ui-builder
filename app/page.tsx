@@ -13,17 +13,20 @@ export default function Home() {
           style={{ minHeight: '60vh' }}
         >
           <h1
-            className="text-4xl font-semibold tracking-tight"
+            className="text-4xl font-semibold tracking-tight hero-title"
             style={{ color: 'var(--color-primary)' }}
           >
             BuilderPro
           </h1>
-          <p style={{ color: 'var(--color-text-secondary)' }} className="text-lg">
+          <p
+            style={{ color: 'var(--color-text-secondary)' }}
+            className="text-lg hero-sub"
+          >
             Visual website builder — coming soon
           </p>
           <Link
             href="/builder"
-            className="rounded-lg px-6 py-3 text-sm font-medium text-white transition-opacity hover:opacity-90"
+            className="rounded-lg px-6 py-3 text-sm font-medium text-white btn-primary-glow hero-cta"
             style={{ backgroundColor: 'var(--color-primary)' }}
           >
             Open Builder
