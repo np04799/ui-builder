@@ -431,6 +431,114 @@ function HeaderEnterpriseThumb() {
 }
 
 
+
+// ─── PPC Thumbnails ───────────────────────────────────────────────────────────
+
+function PpcStellarUtahThumb() {
+  return (
+    <svg viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
+      <defs>
+        <radialGradient id="tp-ppc-hero" cx="50%" cy="40%" r="60%">
+          <stop offset="0%" stopColor="#4719c9" stopOpacity="0.25"/>
+          <stop offset="100%" stopColor="#02040a" stopOpacity="0"/>
+        </radialGradient>
+        <linearGradient id="tp-ppc-fade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#02040a" stopOpacity="0.2"/>
+          <stop offset="80%" stopColor="#02040a" stopOpacity="0.85"/>
+          <stop offset="100%" stopColor="#02040a" stopOpacity="1"/>
+        </linearGradient>
+      </defs>
+      <rect width="280" height="62" fill="#02040a"/>
+      <rect width="280" height="62" fill="url(#tp-ppc-hero)"/>
+      <rect width="280" height="62" fill="url(#tp-ppc-fade)"/>
+      {([
+        [12,4],[42,7],[88,3],[130,9],[172,4],[218,6],[260,10],
+        [28,18],[64,14],[105,22],[150,11],[195,19],[245,15],
+        [18,30],[55,26],[98,33],[142,25],[188,28],[252,22],
+        [35,44],[78,39],[120,48],[165,38],[208,44],[268,35],
+      ] as [number,number][]).map(([x,y], i) => (
+        <circle key={i} cx={x} cy={y} r={i%5===0?1.1:0.6} fill="white" opacity={i%3===0?0.9:0.45}/>
+      ))}
+      <rect width="280" height="11" fill="rgba(10,14,20,0.85)"/>
+      <text x="10" y="7.5" fontFamily="serif" fontSize="5" fill="#c3c6d2">Stellar Utah</text>
+      <rect x="228" y="2.5" width="42" height="6" rx="1.5" fill="none" stroke="#7d5fff" strokeWidth="0.5"/>
+      <text x="249" y="7" fontFamily="sans-serif" fontSize="3.5" fill="#dfe2eb" textAnchor="middle" letterSpacing="0.5">BOOK ESCAPE</text>
+      <text x="140" y="33" fontFamily="serif" fontSize="10" fontWeight="400" fill="#dfe2eb" textAnchor="middle" letterSpacing="0.5">Reconnect with the Infinite</text>
+      <text x="140" y="43" fontFamily="sans-serif" fontSize="4" fill="#909096" textAnchor="middle" letterSpacing="1">WELCOME TO THE ABYSS</text>
+      <rect x="72" y="48" width="52" height="7" rx="1.5" fill="none" stroke="rgba(195,198,210,0.4)" strokeWidth="0.5"/>
+      <text x="98" y="53.5" fontFamily="sans-serif" fontSize="3" fill="#dfe2eb" textAnchor="middle">EXPLORE THE VOID</text>
+      <rect x="130" y="48" width="78" height="7" rx="1.5" fill="none" stroke="rgba(195,198,210,0.4)" strokeWidth="0.5"/>
+      <text x="169" y="53.5" fontFamily="sans-serif" fontSize="3" fill="#dfe2eb" textAnchor="middle">VIEW CELESTIAL CALENDAR</text>
+      <rect width="280" height="34" y="62" fill="#10141a"/>
+      <text x="8" y="76" fontFamily="serif" fontSize="7" fill="#dfe2eb">The Experience</text>
+      <rect x="148" y="64" width="126" height="30" rx="3" fill="#1c2026" stroke="rgba(195,198,210,0.2)" strokeWidth="0.5"/>
+      <rect width="280" height="36" y="96" fill="#0a0e14"/>
+      <text x="140" y="103" fontFamily="serif" fontSize="6.5" fill="#dfe2eb" textAnchor="middle">The Bortle 1 Standard</text>
+      <rect x="6" y="105" width="150" height="12" rx="2" fill="rgba(16,20,26,0.7)" stroke="rgba(195,198,210,0.15)" strokeWidth="0.5"/>
+      <text x="12" y="113" fontFamily="serif" fontSize="5" fill="#dfe2eb">Absolute Void</text>
+      <rect x="162" y="105" width="112" height="12" rx="2" fill="rgba(16,20,26,0.4)" stroke="rgba(195,198,210,0.15)" strokeWidth="0.5"/>
+      <text x="218" y="110" fontFamily="serif" fontSize="10" fill="#dfe2eb" textAnchor="middle" fontWeight="300">01</text>
+      <text x="218" y="115" fontFamily="sans-serif" fontSize="2.5" fill="#cabeff" textAnchor="middle">BORTLE CLASS</text>
+      <rect width="280" height="22" y="132" fill="#10141a"/>
+      <text x="8" y="146" fontFamily="serif" fontSize="6.5" fill="#dfe2eb">Luxury Dwellings</text>
+      <rect width="280" height="6" y="154" fill="#0a0e14"/>
+      <text x="8" y="158.5" fontFamily="sans-serif" fontSize="2.5" fill="#c6c6cb" opacity="0.5">Stellar Utah  ·  Dark Sky Certified  ·  High Desert Luxury</text>
+    </svg>
+  )
+}
+
+function PpcNoirFashionThumb() {
+  return (
+    <svg viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg" style={{width:'100%',height:'100%'}}>
+      <defs>
+        <linearGradient id="tp-noir-hero" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#201D19"/>
+          <stop offset="100%" stopColor="#0A0908"/>
+        </linearGradient>
+      </defs>
+      {/* Background */}
+      <rect width="280" height="160" fill="#0A0908"/>
+      {/* Nav bar */}
+      <rect width="280" height="18" fill="#100F0D"/>
+      <text x="140" y="12" fontFamily="sans-serif" fontSize="7" fill="#F5F0E8" textAnchor="middle" fontWeight="700" letterSpacing="4">NOIR</text>
+      <text x="32" y="12" fontFamily="sans-serif" fontSize="3.5" fill="#827D76" letterSpacing="1">COLLECTIONS</text>
+      <text x="226" y="12" fontFamily="sans-serif" fontSize="3.5" fill="#C9A96E" letterSpacing="1">SALE</text>
+      <line x1="0" y1="18" x2="280" y2="18" stroke="#26231F" strokeWidth="0.5"/>
+      {/* Hero — left text block */}
+      <rect x="0" y="18" width="120" height="78" fill="#100F0D"/>
+      <text x="12" y="32" fontFamily="sans-serif" fontSize="3" fill="#C9A96E" letterSpacing="2">SS 2026 COLLECTION</text>
+      <text x="12" y="44" fontFamily="sans-serif" fontSize="10" fill="#F5F0E8" fontWeight="700" letterSpacing="-0.5">DEFINE YOUR</text>
+      <text x="12" y="56" fontFamily="sans-serif" fontSize="10" fill="#F5F0E8" fontWeight="700" letterSpacing="-0.5">AESTHETIC</text>
+      <text x="12" y="68" fontFamily="sans-serif" fontSize="3" fill="#827D76">Curated luxury for the</text>
+      <text x="12" y="74" fontFamily="sans-serif" fontSize="3" fill="#827D76">discerning wardrobe.</text>
+      <rect x="12" y="82" width="40" height="8" fill="#C9A96E"/>
+      <text x="32" y="88" fontFamily="sans-serif" fontSize="3.5" fill="#0A0908" textAnchor="middle" fontWeight="700" letterSpacing="1">SHOP NOW</text>
+      {/* Hero — right image area */}
+      <rect x="120" y="18" width="160" height="78" fill="url(#tp-noir-hero)"/>
+      <text x="200" y="60" fontFamily="sans-serif" fontSize="5" fill="#46423D" textAnchor="middle">Editorial</text>
+      {/* Collections row */}
+      <rect x="0" y="96" width="280" height="6" fill="#161412"/>
+      <text x="8" y="101" fontFamily="sans-serif" fontSize="3" fill="#46423D" letterSpacing="2">SHOP BY CATEGORY</text>
+      {/* 3 category cards */}
+      <rect x="2" y="104" width="86" height="30" fill="#161412"/>
+      <rect x="2" y="104" width="86" height="16" fill="#201D19"/>
+      <text x="45" y="126" fontFamily="sans-serif" fontSize="3.5" fill="#F5F0E8" textAnchor="middle" letterSpacing="1">NEW ARRIVALS</text>
+      <rect x="96" y="104" width="86" height="30" fill="#161412"/>
+      <rect x="96" y="104" width="86" height="16" fill="#2A2621"/>
+      <text x="139" y="126" fontFamily="sans-serif" fontSize="3.5" fill="#F5F0E8" textAnchor="middle" letterSpacing="1">BESTSELLERS</text>
+      <rect x="190" y="104" width="88" height="30" fill="#1A1210"/>
+      <rect x="190" y="104" width="88" height="16" fill="#241B18"/>
+      <text x="234" y="123" fontFamily="sans-serif" fontSize="3.5" fill="#F5F0E8" textAnchor="middle" letterSpacing="1">SALE</text>
+      <text x="234" y="128.5" fontFamily="sans-serif" fontSize="2.5" fill="#C9A96E" textAnchor="middle">UP TO 50%</text>
+      {/* Footer strip */}
+      <rect width="280" height="12" y="148" fill="#100F0D"/>
+      <line x1="0" y1="148" x2="280" y2="148" stroke="#26231F" strokeWidth="0.5"/>
+      <text x="140" y="155.5" fontFamily="sans-serif" fontSize="5" fill="#F5F0E8" textAnchor="middle" fontWeight="700" letterSpacing="3">NOIR</text>
+    </svg>
+  )
+}
+
+
 const THUMB_MAP: Record<string, React.ReactNode> = {
   'banner-hero-gradient': <BannerGradientThumb />,
   'banner-dark-announcement': <BannerDarkThumb />,
@@ -456,6 +564,8 @@ const THUMB_MAP: Record<string, React.ReactNode> = {
   'header-minimal-center': <HeaderMinimalThumb />,
   'header-saas-transparent': <HeaderTransparentThumb />,
   'header-enterprise-dark': <HeaderEnterpriseThumb />,
+  'ppc-stellar-utah':         <PpcStellarUtahThumb />,
+  'ppc-noir-fashion':          <PpcNoirFashionThumb />,
 }
 
 const CATEGORY_COLORS: Record<string, { bg: string; color: string }> = {
@@ -463,6 +573,7 @@ const CATEGORY_COLORS: Record<string, { bg: string; color: string }> = {
   cta: { bg: '#f0fdf4', color: '#16a34a' },
   form: { bg: '#fdf4ff', color: '#9333ea' },
   header: { bg: '#fff7ed', color: '#ea580c' },
+  ppc:    { bg: '#1a1030', color: '#cabeff' },
 }
 
 // ─── KPI chart items ──────────────────────────────────────────────────────────
@@ -633,7 +744,7 @@ function ChartGrid() {
 
 // ─── Web templates list ───────────────────────────────────────────────────────
 
-type WebCategory = 'all' | 'banner' | 'cta' | 'form' | 'header'
+type WebCategory = 'all' | 'banner' | 'cta' | 'form' | 'header' | 'ppc'
 
 const WEB_CATEGORIES: { label: string; value: WebCategory }[] = [
   { label: 'All', value: 'all' },
@@ -641,6 +752,7 @@ const WEB_CATEGORIES: { label: string; value: WebCategory }[] = [
   { label: 'Banner', value: 'banner' },
   { label: 'CTA', value: 'cta' },
   { label: 'Form', value: 'form' },
+  { label: 'PPC',  value: 'ppc'  },
 ]
 
 function WebTemplatesTab() {

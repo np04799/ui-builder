@@ -1627,6 +1627,379 @@ const _removedHeaderTemplates = [
       }],
     },
   },
+
+  // ─── PPC Page Template — NOIR Fashion E-Commerce (Dark Luxury) ──────────────
+
+  {
+    id: 'ppc-noir-fashion',
+    label: 'NOIR — Fashion E-Commerce',
+    category: 'ppc',
+    desc: 'Dark luxury fashion e-commerce homepage. 8 sections: nav, hero, collections, featured product, trending, editorial quote, newsletter, footer.',
+    sections: [
+
+      // 1. Navigation
+      {
+        styles: { backgroundColor: '#0A0908', borderBottom: '1px solid #26231F', padding: '0 60px', position: 'sticky', top: '0', zIndex: '100' },
+        responsive: { tablet: { padding: '0 32px' }, mobile: { padding: '0 20px' } },
+        rows: [{
+          locked: true,
+          styles: { alignItems: 'center', justifyContent: 'space-between', minHeight: '76px', flexWrap: 'nowrap', gap: '16px' },
+          columns: [
+            {
+              span: { desktop: 4, tablet: 4, mobile: 0 },
+              styles: { display: 'flex', alignItems: 'center', gap: '32px' },
+              responsive: { mobile: { display: 'none' } },
+              elements: [
+                { content: { type: 'button', text: 'COLLECTIONS', href: '#collections', variant: 'ghost' }, styles: { fontFamily: "'Inter', sans-serif", color: '#827D76', fontSize: '11px', fontWeight: '400', letterSpacing: '0.18em', background: 'none', border: 'none', padding: '0', cursor: 'pointer' } },
+                { content: { type: 'button', text: 'NEW ARRIVALS', href: '#arrivals', variant: 'ghost' }, styles: { fontFamily: "'Inter', sans-serif", color: '#827D76', fontSize: '11px', fontWeight: '400', letterSpacing: '0.18em', background: 'none', border: 'none', padding: '0', cursor: 'pointer' } },
+                { content: { type: 'button', text: 'DESIGNERS', href: '#designers', variant: 'ghost' }, styles: { fontFamily: "'Inter', sans-serif", color: '#827D76', fontSize: '11px', fontWeight: '400', letterSpacing: '0.18em', background: 'none', border: 'none', padding: '0', cursor: 'pointer' } },
+              ],
+            },
+            {
+              span: { desktop: 4, tablet: 4, mobile: 8 },
+              styles: { display: 'flex', alignItems: 'center', justifyContent: 'center' },
+              elements: [
+                { content: { type: 'heading', level: 'h1', text: 'NOIR' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '26px', fontWeight: '700', color: '#F5F0E8', margin: '0', letterSpacing: '0.55em' } },
+              ],
+            },
+            {
+              span: { desktop: 4, tablet: 4, mobile: 4 },
+              styles: { display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '28px' },
+              elements: [
+                { content: { type: 'button', text: 'SALE', href: '#sale', variant: 'ghost' }, styles: { fontFamily: "'Inter', sans-serif", color: '#C9A96E', fontSize: '11px', fontWeight: '400', letterSpacing: '0.18em', background: 'none', border: 'none', padding: '0', cursor: 'pointer' } },
+                { content: { type: 'button', text: 'Search', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Inter', sans-serif", color: '#827D76', fontSize: '11px', letterSpacing: '0.1em', background: 'none', border: 'none', padding: '0', cursor: 'pointer' }, responsive: { mobile: { display: 'none' } } },
+                { content: { type: 'button', text: 'Bag', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Inter', sans-serif", color: '#827D76', fontSize: '11px', letterSpacing: '0.1em', background: 'none', border: 'none', padding: '0', cursor: 'pointer' } },
+              ],
+            },
+          ],
+        }],
+      },
+
+      // 2. Hero
+      {
+        styles: { backgroundColor: '#100F0D', padding: '0', overflow: 'hidden' },
+        rows: [
+          // Announcement ticker
+          {
+            styles: { backgroundColor: '#161412', borderBottom: '1px solid #26231F', padding: '10px 60px', justifyContent: 'center' },
+            responsive: { mobile: { padding: '10px 20px' } },
+            columns: [{
+              span: { desktop: 12, tablet: 12, mobile: 12 },
+              styles: { display: 'flex', justifyContent: 'center' },
+              elements: [
+                { content: { type: 'paragraph', text: 'FREE SHIPPING ON ORDERS OVER $200   ·   SS 2026 ARRIVALS NOW LIVE   ·   COMPLIMENTARY GIFT WRAPPING' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '10px', color: '#827D76', letterSpacing: '0.2em', margin: '0', textAlign: 'center', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' } },
+              ],
+            }],
+          },
+          // Main hero row
+          {
+            styles: { minHeight: '680px', position: 'relative', alignItems: 'stretch' },
+            responsive: { mobile: { minHeight: 'auto', flexDirection: 'column' } },
+            columns: [
+              // Left — editorial text
+              {
+                span: { desktop: 5, tablet: 6, mobile: 12 },
+                styles: { backgroundColor: '#100F0D', padding: '80px 60px', display: 'flex', flexDirection: 'column', justifyContent: 'center' },
+                responsive: { tablet: { padding: '60px 32px' }, mobile: { padding: '48px 20px' } },
+                elements: [
+                  { content: { type: 'paragraph', text: 'SS 2026 COLLECTION' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '10px', color: '#C9A96E', letterSpacing: '0.4em', margin: '0 0 28px 0' } },
+                  { content: { type: 'heading', level: 'h1', text: 'DEFINE YOUR AESTHETIC' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '64px', fontWeight: '700', color: '#F5F0E8', lineHeight: '1.0', letterSpacing: '-0.02em', margin: '0 0 32px 0' }, responsive: { tablet: { fontSize: '48px' }, mobile: { fontSize: '36px' } } },
+                  { content: { type: 'paragraph', text: 'Curated luxury for the discerning wardrobe. Structured silhouettes. Timeless pieces.' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '15px', color: '#827D76', lineHeight: '1.7', margin: '0 0 40px 0', maxWidth: '320px' } },
+                  { content: { type: 'button', text: 'SHOP NOW', href: '#collections', variant: 'primary' }, styles: { backgroundColor: '#C9A96E', color: '#0A0908', padding: '16px 40px', fontFamily: "'Inter', sans-serif", fontSize: '11px', fontWeight: '700', letterSpacing: '0.25em', border: 'none', cursor: 'pointer', display: 'inline-block' } },
+                ],
+              },
+              // Right — hero image placeholder
+              {
+                span: { desktop: 7, tablet: 6, mobile: 12 },
+                styles: { backgroundColor: '#201D19', minHeight: '680px', display: 'flex', alignItems: 'center', justifyContent: 'center' },
+                responsive: { mobile: { minHeight: '320px' } },
+                elements: [
+                  { content: { type: 'paragraph', text: 'Editorial Campaign Image' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '12px', color: '#46423D', letterSpacing: '0.1em', margin: '0', textAlign: 'center' } },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+
+      // 3. Collections
+      {
+        id: 'collections',
+        styles: { backgroundColor: '#0A0908', padding: '64px 60px' },
+        responsive: { tablet: { padding: '48px 32px' }, mobile: { padding: '40px 20px' } },
+        rows: [
+          {
+            styles: { marginBottom: '32px' },
+            columns: [{
+              span: { desktop: 12, tablet: 12, mobile: 12 },
+              elements: [
+                { content: { type: 'paragraph', text: 'SHOP BY CATEGORY' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '10px', color: '#46423D', letterSpacing: '0.4em', margin: '0' } },
+              ],
+            }],
+          },
+          {
+            styles: { gap: '16px', alignItems: 'stretch' },
+            columns: [
+              {
+                span: { desktop: 4, tablet: 4, mobile: 12 },
+                styles: { backgroundColor: '#161412', overflow: 'hidden' },
+                elements: [
+                  { content: { type: 'div' }, styles: { backgroundColor: '#201D19', height: '260px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' } },
+                  { content: { type: 'heading', level: 'h3', text: 'NEW ARRIVALS' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '13px', fontWeight: '700', color: '#F5F0E8', letterSpacing: '0.2em', margin: '20px 20px 6px' } },
+                  { content: { type: 'paragraph', text: '140 Pieces' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '11px', color: '#827D76', margin: '0 20px 6px', letterSpacing: '0.05em' } },
+                  { content: { type: 'button', text: 'Explore →', href: '#arrivals', variant: 'ghost' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '11px', color: '#C9A96E', background: 'none', border: 'none', padding: '0 20px 20px', cursor: 'pointer', letterSpacing: '0.05em', display: 'block' } },
+                ],
+              },
+              {
+                span: { desktop: 4, tablet: 4, mobile: 12 },
+                styles: { backgroundColor: '#161412', overflow: 'hidden' },
+                elements: [
+                  { content: { type: 'div' }, styles: { backgroundColor: '#2A2621', height: '260px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' } },
+                  { content: { type: 'heading', level: 'h3', text: 'BESTSELLERS' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '13px', fontWeight: '700', color: '#F5F0E8', letterSpacing: '0.2em', margin: '20px 20px 6px' } },
+                  { content: { type: 'paragraph', text: '68 Pieces' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '11px', color: '#827D76', margin: '0 20px 6px', letterSpacing: '0.05em' } },
+                  { content: { type: 'button', text: 'Explore →', href: '#bestsellers', variant: 'ghost' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '11px', color: '#C9A96E', background: 'none', border: 'none', padding: '0 20px 20px', cursor: 'pointer', letterSpacing: '0.05em', display: 'block' } },
+                ],
+              },
+              {
+                span: { desktop: 4, tablet: 4, mobile: 12 },
+                styles: { backgroundColor: '#1A1210', overflow: 'hidden' },
+                elements: [
+                  { content: { type: 'div' }, styles: { backgroundColor: '#241B18', height: '260px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' } },
+                  { content: { type: 'heading', level: 'h3', text: 'SALE UP TO 50%' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '13px', fontWeight: '700', color: '#F5F0E8', letterSpacing: '0.2em', margin: '20px 20px 6px' } },
+                  { content: { type: 'paragraph', text: 'Limited Time' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '11px', color: '#C9A96E', margin: '0 20px 6px', letterSpacing: '0.05em' } },
+                  { content: { type: 'button', text: 'Shop Sale →', href: '#sale', variant: 'ghost' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '11px', color: '#C9A96E', background: 'none', border: 'none', padding: '0 20px 20px', cursor: 'pointer', letterSpacing: '0.05em', display: 'block' } },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+
+      // 4. Featured Product
+      {
+        styles: { backgroundColor: '#100F0D', padding: '0', overflow: 'hidden' },
+        rows: [{
+          styles: { alignItems: 'stretch', minHeight: '600px' },
+          responsive: { mobile: { flexDirection: 'column' } },
+          columns: [
+            // Product image
+            {
+              span: { desktop: 5, tablet: 5, mobile: 12 },
+              styles: { backgroundColor: '#201D19', minHeight: '600px', display: 'flex', alignItems: 'center', justifyContent: 'center' },
+              responsive: { mobile: { minHeight: '300px' } },
+              elements: [
+                { content: { type: 'paragraph', text: 'Product Photo' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '12px', color: '#46423D', margin: '0' } },
+              ],
+            },
+            // Product details
+            {
+              span: { desktop: 7, tablet: 7, mobile: 12 },
+              styles: { padding: '80px 60px', display: 'flex', flexDirection: 'column', justifyContent: 'center' },
+              responsive: { tablet: { padding: '60px 32px' }, mobile: { padding: '40px 20px' } },
+              elements: [
+                { content: { type: 'paragraph', text: 'FEATURED PIECE' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '9px', color: '#C9A96E', letterSpacing: '0.45em', margin: '0 0 20px 0' } },
+                { content: { type: 'heading', level: 'h2', text: 'The Obsidian Overcoat' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '48px', fontWeight: '700', color: '#F5F0E8', lineHeight: '1.05', margin: '0 0 20px 0', letterSpacing: '-0.02em' }, responsive: { tablet: { fontSize: '36px' }, mobile: { fontSize: '28px' } } },
+                { content: { type: 'div' }, styles: { width: '48px', height: '1px', backgroundColor: '#C9A96E', margin: '0 0 24px 0' } },
+                { content: { type: 'paragraph', text: 'Crafted from double-faced cashmere, the Obsidian Overcoat is a study in restraint. Structured silhouette, precision-cut lapels. Timeless.' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '14px', color: '#827D76', lineHeight: '1.75', margin: '0 0 24px 0', maxWidth: '420px' } },
+                { content: { type: 'paragraph', text: '★★★★★  4.9  (128 reviews)' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '12px', color: '#C9A96E', margin: '0 0 20px 0', letterSpacing: '0.03em' } },
+                { content: { type: 'heading', level: 'h3', text: '$1,890' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '32px', fontWeight: '700', color: '#F5F0E8', margin: '0 0 28px 0' } },
+                { content: { type: 'paragraph', text: 'SELECT SIZE' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '9px', color: '#46423D', letterSpacing: '0.3em', margin: '0 0 12px 0' } },
+                { content: { type: 'paragraph', text: 'XS  ·  S  ·  M  ·  L  ·  XL' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '12px', color: '#827D76', letterSpacing: '0.15em', margin: '0 0 28px 0' } },
+                { content: { type: 'button', text: 'ADD TO BAG', href: '#', variant: 'primary' }, styles: { backgroundColor: '#C9A96E', color: '#0A0908', padding: '18px 48px', fontFamily: "'Inter', sans-serif", fontSize: '11px', fontWeight: '700', letterSpacing: '0.25em', border: 'none', cursor: 'pointer', display: 'inline-block', marginBottom: '16px' } },
+                { content: { type: 'paragraph', text: '✓  Free shipping & returns  ·  Ships in 2–3 days' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '11px', color: '#46423D', margin: '0', letterSpacing: '0.05em' } },
+              ],
+            },
+          ],
+        }],
+      },
+
+      // 5. Trending Now — Product Grid
+      {
+        styles: { backgroundColor: '#0A0908', padding: '64px 60px' },
+        responsive: { tablet: { padding: '48px 32px' }, mobile: { padding: '40px 20px' } },
+        rows: [
+          {
+            styles: { marginBottom: '28px', alignItems: 'center', justifyContent: 'space-between' },
+            columns: [
+              {
+                span: { desktop: 6, tablet: 6, mobile: 8 },
+                elements: [
+                  { content: { type: 'paragraph', text: 'TRENDING NOW' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '10px', color: '#46423D', letterSpacing: '0.4em', margin: '0' } },
+                ],
+              },
+              {
+                span: { desktop: 6, tablet: 6, mobile: 4 },
+                styles: { display: 'flex', justifyContent: 'flex-end' },
+                elements: [
+                  { content: { type: 'button', text: 'View all →', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '12px', color: '#C9A96E', background: 'none', border: 'none', padding: '0', cursor: 'pointer' } },
+                ],
+              },
+            ],
+          },
+          {
+            styles: { gap: '12px', alignItems: 'stretch' },
+            responsive: { mobile: { flexWrap: 'wrap' } },
+            columns: [
+              {
+                span: { desktop: 3, tablet: 6, mobile: 6 },
+                styles: { display: 'flex', flexDirection: 'column', gap: '0' },
+                elements: [
+                  { content: { type: 'div' }, styles: { backgroundColor: '#201D19', height: '320px', width: '100%' } },
+                  { content: { type: 'paragraph', text: 'NEW' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '9px', color: '#C9A96E', letterSpacing: '0.15em', margin: '12px 0 4px', borderLeft: '2px solid #C9A96E', paddingLeft: '8px' } },
+                  { content: { type: 'heading', level: 'h4', text: 'Silk Slip Dress' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '13px', fontWeight: '400', color: '#F5F0E8', margin: '0 0 4px 0' } },
+                  { content: { type: 'paragraph', text: '$420' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '13px', color: '#827D76', margin: '0' } },
+                ],
+              },
+              {
+                span: { desktop: 3, tablet: 6, mobile: 6 },
+                styles: { display: 'flex', flexDirection: 'column', gap: '0' },
+                elements: [
+                  { content: { type: 'div' }, styles: { backgroundColor: '#2A2621', height: '320px', width: '100%' } },
+                  { content: { type: 'paragraph', text: 'BESTSELLER' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '9px', color: '#C9A96E', letterSpacing: '0.15em', margin: '12px 0 4px', borderLeft: '2px solid #C9A96E', paddingLeft: '8px' } },
+                  { content: { type: 'heading', level: 'h4', text: 'Tailored Blazer' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '13px', fontWeight: '400', color: '#F5F0E8', margin: '0 0 4px 0' } },
+                  { content: { type: 'paragraph', text: '$890' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '13px', color: '#827D76', margin: '0' } },
+                ],
+              },
+              {
+                span: { desktop: 3, tablet: 6, mobile: 6 },
+                styles: { display: 'flex', flexDirection: 'column', gap: '0' },
+                elements: [
+                  { content: { type: 'div' }, styles: { backgroundColor: '#161412', height: '320px', width: '100%' } },
+                  { content: { type: 'paragraph', text: ' ' }, styles: { margin: '12px 0 4px' } },
+                  { content: { type: 'heading', level: 'h4', text: 'Leather Trousers' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '13px', fontWeight: '400', color: '#F5F0E8', margin: '0 0 4px 0' } },
+                  { content: { type: 'paragraph', text: '$640' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '13px', color: '#827D76', margin: '0' } },
+                ],
+              },
+              {
+                span: { desktop: 3, tablet: 6, mobile: 6 },
+                styles: { display: 'flex', flexDirection: 'column', gap: '0' },
+                elements: [
+                  { content: { type: 'div' }, styles: { backgroundColor: '#201D19', height: '320px', width: '100%' } },
+                  { content: { type: 'paragraph', text: 'LOW STOCK' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '9px', color: '#C9A96E', letterSpacing: '0.15em', margin: '12px 0 4px', borderLeft: '2px solid #C9A96E', paddingLeft: '8px' } },
+                  { content: { type: 'heading', level: 'h4', text: 'Cashmere Turtleneck' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '13px', fontWeight: '400', color: '#F5F0E8', margin: '0 0 4px 0' } },
+                  { content: { type: 'paragraph', text: '$310' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '13px', color: '#827D76', margin: '0' } },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+
+      // 6. Editorial Quote
+      {
+        styles: { backgroundColor: '#161412', padding: '80px 60px', textAlign: 'center' },
+        responsive: { mobile: { padding: '60px 20px' } },
+        rows: [{
+          styles: { justifyContent: 'center' },
+          columns: [{
+            span: { desktop: 10, tablet: 12, mobile: 12 },
+            styles: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0' },
+            elements: [
+              { content: { type: 'div' }, styles: { width: '1px', height: '60px', backgroundColor: '#46423D', margin: '0 auto 24px' } },
+              { content: { type: 'heading', level: 'h2', text: '"Fashion is the armor to survive everyday life."' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '36px', fontWeight: '700', color: '#F5F0E8', lineHeight: '1.2', margin: '0 0 24px 0', letterSpacing: '-0.02em', textAlign: 'center' }, responsive: { tablet: { fontSize: '28px' }, mobile: { fontSize: '22px' } } },
+              { content: { type: 'paragraph', text: '— Bill Cunningham' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '13px', color: '#C9A96E', letterSpacing: '0.15em', margin: '0', textAlign: 'center' } },
+            ],
+          }],
+        }],
+      },
+
+      // 7. Newsletter
+      {
+        styles: { backgroundColor: '#0A0908', padding: '72px 60px', borderTop: '1px solid #26231F' },
+        responsive: { mobile: { padding: '52px 20px' } },
+        rows: [{
+          styles: { justifyContent: 'center', flexDirection: 'column', alignItems: 'center', gap: '0' },
+          columns: [{
+            span: { desktop: 8, tablet: 10, mobile: 12 },
+            styles: { display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' },
+            elements: [
+              { content: { type: 'paragraph', text: 'THE INSIDE TRACK' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '9px', color: '#C9A96E', letterSpacing: '0.45em', margin: '0 0 16px 0' } },
+              { content: { type: 'heading', level: 'h2', text: 'First Access. Always.' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '36px', fontWeight: '700', color: '#F5F0E8', margin: '0 0 12px 0', letterSpacing: '-0.02em' }, responsive: { mobile: { fontSize: '26px' } } },
+              { content: { type: 'paragraph', text: 'New drops, private sales, and editorial — direct to your inbox.' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '14px', color: '#827D76', margin: '0 0 32px 0', lineHeight: '1.6' } },
+              { content: { type: 'form' }, styles: { display: 'flex', gap: '0', width: '100%', maxWidth: '520px', flexWrap: 'wrap', justifyContent: 'center' } },
+              { content: { type: 'paragraph', text: 'No spam. Unsubscribe anytime.' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '11px', color: '#46423D', margin: '16px 0 0 0' } },
+            ],
+          }],
+        }],
+      },
+
+      // 8. Footer
+      {
+        styles: { backgroundColor: '#07070600', padding: '52px 60px 32px', borderTop: '1px solid #26231F' },
+        responsive: { tablet: { padding: '40px 32px 24px' }, mobile: { padding: '36px 20px 24px' } },
+        rows: [
+          {
+            styles: { alignItems: 'flex-start', marginBottom: '40px' },
+            responsive: { mobile: { flexDirection: 'column', gap: '32px' } },
+            columns: [
+              {
+                span: { desktop: 4, tablet: 4, mobile: 12 },
+                styles: { display: 'flex', flexDirection: 'column', gap: '8px' },
+                elements: [
+                  { content: { type: 'heading', level: 'h3', text: 'NOIR' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '22px', fontWeight: '700', color: '#F5F0E8', margin: '0', letterSpacing: '0.5em' } },
+                  { content: { type: 'paragraph', text: 'Luxury. Defined.' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '11px', color: '#46423D', margin: '0', letterSpacing: '0.08em' } },
+                  { content: { type: 'paragraph', text: 'IG  ·  PT  ·  TT' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '10px', color: '#827D76', margin: '16px 0 0 0', letterSpacing: '0.2em' } },
+                ],
+              },
+              {
+                span: { desktop: 2, tablet: 2, mobile: 6 },
+                styles: { display: 'flex', flexDirection: 'column', gap: '12px' },
+                elements: [
+                  { content: { type: 'paragraph', text: 'COMPANY' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '9px', fontWeight: '700', color: '#F5F0E8', letterSpacing: '0.3em', margin: '0 0 4px 0' } },
+                  { content: { type: 'button', text: 'About', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '11px', color: '#46423D', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textAlign: 'left' } },
+                  { content: { type: 'button', text: 'Careers', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '11px', color: '#46423D', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textAlign: 'left' } },
+                  { content: { type: 'button', text: 'Press', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '11px', color: '#46423D', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textAlign: 'left' } },
+                  { content: { type: 'button', text: 'Sustainability', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '11px', color: '#46423D', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textAlign: 'left' } },
+                ],
+              },
+              {
+                span: { desktop: 2, tablet: 2, mobile: 6 },
+                styles: { display: 'flex', flexDirection: 'column', gap: '12px' },
+                elements: [
+                  { content: { type: 'paragraph', text: 'SUPPORT' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '9px', fontWeight: '700', color: '#F5F0E8', letterSpacing: '0.3em', margin: '0 0 4px 0' } },
+                  { content: { type: 'button', text: 'Contact', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '11px', color: '#46423D', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textAlign: 'left' } },
+                  { content: { type: 'button', text: 'Shipping', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '11px', color: '#46423D', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textAlign: 'left' } },
+                  { content: { type: 'button', text: 'Returns', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '11px', color: '#46423D', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textAlign: 'left' } },
+                  { content: { type: 'button', text: 'Size Guide', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '11px', color: '#46423D', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textAlign: 'left' } },
+                ],
+              },
+              {
+                span: { desktop: 2, tablet: 4, mobile: 6 },
+                styles: { display: 'flex', flexDirection: 'column', gap: '12px' },
+                elements: [
+                  { content: { type: 'paragraph', text: 'DISCOVER' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '9px', fontWeight: '700', color: '#F5F0E8', letterSpacing: '0.3em', margin: '0 0 4px 0' } },
+                  { content: { type: 'button', text: 'Lookbook', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '11px', color: '#46423D', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textAlign: 'left' } },
+                  { content: { type: 'button', text: 'Blog', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '11px', color: '#46423D', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textAlign: 'left' } },
+                  { content: { type: 'button', text: 'Gift Cards', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '11px', color: '#46423D', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textAlign: 'left' } },
+                ],
+              },
+              {
+                span: { desktop: 2, tablet: 4, mobile: 6 },
+                styles: { display: 'flex', flexDirection: 'column', gap: '12px' },
+                elements: [
+                  { content: { type: 'paragraph', text: 'LEGAL' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '9px', fontWeight: '700', color: '#F5F0E8', letterSpacing: '0.3em', margin: '0 0 4px 0' } },
+                  { content: { type: 'button', text: 'Privacy', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '11px', color: '#46423D', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textAlign: 'left' } },
+                  { content: { type: 'button', text: 'Terms', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '11px', color: '#46423D', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textAlign: 'left' } },
+                  { content: { type: 'button', text: 'Cookies', href: '#', variant: 'ghost' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '11px', color: '#46423D', background: 'none', border: 'none', padding: '0', cursor: 'pointer', textAlign: 'left' } },
+                ],
+              },
+            ],
+          },
+          {
+            styles: { borderTop: '1px solid #26231F', paddingTop: '24px', alignItems: 'center', justifyContent: 'space-between' },
+            columns: [{
+              span: { desktop: 12, tablet: 12, mobile: 12 },
+              elements: [
+                { content: { type: 'paragraph', text: '© 2026 NOIR. All rights reserved.  ·  A Modern Luxury Brand.' }, styles: { fontFamily: "'Inter', sans-serif", fontSize: '10px', color: '#46423D', margin: '0', letterSpacing: '0.05em' } },
+              ],
+            }],
+          },
+        ],
+      },
+
+    ],
+  },
+
 ]
 
 export { _removedHeaderTemplates }

@@ -433,6 +433,58 @@ function PpcStellarUtahThumb() {
   )
 }
 
+function PpcNoirFashionThumb() {
+  return (
+    <svg viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg" style={{width:'100%',height:'100%'}}>
+      <defs>
+        <linearGradient id="ig-noir-hero" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#201D19"/>
+          <stop offset="100%" stopColor="#0A0908"/>
+        </linearGradient>
+      </defs>
+      {/* Background */}
+      <rect width="280" height="160" fill="#0A0908"/>
+      {/* Nav bar */}
+      <rect width="280" height="18" fill="#100F0D"/>
+      <text x="140" y="12" fontFamily="sans-serif" fontSize="7" fill="#F5F0E8" textAnchor="middle" fontWeight="700" letterSpacing="4">NOIR</text>
+      <text x="32" y="12" fontFamily="sans-serif" fontSize="3.5" fill="#827D76" letterSpacing="1">COLLECTIONS</text>
+      <text x="226" y="12" fontFamily="sans-serif" fontSize="3.5" fill="#C9A96E" letterSpacing="1">SALE</text>
+      <line x1="0" y1="18" x2="280" y2="18" stroke="#26231F" strokeWidth="0.5"/>
+      {/* Hero — left text block */}
+      <rect x="0" y="18" width="120" height="78" fill="#100F0D"/>
+      <text x="12" y="32" fontFamily="sans-serif" fontSize="3" fill="#C9A96E" letterSpacing="2">SS 2026 COLLECTION</text>
+      <text x="12" y="44" fontFamily="sans-serif" fontSize="10" fill="#F5F0E8" fontWeight="700" letterSpacing="-0.5">DEFINE YOUR</text>
+      <text x="12" y="56" fontFamily="sans-serif" fontSize="10" fill="#F5F0E8" fontWeight="700" letterSpacing="-0.5">AESTHETIC</text>
+      <text x="12" y="68" fontFamily="sans-serif" fontSize="3" fill="#827D76">Curated luxury for the</text>
+      <text x="12" y="74" fontFamily="sans-serif" fontSize="3" fill="#827D76">discerning wardrobe.</text>
+      <rect x="12" y="82" width="40" height="8" fill="#C9A96E"/>
+      <text x="32" y="88" fontFamily="sans-serif" fontSize="3.5" fill="#0A0908" textAnchor="middle" fontWeight="700" letterSpacing="1">SHOP NOW</text>
+      {/* Hero — right image area */}
+      <rect x="120" y="18" width="160" height="78" fill="url(#ig-noir-hero)"/>
+      <text x="200" y="60" fontFamily="sans-serif" fontSize="5" fill="#46423D" textAnchor="middle">Editorial</text>
+      {/* Collections row */}
+      <rect x="0" y="96" width="280" height="6" fill="#161412"/>
+      <text x="8" y="101" fontFamily="sans-serif" fontSize="3" fill="#46423D" letterSpacing="2">SHOP BY CATEGORY</text>
+      {/* 3 category cards */}
+      <rect x="2" y="104" width="86" height="30" fill="#161412"/>
+      <rect x="2" y="104" width="86" height="16" fill="#201D19"/>
+      <text x="45" y="126" fontFamily="sans-serif" fontSize="3.5" fill="#F5F0E8" textAnchor="middle" letterSpacing="1">NEW ARRIVALS</text>
+      <rect x="96" y="104" width="86" height="30" fill="#161412"/>
+      <rect x="96" y="104" width="86" height="16" fill="#2A2621"/>
+      <text x="139" y="126" fontFamily="sans-serif" fontSize="3.5" fill="#F5F0E8" textAnchor="middle" letterSpacing="1">BESTSELLERS</text>
+      <rect x="190" y="104" width="88" height="30" fill="#1A1210"/>
+      <rect x="190" y="104" width="88" height="16" fill="#241B18"/>
+      <text x="234" y="123" fontFamily="sans-serif" fontSize="3.5" fill="#F5F0E8" textAnchor="middle" letterSpacing="1">SALE</text>
+      <text x="234" y="128.5" fontFamily="sans-serif" fontSize="2.5" fill="#C9A96E" textAnchor="middle">UP TO 50%</text>
+      {/* Footer strip */}
+      <rect width="280" height="12" y="148" fill="#100F0D"/>
+      <line x1="0" y1="148" x2="280" y2="148" stroke="#26231F" strokeWidth="0.5"/>
+      <text x="140" y="155.5" fontFamily="sans-serif" fontSize="5" fill="#F5F0E8" textAnchor="middle" fontWeight="700" letterSpacing="3">NOIR</text>
+    </svg>
+  )
+}
+
+
 const THUMB_MAP: Record<string, React.ReactNode> = {
   'banner-hero-gradient':    <BannerGradientThumb />,
   'banner-dark-announcement':<BannerDarkThumb />,
@@ -459,6 +511,7 @@ const THUMB_MAP: Record<string, React.ReactNode> = {
   'header-saas-transparent': <HeaderTransparentThumb />,
   'header-enterprise-dark':  <HeaderEnterpriseThumb />,
   'ppc-stellar-utah':   <PpcStellarUtahThumb />,
+  'ppc-noir-fashion':   <PpcNoirFashionThumb />,
 }
 
 // ─── Category badge colours ────────────────────────────────────────────────────
