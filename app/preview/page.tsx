@@ -21,8 +21,18 @@ export default function PreviewPage() {
 
   useEffect(() => {
     try {
+      // Primary: builder sets state in sessionStorage
       const raw = sessionStorage.getItem(PREVIEW_STORAGE_KEY)
-      if (raw) setState(JSON.parse(raw) as BuilderStoreState)
+      if (raw) {
+        setState(JSON.parse(raw) as BuilderStoreState)
+        return
+      }
+      // Fallback: Inspiration section sets state in localStorage (cross-tab bridge)
+      const inspirationRaw = localStorage.getItem('builderpro_inspiration_preview')
+      if (inspirationRaw) {
+        setState(JSON.parse(inspirationRaw) as BuilderStoreState)
+        localStorage.removeItem('builderpro_inspiration_preview')
+      }
     } catch {
       // ignore parse errors
     }

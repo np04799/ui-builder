@@ -6,6 +6,8 @@ import type { Template } from '@/lib/templates'
 import type { BuilderMode } from '@/types/builder.types'
 import type { BuilderStoreState } from '@/types/store.types'
 
+export const INSPIRATION_PREVIEW_KEY = 'builderpro_inspiration_preview'
+
 // ─── SVG Thumbnails (mirrored from TemplatesPanel — marketing context) ─────────
 
 function BannerGradientThumb() {
@@ -667,7 +669,7 @@ function FrameworkPickerModal({ template, onClose }: ModalProps) {
 
 // ─── Template Card ─────────────────────────────────────────────────────────────
 
-function TemplateCard({ tpl, onDownload }: { tpl: Template; onDownload: (t: Template) => void }) {
+function TemplateCard({ tpl, onDownload, onPreview }: { tpl: Template; onDownload: (t: Template) => void; onPreview: (t: Template) => void }) {
   const [hovered, setHovered] = useState(false)
   const catStyle = CATEGORY_COLORS[tpl.category] ?? { bg: '#f3f4f6', color: '#374151' }
 
@@ -731,15 +733,36 @@ function TemplateCard({ tpl, onDownload }: { tpl: Template; onDownload: (t: Temp
           WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
         }}>{tpl.desc}</p>
 
-        {/* Download button */}
-        <div style={{ marginTop: 'auto', paddingTop: 4 }}>
+        {/* Action buttons */}
+        <div style={{ marginTop: 'auto', paddingTop: 4, display: 'flex', gap: 7 }}>
+          {/* Preview */}
+          <button
+            onClick={() => onPreview(tpl)}
+            style={{
+              flex: 1, height: 34, borderRadius: 8,
+              border: '1.5px solid var(--color-border)',
+              backgroundColor: 'var(--color-bg)',
+              color: 'var(--color-text-primary)', fontSize: '0.8125rem', fontWeight: 600,
+              cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5,
+              transition: 'border-color 120ms, color 120ms',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--color-primary)'; e.currentTarget.style.color = 'var(--color-primary)' }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--color-border)'; e.currentTarget.style.color = 'var(--color-text-primary)' }}
+          >
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" />
+              <circle cx="8" cy="8" r="2" />
+            </svg>
+            Preview
+          </button>
+          {/* Download */}
           <button
             onClick={() => onDownload(tpl)}
             style={{
-              width: '100%', height: 34, borderRadius: 8, border: 'none',
+              flex: 1, height: 34, borderRadius: 8, border: 'none',
               backgroundColor: 'var(--color-primary)',
               color: '#fff', fontSize: '0.8125rem', fontWeight: 600,
-              cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+              cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5,
               transition: 'opacity 150ms',
             }}
             onMouseEnter={e => (e.currentTarget.style.opacity = '0.88')}
@@ -774,6 +797,37 @@ const CATEGORIES: { label: string; value: Category }[] = [
 export default function InspirationSection() {
   const [activeCategory, setActiveCategory] = useState<Category>('all')
   const [modalTemplate, setModalTemplate] = useState<Template | null>(null)
+
+  function handlePreview(tpl: Template) {
+    const { section, rows, columns, elements } = materializeTemplate(tpl.section)
+    const state: BuilderStoreState = {
+      sections:  { [section.id]: section },
+      rows:      Object.fromEntries(rows.map(r => [r.id, r])),
+      columns:   Object.fromEntries(columns.map(c => [c.id, c])),
+      elements:  Object.fromEntries(elements.map(e => [e.id, e])),
+      sectionOrder: [section.id],
+      projectMeta: {
+        id: crypto.randomUUID(),
+        name: tpl.label,
+        createdAt: new Date().toISOString(),
+      },
+      mode: 'custom',
+      responsiveMode: 'desktop',
+      selectedId: null,
+      editingId: null,
+      dragState: null,
+      canvasWidth: '100%',
+      projectName: tpl.label,
+      leftPanelVisible: true,
+      rightPanelVisible: true,
+      canvasZoom: 1,
+      clipboard: null,
+      _history: [],
+      _future: [],
+    }
+    localStorage.setItem(INSPIRATION_PREVIEW_KEY, JSON.stringify(state))
+    window.open('/preview', '_blank', 'noopener')
+  }
 
   const filtered = activeCategory === 'all'
     ? TEMPLATES
@@ -868,6 +922,7 @@ export default function InspirationSection() {
                 key={tpl.id}
                 tpl={tpl}
                 onDownload={setModalTemplate}
+                onPreview={handlePreview}
               />
             ))}
           </div>
