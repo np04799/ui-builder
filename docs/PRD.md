@@ -550,3 +550,57 @@ Deliver a stable builder that allows users to:
 - Download clean code
 - Use framework-specific modes
 - Create modern responsive layouts quickly
+---
+
+# 🎨 Inspiration Section (Main / Landing Page)
+
+## Purpose
+
+A public gallery on the marketing landing page (`/`) that showcases BuilderPro's built-in section templates. Visitors can browse, preview, and download any template as clean code in their chosen framework — with zero sign-in required.
+
+## Location
+
+Below the hero on `app/page.tsx`, anchored at `#inspiration` and linked from the marketing header under "Templates".
+
+## Layout
+
+- Section heading: **"Explore Templates"** with a sub-caption explaining framework flexibility
+- Category filter pill row: **All / Header / Banner / CTA / Form**
+- Responsive grid: **3 columns** desktop → **2 columns** tablet → **1 column** mobile
+- Each card contains:
+  - SVG thumbnail (full card width, 140 px tall)
+  - Animated badge on animated templates
+  - Category badge (colored, pill)
+  - Template name (bold)
+  - Short description (muted, single line)
+  - **Download** button (primary color, right-aligned)
+
+## Framework Picker Modal
+
+Triggered by the Download button on any card.
+
+- Centered overlay with backdrop blur
+- Header: "Choose a Framework" + template name sub-label
+- 4 selectable option tiles: **Bootstrap · MUI · Tailwind · Custom**
+  - Each tile shows framework icon + name + brief description
+  - Selected tile highlighted with primary border + background
+- **Download ZIP** button (disabled until framework chosen)
+- **Cancel** button / clicking backdrop closes modal
+- On confirm: POST `/api/export` with mock `BuilderStoreState` containing the template section and the chosen mode, format `zip` → trigger browser download
+
+## Download Mechanics
+
+1. Call `materializeTemplate(tpl.section)` to get normalized `{ section, rows, columns, elements }`.
+2. Assemble a minimal `BuilderStoreState` with those nodes + `mode = chosenFramework` + minimal `projectMeta`.
+3. POST to `/api/export` → receive ZIP blob → trigger `<a download>` click.
+4. ZIP contains `index.html` + `styles.css` + `/assets` folder per `EXPORT_RULES.md`.
+
+## Constraints
+
+- No login required — fully public, no Firestore dependency
+- Reuses existing `TEMPLATES` array and `materializeTemplate()` from `lib/templates.ts`
+- Reuses existing `/api/export` route unchanged
+- All 24 templates shown (same set as builder TemplatesPanel)
+- Dark/light theme compatible via CSS variables
+- Fully responsive at 1440 / 768 / 390 px breakpoints
+
