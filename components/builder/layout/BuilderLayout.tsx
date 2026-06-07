@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import { useUndoRedo } from '@/hooks/useUndoRedo'
 import { useBuilderStore } from '@/store/builder.store'
 import Toolbar from '@/components/builder/toolbar/Toolbar'
@@ -18,6 +19,44 @@ export default function BuilderLayout() {
   const rightPanelVisible = useBuilderStore((s) => s.rightPanelVisible)
   const canvasZoom = useBuilderStore((s) => s.canvasZoom)
   const projectMeta = useBuilderStore((s) => s.projectMeta)
+
+  // ── Global keyboard shortcuts ─────────────────────────────────────────────
+  useEffect(() => {
+    function handler(e: KeyboardEvent) {
+      // Ignore when typing in inputs / contenteditable
+      const tag = (e.target as HTMLElement)?.tagName
+      const isEditable = tag === 'INPUT' || tag === 'TEXTAREA' ||
+        (e.target as HTMLElement)?.isContentEditable
+      if (isEditable) return
+
+      const store = useBuilderStore.getState()
+      const sel = store.selectedId
+
+      const ctrl = e.ctrlKey || e.metaKey
+
+      // Note: Ctrl+Z / Ctrl+Y handled by useUndoRedo hook
+      if (ctrl && e.key === 'c') { e.preventDefault(); store.copySelected?.(); return }
+      if (ctrl && e.key === 'v') { e.preventDefault(); store.pasteClipboard?.(); return }
+      if (ctrl && e.key === 'd') { e.preventDefault(); if (sel && store.elements[sel]) store.duplicateElement?.(sel); return }
+
+      // Delete / Backspace — remove selected element
+      if ((e.key === 'Delete' || e.key === 'Backspace') && sel) {
+        e.preventDefault()
+        if (store.elements[sel]) store.deleteElement(sel)
+        else if (store.columns[sel]) store.deleteColumn(sel)
+        else if (store.rows[sel]) store.deleteRow(sel)
+        else if (store.sections[sel]) store.deleteSection(sel)
+        store.setSelectedId(null)
+        return
+      }
+
+      // Escape — deselect
+      if (e.key === 'Escape') { store.setSelectedId(null); store.setEditingId?.(null); return }
+    }
+
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [])
 
   return (
     <div

@@ -119,7 +119,7 @@ function SaveButton() {
     const key = saveProject()
     if (key) {
       setSaved(true)
-      setTimeout(() => setSaved(false), 1800)
+      setTimeout(() => setSaved(false), 2500)
     }
   }
 
@@ -390,16 +390,24 @@ function ExportButton() {
   }, [open])
 
   async function handleExport(format: 'html' | 'css' | 'zip') {
+    const state = useBuilderStore.getState()
+    // Guard: nothing to export
+    if (!state.sectionOrder || state.sectionOrder.length === 0) {
+      alert('Nothing to export — add some sections to the canvas first.')
+      return
+    }
     setLoading(format)
     setOpen(false)
     try {
-      const state = useBuilderStore.getState()
       const res = await fetch('/api/export', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ state, format }),
       })
-      if (!res.ok) throw new Error(await res.text())
+      if (!res.ok) {
+        const msg = await res.text().catch(() => 'Unknown error')
+        throw new Error(msg)
+      }
       const blob = await res.blob()
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
@@ -407,11 +415,13 @@ function ExportButton() {
       const project = state.projectMeta
       const name = (project?.name ?? 'export').replace(/[^a-z0-9]/gi, '-').toLowerCase()
       a.download = format === 'zip' ? `${name}.zip` : format === 'html' ? `${name}.html` : `${name}.css`
+      document.body.appendChild(a)
       a.click()
+      document.body.removeChild(a)
       URL.revokeObjectURL(url)
     } catch (err) {
       console.error('[export]', err)
-      alert('Export failed. Please try again.')
+      alert(`Export failed: ${err instanceof Error ? err.message : 'Please try again.'}`)
     } finally {
       setLoading(null)
     }
@@ -894,23 +904,29 @@ export default function Toolbar() {
             }}
             onClick={async () => {
               const state = useBuilderStore.getState()
+              if (!state.sectionOrder || state.sectionOrder.length === 0) {
+                alert('Nothing to publish — add some sections to the canvas first.')
+                return
+              }
               try {
                 const res = await fetch('/api/export', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({ state, format: 'zip' }),
                 })
-                if (!res.ok) throw new Error('Export failed')
+                if (!res.ok) throw new Error(await res.text().catch(() => 'Export failed'))
                 const blob = await res.blob()
                 const url = URL.createObjectURL(blob)
                 const a = document.createElement('a')
                 a.href = url
                 const name = (state.projectMeta?.name ?? 'project').replace(/[^a-z0-9]/gi, '-').toLowerCase()
                 a.download = `${name}.zip`
+                document.body.appendChild(a)
                 a.click()
+                document.body.removeChild(a)
                 URL.revokeObjectURL(url)
               } catch (e) {
-                alert('Export failed. Please try again.')
+                alert(`Publish failed: ${e instanceof Error ? e.message : 'Please try again.'}`)
               }
             }}
           >
