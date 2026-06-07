@@ -907,340 +907,6 @@ export const TEMPLATES: Template[] = [
       }],
     },
   },
-]
-
-// Placeholder to keep the rest of the removed header templates — will be re-added once each is fixed
-const _removedHeaderTemplates = [
-  {
-    id: 'header-dark-pro',
-    label: 'Dark Pro Header',
-    category: 'header',
-    desc: 'Dark navbar with logo, nav links and dual action buttons',
-    section: {
-      styles: {
-        backgroundColor: '#0f172a',
-        padding: '0 48px',
-        borderBottom: '1px solid rgba(255,255,255,0.08)',
-        position: 'sticky',
-        top: '0',
-        zIndex: '100',
-      },
-      responsive: {
-        tablet: { padding: '0 24px' },
-        mobile: { padding: '0 16px' },
-      },
-      rows: [{
-        locked: true,
-        styles: { alignItems: 'center', justifyContent: 'space-between', minHeight: '64px', flexWrap: 'nowrap', gap: '16px' },
-        columns: [
-          {
-            span: { desktop: 3, tablet: 5, mobile: 7 },
-            styles: { display: 'flex', alignItems: 'center', flexShrink: '0', minWidth: '0' },
-            elements: [
-              {
-                content: { type: 'image', src: '/logo.svg', alt: 'UI Builder', objectFit: 'contain' },
-                styles: { height: '34px', width: '170px', display: 'block', objectFit: 'contain', flexShrink: '0', filter: 'brightness(0) invert(1)' },
-              },
-            ],
-          },
-          {
-            span: { desktop: 6, tablet: 0, mobile: 0 },
-            styles: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '28px' },
-            responsive: {
-              tablet: { display: 'none' },
-              mobile: { display: 'none' },
-            },
-            elements: [
-              { content: { type: 'button', text: 'Features', href: '#', variant: 'ghost' }, styles: { color: '#94a3b8', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
-              { content: { type: 'button', text: 'Templates', href: '#', variant: 'ghost' }, styles: { color: '#94a3b8', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
-              { content: { type: 'button', text: 'Pricing', href: '#', variant: 'ghost' }, styles: { color: '#94a3b8', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
-              { content: { type: 'button', text: 'Docs', href: '#', variant: 'ghost' }, styles: { color: '#94a3b8', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
-            ],
-          },
-          {
-            span: { desktop: 3, tablet: 7, mobile: 5 },
-            styles: { display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '10px', flexShrink: '0' },
-            elements: [
-              {
-                content: { type: 'button', text: 'Log in', href: '#', variant: 'ghost' },
-                styles: { color: '#94a3b8', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' },
-                responsive: { mobile: { display: 'none' } },
-              },
-              { content: { type: 'button', text: 'Start free →', href: '#', variant: 'primary' }, styles: { backgroundColor: '#4f46e5', color: '#ffffff', padding: '9px 18px', borderRadius: '7px', fontSize: '13px', fontWeight: '600', border: 'none', whiteSpace: 'nowrap' } },
-            ],
-          },
-        ],
-      }],
-    },
-  },
-
-  {
-    id: 'header-gradient-brand',
-    label: 'Gradient Brand Header',
-    category: 'header',
-    desc: 'Indigo-to-purple gradient header with logo and navigation',
-    section: {
-      styles: {
-        background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
-        padding: '0 48px',
-        position: 'sticky',
-        top: '0',
-        zIndex: '100',
-      },
-      responsive: {
-        tablet: { padding: '0 24px' },
-        mobile: { padding: '0 16px' },
-      },
-      rows: [{
-        locked: true,
-        styles: { alignItems: 'center', justifyContent: 'space-between', minHeight: '64px', flexWrap: 'nowrap', gap: '16px' },
-        columns: [
-          {
-            span: { desktop: 3, tablet: 5, mobile: 7 },
-            styles: { display: 'flex', alignItems: 'center', flexShrink: '0', minWidth: '0' },
-            elements: [
-              {
-                content: { type: 'image', src: '/logo.svg', alt: 'UI Builder', objectFit: 'contain' },
-                styles: { height: '34px', width: '170px', display: 'block', objectFit: 'contain', flexShrink: '0', filter: 'brightness(0) invert(1)' },
-              },
-            ],
-          },
-          {
-            span: { desktop: 6, tablet: 0, mobile: 0 },
-            styles: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '28px' },
-            responsive: {
-              tablet: { display: 'none' },
-              mobile: { display: 'none' },
-            },
-            elements: [
-              { content: { type: 'button', text: 'Products', href: '#', variant: 'ghost' }, styles: { color: 'rgba(255,255,255,0.85)', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
-              { content: { type: 'button', text: 'Templates', href: '#', variant: 'ghost' }, styles: { color: 'rgba(255,255,255,0.85)', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
-              { content: { type: 'button', text: 'Pricing', href: '#', variant: 'ghost' }, styles: { color: 'rgba(255,255,255,0.85)', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
-              { content: { type: 'button', text: 'About', href: '#', variant: 'ghost' }, styles: { color: 'rgba(255,255,255,0.85)', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
-            ],
-          },
-          {
-            span: { desktop: 3, tablet: 7, mobile: 5 },
-            styles: { display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '12px', flexShrink: '0' },
-            elements: [
-              {
-                content: { type: 'button', text: 'Sign in', href: '#', variant: 'ghost' },
-                styles: { color: 'rgba(255,255,255,0.85)', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' },
-                responsive: { mobile: { display: 'none' } },
-              },
-              { content: { type: 'button', text: 'Get started', href: '#', variant: 'outline' }, styles: { backgroundColor: 'rgba(255,255,255,0.15)', color: '#ffffff', padding: '9px 20px', borderRadius: '8px', fontSize: '14px', fontWeight: '600', border: '1.5px solid rgba(255,255,255,0.5)', whiteSpace: 'nowrap' } },
-            ],
-          },
-        ],
-      }],
-    },
-  },
-
-  {
-    id: 'header-minimal-center',
-    label: 'Minimal Centered Header',
-    category: 'header',
-    desc: 'Logo centered, minimal links — ultra-clean minimal style',
-    section: {
-      styles: {
-        backgroundColor: '#ffffff',
-        borderBottom: '1px solid #f3f4f6',
-        padding: '0 48px',
-      },
-      responsive: {
-        tablet: { padding: '0 24px' },
-        mobile: { padding: '0 16px' },
-      },
-      rows: [{
-        locked: true,
-        styles: { alignItems: 'center', justifyContent: 'space-between', minHeight: '72px', flexWrap: 'nowrap', gap: '16px' },
-        columns: [
-          {
-            span: { desktop: 3, tablet: 4, mobile: 5 },
-            styles: { display: 'flex', alignItems: 'center', gap: '20px' },
-            responsive: {
-              mobile: { gap: '0' },
-            },
-            elements: [
-              {
-                content: { type: 'button', text: 'Features', href: '#', variant: 'ghost' },
-                styles: { color: '#6b7280', fontSize: '14px', fontWeight: '400', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' },
-                responsive: { mobile: { display: 'none' } },
-              },
-              {
-                content: { type: 'button', text: 'Pricing', href: '#', variant: 'ghost' },
-                styles: { color: '#6b7280', fontSize: '14px', fontWeight: '400', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' },
-                responsive: { mobile: { display: 'none' } },
-              },
-              {
-                content: { type: 'image', src: '/logo.svg', alt: 'UI Builder', objectFit: 'contain' },
-                styles: { height: '32px', width: '160px', display: 'none', objectFit: 'contain', flexShrink: '0' },
-                responsive: { mobile: { display: 'block' } },
-              },
-            ],
-          },
-          {
-            span: { desktop: 6, tablet: 4, mobile: 0 },
-            styles: { display: 'flex', alignItems: 'center', justifyContent: 'center' },
-            responsive: { mobile: { display: 'none' } },
-            elements: [
-              {
-                content: { type: 'image', src: '/logo.svg', alt: 'UI Builder', objectFit: 'contain' },
-                styles: { height: '32px', width: '160px', display: 'block', objectFit: 'contain', flexShrink: '0' },
-              },
-            ],
-          },
-          {
-            span: { desktop: 3, tablet: 4, mobile: 7 },
-            styles: { display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '16px', flexShrink: '0' },
-            elements: [
-              {
-                content: { type: 'button', text: 'Sign in', href: '#', variant: 'ghost' },
-                styles: { color: '#6b7280', fontSize: '14px', fontWeight: '400', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' },
-                responsive: { mobile: { display: 'none' } },
-              },
-              { content: { type: 'button', text: 'Sign up', href: '#', variant: 'primary' }, styles: { backgroundColor: '#111827', color: '#ffffff', padding: '8px 18px', borderRadius: '6px', fontSize: '14px', fontWeight: '500', border: 'none', whiteSpace: 'nowrap' } },
-            ],
-          },
-        ],
-      }],
-    },
-  },
-
-  {
-    id: 'header-saas-transparent',
-    label: 'SaaS Transparent Header',
-    category: 'header',
-    desc: 'Glassmorphism frosted header — overlays hero content with blur',
-    section: {
-      styles: {
-        backgroundColor: 'rgba(255,255,255,0.75)',
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
-        borderBottom: '1px solid rgba(229,231,235,0.6)',
-        padding: '0 48px',
-        position: 'sticky',
-        top: '0',
-        zIndex: '100',
-        boxShadow: '0 2px 20px rgba(0,0,0,0.05)',
-      },
-      responsive: {
-        tablet: { padding: '0 24px' },
-        mobile: { padding: '0 16px' },
-      },
-      rows: [{
-        locked: true,
-        styles: { alignItems: 'center', justifyContent: 'space-between', minHeight: '64px', flexWrap: 'nowrap', gap: '16px' },
-        columns: [
-          {
-            span: { desktop: 3, tablet: 5, mobile: 7 },
-            styles: { display: 'flex', alignItems: 'center', flexShrink: '0', minWidth: '0' },
-            elements: [
-              {
-                content: { type: 'image', src: '/logo.svg', alt: 'UI Builder', objectFit: 'contain' },
-                styles: { height: '32px', width: '160px', display: 'block', objectFit: 'contain', flexShrink: '0' },
-              },
-            ],
-          },
-          {
-            span: { desktop: 6, tablet: 0, mobile: 0 },
-            styles: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '32px' },
-            responsive: {
-              tablet: { display: 'none' },
-              mobile: { display: 'none' },
-            },
-            elements: [
-              { content: { type: 'button', text: 'Features', href: '#', variant: 'ghost' }, styles: { color: '#374151', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
-              { content: { type: 'button', text: 'Solutions', href: '#', variant: 'ghost' }, styles: { color: '#374151', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
-              { content: { type: 'button', text: 'Pricing', href: '#', variant: 'ghost' }, styles: { color: '#374151', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
-              { content: { type: 'button', text: 'Resources', href: '#', variant: 'ghost' }, styles: { color: '#374151', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
-            ],
-          },
-          {
-            span: { desktop: 3, tablet: 7, mobile: 5 },
-            styles: { display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '12px', flexShrink: '0' },
-            elements: [
-              {
-                content: { type: 'button', text: 'Log in', href: '#', variant: 'ghost' },
-                styles: { color: '#374151', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' },
-                responsive: { mobile: { display: 'none' } },
-              },
-              { content: { type: 'button', text: 'Try for free', href: '#', variant: 'primary' }, styles: { background: 'linear-gradient(135deg,#4f46e5,#7c3aed)', color: '#ffffff', padding: '9px 20px', borderRadius: '8px', fontSize: '14px', fontWeight: '600', border: 'none', whiteSpace: 'nowrap', boxShadow: '0 4px 14px rgba(79,70,229,0.4)' } },
-            ],
-          },
-        ],
-      }],
-    },
-  },
-
-  {
-    id: 'header-enterprise-dark',
-    label: 'Enterprise Dark Header',
-    category: 'header',
-    desc: 'Sophisticated dark header with logo, multi-section nav and badge',
-    section: {
-      styles: {
-        backgroundColor: '#09090b',
-        borderBottom: '1px solid rgba(255,255,255,0.06)',
-        padding: '0 48px',
-        position: 'sticky',
-        top: '0',
-        zIndex: '100',
-      },
-      responsive: {
-        tablet: { padding: '0 24px' },
-        mobile: { padding: '0 16px' },
-      },
-      rows: [{
-        locked: true,
-        styles: { alignItems: 'center', justifyContent: 'space-between', minHeight: '60px', flexWrap: 'nowrap', gap: '16px' },
-        columns: [
-          {
-            span: { desktop: 4, tablet: 5, mobile: 7 },
-            styles: { display: 'flex', alignItems: 'center', gap: '10px', flexShrink: '0', minWidth: '0' },
-            elements: [
-              {
-                content: { type: 'image', src: '/logo.svg', alt: 'UI Builder', objectFit: 'contain' },
-                styles: { height: '30px', width: '150px', display: 'block', objectFit: 'contain', flexShrink: '0', filter: 'brightness(0) invert(1)' },
-              },
-              {
-                content: { type: 'paragraph', text: 'Enterprise' },
-                styles: { fontSize: '10px', fontWeight: '700', color: '#a78bfa', backgroundColor: 'rgba(167,139,250,0.12)', border: '1px solid rgba(167,139,250,0.25)', borderRadius: '4px', padding: '2px 7px', letterSpacing: '0.06em', textTransform: 'uppercase', margin: '0', whiteSpace: 'nowrap' },
-                responsive: { mobile: { display: 'none' } },
-              },
-            ],
-          },
-          {
-            span: { desktop: 5, tablet: 0, mobile: 0 },
-            styles: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px' },
-            responsive: {
-              tablet: { display: 'none' },
-              mobile: { display: 'none' },
-            },
-            elements: [
-              { content: { type: 'button', text: 'Platform', href: '#', variant: 'ghost' }, styles: { color: '#a1a1aa', fontSize: '13px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
-              { content: { type: 'button', text: 'Security', href: '#', variant: 'ghost' }, styles: { color: '#a1a1aa', fontSize: '13px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
-              { content: { type: 'button', text: 'Integrations', href: '#', variant: 'ghost' }, styles: { color: '#a1a1aa', fontSize: '13px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
-              { content: { type: 'button', text: 'Customers', href: '#', variant: 'ghost' }, styles: { color: '#a1a1aa', fontSize: '13px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
-              { content: { type: 'button', text: 'Pricing', href: '#', variant: 'ghost' }, styles: { color: '#a1a1aa', fontSize: '13px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
-            ],
-          },
-          {
-            span: { desktop: 3, tablet: 7, mobile: 5 },
-            styles: { display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px', flexShrink: '0' },
-            elements: [
-              {
-                content: { type: 'button', text: 'Contact sales', href: '#', variant: 'outline' },
-                styles: { color: '#e4e4e7', fontSize: '13px', fontWeight: '500', backgroundColor: 'transparent', border: '1px solid rgba(255,255,255,0.15)', padding: '7px 14px', borderRadius: '6px', whiteSpace: 'nowrap', cursor: 'pointer' },
-                responsive: { mobile: { display: 'none' } },
-              },
-              { content: { type: 'button', text: 'Get demo', href: '#', variant: 'primary' }, styles: { backgroundColor: '#4f46e5', color: '#ffffff', padding: '7px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: '600', border: 'none', whiteSpace: 'nowrap' } },
-            ],
-          },
-        ],
-      }],
-    },
-  },
   // ─── PPC Templates — Celestial Obsidian / Stellar Utah ──────────────────────
 
   {
@@ -1746,7 +1412,7 @@ const _removedHeaderTemplates = [
                   styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '13px', color: '#cabeff', margin: '0 0 24px', letterSpacing: '0.04em' },
                 },
                 {
-                  content: { type: 'list', items: [{ text: '10-foot panoramic skylight ceiling' }, { text: 'In-floor radiant heating' }, { text: 'Private hot tub with unobstructed views' }, { text: 'Telescope setup & star chart' }, { text: 'Gourmet breakfast delivered' }] },
+                  content: { type: 'list', items: [{ id: '1df88326', text: '10-foot panoramic skylight ceiling' }, { id: 'be04f35b', text: 'In-floor radiant heating' }, { id: 'e5b2f9fc', text: 'Private hot tub with unobstructed views' }, { id: '6ef506fb', text: 'Telescope setup & star chart' }, { id: '4e173d02', text: 'Gourmet breakfast delivered' }] },
                   styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '15px', color: '#c3c6d2', lineHeight: '2', margin: '0 0 28px', paddingLeft: '20px' },
                 },
                 {
@@ -1774,7 +1440,7 @@ const _removedHeaderTemplates = [
                   styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '13px', color: '#cabeff', margin: '0 0 24px', letterSpacing: '0.04em' },
                 },
                 {
-                  content: { type: 'list', items: [{ text: 'Floor-to-ceiling east-facing windows' }, { text: 'Private wraparound deck' }, { text: 'Smart blackout shade system' }, { text: 'Curated minibar & evening snacks' }, { text: 'Observatory session included' }] },
+                  content: { type: 'list', items: [{ id: 'faff6ea7', text: 'Floor-to-ceiling east-facing windows' }, { id: 'cc455cba', text: 'Private wraparound deck' }, { id: '9f98f61f', text: 'Smart blackout shade system' }, { id: '0e30b02c', text: 'Curated minibar & evening snacks' }, { id: 'd49966bf', text: 'Observatory session included' }] },
                   styles: { fontFamily: '\'Hanken Grotesk\', sans-serif', fontSize: '15px', color: '#c3c6d2', lineHeight: '2', margin: '0 0 28px', paddingLeft: '20px' },
                 },
                 {
@@ -1949,6 +1615,339 @@ const _removedHeaderTemplates = [
           ],
         },
       ],
+    },
+  },
+]
+
+const _removedHeaderTemplates = [
+  {
+    id: 'header-dark-pro',
+    label: 'Dark Pro Header',
+    category: 'header',
+    desc: 'Dark navbar with logo, nav links and dual action buttons',
+    section: {
+      styles: {
+        backgroundColor: '#0f172a',
+        padding: '0 48px',
+        borderBottom: '1px solid rgba(255,255,255,0.08)',
+        position: 'sticky',
+        top: '0',
+        zIndex: '100',
+      },
+      responsive: {
+        tablet: { padding: '0 24px' },
+        mobile: { padding: '0 16px' },
+      },
+      rows: [{
+        locked: true,
+        styles: { alignItems: 'center', justifyContent: 'space-between', minHeight: '64px', flexWrap: 'nowrap', gap: '16px' },
+        columns: [
+          {
+            span: { desktop: 3, tablet: 5, mobile: 7 },
+            styles: { display: 'flex', alignItems: 'center', flexShrink: '0', minWidth: '0' },
+            elements: [
+              {
+                content: { type: 'image', src: '/logo.svg', alt: 'UI Builder', objectFit: 'contain' },
+                styles: { height: '34px', width: '170px', display: 'block', objectFit: 'contain', flexShrink: '0', filter: 'brightness(0) invert(1)' },
+              },
+            ],
+          },
+          {
+            span: { desktop: 6, tablet: 0, mobile: 0 },
+            styles: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '28px' },
+            responsive: {
+              tablet: { display: 'none' },
+              mobile: { display: 'none' },
+            },
+            elements: [
+              { content: { type: 'button', text: 'Features', href: '#', variant: 'ghost' }, styles: { color: '#94a3b8', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
+              { content: { type: 'button', text: 'Templates', href: '#', variant: 'ghost' }, styles: { color: '#94a3b8', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
+              { content: { type: 'button', text: 'Pricing', href: '#', variant: 'ghost' }, styles: { color: '#94a3b8', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
+              { content: { type: 'button', text: 'Docs', href: '#', variant: 'ghost' }, styles: { color: '#94a3b8', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
+            ],
+          },
+          {
+            span: { desktop: 3, tablet: 7, mobile: 5 },
+            styles: { display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '10px', flexShrink: '0' },
+            elements: [
+              {
+                content: { type: 'button', text: 'Log in', href: '#', variant: 'ghost' },
+                styles: { color: '#94a3b8', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' },
+                responsive: { mobile: { display: 'none' } },
+              },
+              { content: { type: 'button', text: 'Start free →', href: '#', variant: 'primary' }, styles: { backgroundColor: '#4f46e5', color: '#ffffff', padding: '9px 18px', borderRadius: '7px', fontSize: '13px', fontWeight: '600', border: 'none', whiteSpace: 'nowrap' } },
+            ],
+          },
+        ],
+      }],
+    },
+  },
+
+  {
+    id: 'header-gradient-brand',
+    label: 'Gradient Brand Header',
+    category: 'header',
+    desc: 'Indigo-to-purple gradient header with logo and navigation',
+    section: {
+      styles: {
+        background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+        padding: '0 48px',
+        position: 'sticky',
+        top: '0',
+        zIndex: '100',
+      },
+      responsive: {
+        tablet: { padding: '0 24px' },
+        mobile: { padding: '0 16px' },
+      },
+      rows: [{
+        locked: true,
+        styles: { alignItems: 'center', justifyContent: 'space-between', minHeight: '64px', flexWrap: 'nowrap', gap: '16px' },
+        columns: [
+          {
+            span: { desktop: 3, tablet: 5, mobile: 7 },
+            styles: { display: 'flex', alignItems: 'center', flexShrink: '0', minWidth: '0' },
+            elements: [
+              {
+                content: { type: 'image', src: '/logo.svg', alt: 'UI Builder', objectFit: 'contain' },
+                styles: { height: '34px', width: '170px', display: 'block', objectFit: 'contain', flexShrink: '0', filter: 'brightness(0) invert(1)' },
+              },
+            ],
+          },
+          {
+            span: { desktop: 6, tablet: 0, mobile: 0 },
+            styles: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '28px' },
+            responsive: {
+              tablet: { display: 'none' },
+              mobile: { display: 'none' },
+            },
+            elements: [
+              { content: { type: 'button', text: 'Products', href: '#', variant: 'ghost' }, styles: { color: 'rgba(255,255,255,0.85)', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
+              { content: { type: 'button', text: 'Templates', href: '#', variant: 'ghost' }, styles: { color: 'rgba(255,255,255,0.85)', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
+              { content: { type: 'button', text: 'Pricing', href: '#', variant: 'ghost' }, styles: { color: 'rgba(255,255,255,0.85)', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
+              { content: { type: 'button', text: 'About', href: '#', variant: 'ghost' }, styles: { color: 'rgba(255,255,255,0.85)', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
+            ],
+          },
+          {
+            span: { desktop: 3, tablet: 7, mobile: 5 },
+            styles: { display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '12px', flexShrink: '0' },
+            elements: [
+              {
+                content: { type: 'button', text: 'Sign in', href: '#', variant: 'ghost' },
+                styles: { color: 'rgba(255,255,255,0.85)', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' },
+                responsive: { mobile: { display: 'none' } },
+              },
+              { content: { type: 'button', text: 'Get started', href: '#', variant: 'outline' }, styles: { backgroundColor: 'rgba(255,255,255,0.15)', color: '#ffffff', padding: '9px 20px', borderRadius: '8px', fontSize: '14px', fontWeight: '600', border: '1.5px solid rgba(255,255,255,0.5)', whiteSpace: 'nowrap' } },
+            ],
+          },
+        ],
+      }],
+    },
+  },
+
+  {
+    id: 'header-minimal-center',
+    label: 'Minimal Centered Header',
+    category: 'header',
+    desc: 'Logo centered, minimal links — ultra-clean minimal style',
+    section: {
+      styles: {
+        backgroundColor: '#ffffff',
+        borderBottom: '1px solid #f3f4f6',
+        padding: '0 48px',
+      },
+      responsive: {
+        tablet: { padding: '0 24px' },
+        mobile: { padding: '0 16px' },
+      },
+      rows: [{
+        locked: true,
+        styles: { alignItems: 'center', justifyContent: 'space-between', minHeight: '72px', flexWrap: 'nowrap', gap: '16px' },
+        columns: [
+          {
+            span: { desktop: 3, tablet: 4, mobile: 5 },
+            styles: { display: 'flex', alignItems: 'center', gap: '20px' },
+            responsive: {
+              mobile: { gap: '0' },
+            },
+            elements: [
+              {
+                content: { type: 'button', text: 'Features', href: '#', variant: 'ghost' },
+                styles: { color: '#6b7280', fontSize: '14px', fontWeight: '400', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' },
+                responsive: { mobile: { display: 'none' } },
+              },
+              {
+                content: { type: 'button', text: 'Pricing', href: '#', variant: 'ghost' },
+                styles: { color: '#6b7280', fontSize: '14px', fontWeight: '400', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' },
+                responsive: { mobile: { display: 'none' } },
+              },
+              {
+                content: { type: 'image', src: '/logo.svg', alt: 'UI Builder', objectFit: 'contain' },
+                styles: { height: '32px', width: '160px', display: 'none', objectFit: 'contain', flexShrink: '0' },
+                responsive: { mobile: { display: 'block' } },
+              },
+            ],
+          },
+          {
+            span: { desktop: 6, tablet: 4, mobile: 0 },
+            styles: { display: 'flex', alignItems: 'center', justifyContent: 'center' },
+            responsive: { mobile: { display: 'none' } },
+            elements: [
+              {
+                content: { type: 'image', src: '/logo.svg', alt: 'UI Builder', objectFit: 'contain' },
+                styles: { height: '32px', width: '160px', display: 'block', objectFit: 'contain', flexShrink: '0' },
+              },
+            ],
+          },
+          {
+            span: { desktop: 3, tablet: 4, mobile: 7 },
+            styles: { display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '16px', flexShrink: '0' },
+            elements: [
+              {
+                content: { type: 'button', text: 'Sign in', href: '#', variant: 'ghost' },
+                styles: { color: '#6b7280', fontSize: '14px', fontWeight: '400', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' },
+                responsive: { mobile: { display: 'none' } },
+              },
+              { content: { type: 'button', text: 'Sign up', href: '#', variant: 'primary' }, styles: { backgroundColor: '#111827', color: '#ffffff', padding: '8px 18px', borderRadius: '6px', fontSize: '14px', fontWeight: '500', border: 'none', whiteSpace: 'nowrap' } },
+            ],
+          },
+        ],
+      }],
+    },
+  },
+
+  {
+    id: 'header-saas-transparent',
+    label: 'SaaS Transparent Header',
+    category: 'header',
+    desc: 'Glassmorphism frosted header — overlays hero content with blur',
+    section: {
+      styles: {
+        backgroundColor: 'rgba(255,255,255,0.75)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        borderBottom: '1px solid rgba(229,231,235,0.6)',
+        padding: '0 48px',
+        position: 'sticky',
+        top: '0',
+        zIndex: '100',
+        boxShadow: '0 2px 20px rgba(0,0,0,0.05)',
+      },
+      responsive: {
+        tablet: { padding: '0 24px' },
+        mobile: { padding: '0 16px' },
+      },
+      rows: [{
+        locked: true,
+        styles: { alignItems: 'center', justifyContent: 'space-between', minHeight: '64px', flexWrap: 'nowrap', gap: '16px' },
+        columns: [
+          {
+            span: { desktop: 3, tablet: 5, mobile: 7 },
+            styles: { display: 'flex', alignItems: 'center', flexShrink: '0', minWidth: '0' },
+            elements: [
+              {
+                content: { type: 'image', src: '/logo.svg', alt: 'UI Builder', objectFit: 'contain' },
+                styles: { height: '32px', width: '160px', display: 'block', objectFit: 'contain', flexShrink: '0' },
+              },
+            ],
+          },
+          {
+            span: { desktop: 6, tablet: 0, mobile: 0 },
+            styles: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '32px' },
+            responsive: {
+              tablet: { display: 'none' },
+              mobile: { display: 'none' },
+            },
+            elements: [
+              { content: { type: 'button', text: 'Features', href: '#', variant: 'ghost' }, styles: { color: '#374151', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
+              { content: { type: 'button', text: 'Solutions', href: '#', variant: 'ghost' }, styles: { color: '#374151', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
+              { content: { type: 'button', text: 'Pricing', href: '#', variant: 'ghost' }, styles: { color: '#374151', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
+              { content: { type: 'button', text: 'Resources', href: '#', variant: 'ghost' }, styles: { color: '#374151', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
+            ],
+          },
+          {
+            span: { desktop: 3, tablet: 7, mobile: 5 },
+            styles: { display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '12px', flexShrink: '0' },
+            elements: [
+              {
+                content: { type: 'button', text: 'Log in', href: '#', variant: 'ghost' },
+                styles: { color: '#374151', fontSize: '14px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' },
+                responsive: { mobile: { display: 'none' } },
+              },
+              { content: { type: 'button', text: 'Try for free', href: '#', variant: 'primary' }, styles: { background: 'linear-gradient(135deg,#4f46e5,#7c3aed)', color: '#ffffff', padding: '9px 20px', borderRadius: '8px', fontSize: '14px', fontWeight: '600', border: 'none', whiteSpace: 'nowrap', boxShadow: '0 4px 14px rgba(79,70,229,0.4)' } },
+            ],
+          },
+        ],
+      }],
+    },
+  },
+
+  {
+    id: 'header-enterprise-dark',
+    label: 'Enterprise Dark Header',
+    category: 'header',
+    desc: 'Sophisticated dark header with logo, multi-section nav and badge',
+    section: {
+      styles: {
+        backgroundColor: '#09090b',
+        borderBottom: '1px solid rgba(255,255,255,0.06)',
+        padding: '0 48px',
+        position: 'sticky',
+        top: '0',
+        zIndex: '100',
+      },
+      responsive: {
+        tablet: { padding: '0 24px' },
+        mobile: { padding: '0 16px' },
+      },
+      rows: [{
+        locked: true,
+        styles: { alignItems: 'center', justifyContent: 'space-between', minHeight: '60px', flexWrap: 'nowrap', gap: '16px' },
+        columns: [
+          {
+            span: { desktop: 4, tablet: 5, mobile: 7 },
+            styles: { display: 'flex', alignItems: 'center', gap: '10px', flexShrink: '0', minWidth: '0' },
+            elements: [
+              {
+                content: { type: 'image', src: '/logo.svg', alt: 'UI Builder', objectFit: 'contain' },
+                styles: { height: '30px', width: '150px', display: 'block', objectFit: 'contain', flexShrink: '0', filter: 'brightness(0) invert(1)' },
+              },
+              {
+                content: { type: 'paragraph', text: 'Enterprise' },
+                styles: { fontSize: '10px', fontWeight: '700', color: '#a78bfa', backgroundColor: 'rgba(167,139,250,0.12)', border: '1px solid rgba(167,139,250,0.25)', borderRadius: '4px', padding: '2px 7px', letterSpacing: '0.06em', textTransform: 'uppercase', margin: '0', whiteSpace: 'nowrap' },
+                responsive: { mobile: { display: 'none' } },
+              },
+            ],
+          },
+          {
+            span: { desktop: 5, tablet: 0, mobile: 0 },
+            styles: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px' },
+            responsive: {
+              tablet: { display: 'none' },
+              mobile: { display: 'none' },
+            },
+            elements: [
+              { content: { type: 'button', text: 'Platform', href: '#', variant: 'ghost' }, styles: { color: '#a1a1aa', fontSize: '13px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
+              { content: { type: 'button', text: 'Security', href: '#', variant: 'ghost' }, styles: { color: '#a1a1aa', fontSize: '13px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
+              { content: { type: 'button', text: 'Integrations', href: '#', variant: 'ghost' }, styles: { color: '#a1a1aa', fontSize: '13px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
+              { content: { type: 'button', text: 'Customers', href: '#', variant: 'ghost' }, styles: { color: '#a1a1aa', fontSize: '13px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
+              { content: { type: 'button', text: 'Pricing', href: '#', variant: 'ghost' }, styles: { color: '#a1a1aa', fontSize: '13px', fontWeight: '500', background: 'none', border: 'none', padding: '0', cursor: 'pointer', whiteSpace: 'nowrap' } },
+            ],
+          },
+          {
+            span: { desktop: 3, tablet: 7, mobile: 5 },
+            styles: { display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px', flexShrink: '0' },
+            elements: [
+              {
+                content: { type: 'button', text: 'Contact sales', href: '#', variant: 'outline' },
+                styles: { color: '#e4e4e7', fontSize: '13px', fontWeight: '500', backgroundColor: 'transparent', border: '1px solid rgba(255,255,255,0.15)', padding: '7px 14px', borderRadius: '6px', whiteSpace: 'nowrap', cursor: 'pointer' },
+                responsive: { mobile: { display: 'none' } },
+              },
+              { content: { type: 'button', text: 'Get demo', href: '#', variant: 'primary' }, styles: { backgroundColor: '#4f46e5', color: '#ffffff', padding: '7px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: '600', border: 'none', whiteSpace: 'nowrap' } },
+            ],
+          },
+        ],
+      }],
     },
   },
 ]
