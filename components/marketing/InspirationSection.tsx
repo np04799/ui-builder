@@ -349,61 +349,86 @@ function PpcStellarUtahThumb() {
   return (
     <svg viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
       <defs>
-        <radialGradient id="ig-ppc-glow" cx="50%" cy="30%" r="55%">
-          <stop offset="0%" stopColor="#4719c9" stopOpacity="0.4"/>
-          <stop offset="100%" stopColor="#10141a" stopOpacity="0"/>
+        <radialGradient id="ig-ppc-hero" cx="50%" cy="40%" r="60%">
+          <stop offset="0%" stopColor="#4719c9" stopOpacity="0.25"/>
+          <stop offset="100%" stopColor="#02040a" stopOpacity="0"/>
         </radialGradient>
-        <linearGradient id="ig-ppc-card" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.07"/>
-          <stop offset="100%" stopColor="#ffffff" stopOpacity="0.02"/>
+        <linearGradient id="ig-ppc-fade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#02040a" stopOpacity="0.2"/>
+          <stop offset="80%" stopColor="#02040a" stopOpacity="0.85"/>
+          <stop offset="100%" stopColor="#02040a" stopOpacity="1"/>
         </linearGradient>
       </defs>
-      {/* Sky bg */}
-      <rect width="280" height="160" fill="#10141a"/>
-      <rect width="280" height="160" fill="url(#ig-ppc-glow)"/>
+
+      {/* Hero full-bleed bg — simulated night sky */}
+      <rect width="280" height="62" fill="#02040a"/>
+      <rect width="280" height="62" fill="url(#ig-ppc-hero)"/>
+      <rect width="280" height="62" fill="url(#ig-ppc-fade)"/>
       {/* Stars */}
-      {[
-        [18,12],[54,8],[91,22],[132,6],[170,15],[210,9],[248,18],
-        [35,38],[74,28],[118,35],[158,26],[200,32],[245,41],
-        [22,55],[66,48],[105,58],[148,44],[194,52],[258,47],
-      ].map(([x,y], i) => (
-        <circle key={i} cx={x} cy={y} r={i%3===0?1.2:0.7} fill="#cabeff" opacity={i%2===0?0.9:0.5}/>
+      {([
+        [12,4],[42,7],[88,3],[130,9],[172,4],[218,6],[260,10],
+        [28,18],[64,14],[105,22],[150,11],[195,19],[245,15],
+        [18,30],[55,26],[98,33],[142,25],[188,28],[252,22],
+        [35,44],[78,39],[120,48],[165,38],[208,44],[268,35],
+      ] as [number,number][]).map(([x,y], i) => (
+        <circle key={i} cx={x} cy={y} r={i%5===0?1.1:0.6} fill="white" opacity={i%3===0?0.9:0.45}/>
       ))}
-      {/* Nav bar */}
-      <rect width="280" height="14" fill="#0a0d12" opacity="0.9"/>
-      <text x="10" y="10" fontFamily="sans-serif" fontSize="6" fontWeight="700" fill="#dfe2eb">✦ Stellar Utah</text>
-      <rect x="230" y="4" width="40" height="6" rx="2" fill="#cabeff"/>
-      <text x="250" y="9" fontFamily="sans-serif" fontSize="4" fill="#10141a" textAnchor="middle" fontWeight="700">Reserve</text>
-      {/* Hero headline */}
-      <text x="140" y="46" fontFamily="serif" fontSize="11" fontWeight="400" fill="#dfe2eb" textAnchor="middle">Sleep Beneath a Thousand Suns</text>
-      <text x="140" y="58" fontFamily="sans-serif" fontSize="5" fill="#c3c6d2" textAnchor="middle">Luxury dark-sky accommodations in Canyon Country</text>
-      {/* CTA row */}
-      <rect x="90" y="63" width="44" height="9" rx="2" fill="#cabeff"/>
-      <text x="112" y="69.5" fontFamily="sans-serif" fontSize="4" fill="#10141a" textAnchor="middle" fontWeight="700">Reserve Now</text>
-      <rect x="140" y="63" width="50" height="9" rx="2" fill="none" stroke="#c3c6d2" strokeWidth="0.6"/>
-      <text x="165" y="69.5" fontFamily="sans-serif" fontSize="4" fill="#c3c6d2" textAnchor="middle">Explore ↓</text>
-      {/* Experiences section */}
-      <rect width="280" height="30" y="80" fill="#0d1017"/>
-      <text x="140" y="91" fontFamily="serif" fontSize="7" fill="#dfe2eb" textAnchor="middle">Curated Celestial Experiences</text>
-      {[0,1,2].map(i => (
-        <g key={i}>
-          <rect x={6 + i*92} y="96" width="82" height="12" rx="4" fill="url(#ig-ppc-card)" stroke="#cabeff" strokeWidth="0.4" strokeOpacity="0.3"/>
-          <text x={47 + i*92} y="104" fontFamily="sans-serif" fontSize="4" fill="#c3c6d2" textAnchor="middle">
-            {['🌌 Observatory','🌠 Night Tour','📸 Astrophoto'][i]}
-          </text>
-        </g>
-      ))}
-      {/* Stats row */}
-      <rect width="280" height="22" y="112" fill="#10141a"/>
-      {[['320+','Clear Nights'],['5★','Rated'],['12k+','Guests'],['IDA','Certified']].map(([num, lbl], i) => (
-        <g key={i}>
-          <text x={23 + i*65} y="121" fontFamily="sans-serif" fontSize="6" fontWeight="700" fill="#cabeff" textAnchor="middle">{num}</text>
-          <text x={23 + i*65} y="129" fontFamily="sans-serif" fontSize="3.5" fill="#c3c6d2" textAnchor="middle">{lbl}</text>
-        </g>
-      ))}
+      {/* Nav */}
+      <rect width="280" height="11" fill="rgba(10,14,20,0.85)"/>
+      <text x="10" y="7.5" fontFamily="serif" fontSize="5" fill="#c3c6d2">Stellar Utah</text>
+      <rect x="228" y="2.5" width="42" height="6" rx="1.5" fill="url(#ig-ppc-hero)"/>
+      <rect x="228" y="2.5" width="42" height="6" rx="1.5" fill="none" stroke="#7d5fff" strokeWidth="0.5"/>
+      <text x="249" y="7" fontFamily="sans-serif" fontSize="3.5" fill="#dfe2eb" textAnchor="middle" letterSpacing="0.5">BOOK ESCAPE</text>
+      {/* Hero text */}
+      <text x="140" y="33" fontFamily="serif" fontSize="10" fontWeight="400" fill="#dfe2eb" textAnchor="middle" letterSpacing="0.5">Reconnect with the Infinite</text>
+      <text x="140" y="43" fontFamily="sans-serif" fontSize="4" fill="#909096" textAnchor="middle" letterSpacing="1">WELCOME TO THE ABYSS</text>
+      {/* Hero buttons */}
+      <rect x="72" y="48" width="52" height="7" rx="1.5" fill="none" stroke="rgba(195,198,210,0.4)" strokeWidth="0.5"/>
+      <text x="98" y="53.5" fontFamily="sans-serif" fontSize="3" fill="#dfe2eb" textAnchor="middle" letterSpacing="0.3">EXPLORE THE VOID</text>
+      <rect x="130" y="48" width="78" height="7" rx="1.5" fill="none" stroke="rgba(195,198,210,0.4)" strokeWidth="0.5"/>
+      <text x="169" y="53.5" fontFamily="sans-serif" fontSize="3" fill="#dfe2eb" textAnchor="middle" letterSpacing="0.3">VIEW CELESTIAL CALENDAR</text>
+
+      {/* Experience section — 2-col */}
+      <rect width="280" height="34" y="62" fill="#10141a"/>
+      {/* Left col text */}
+      <rect x="8" y="66" width="22" height="3" rx="0.5" fill="rgba(202,190,255,0.3)"/>
+      <text x="8" y="69" fontFamily="sans-serif" fontSize="2.5" fill="#cabeff">IMMERSION</text>
+      <text x="8" y="76" fontFamily="serif" fontSize="7" fill="#dfe2eb">The Experience</text>
+      <rect x="8" y="79" width="90" height="2" rx="0.5" fill="#45474b"/>
+      <rect x="8" y="82" width="80" height="2" rx="0.5" fill="#45474b"/>
+      <rect x="8" y="85" width="70" height="2" rx="0.5" fill="#45474b"/>
+      <rect x="8" y="90" width="40" height="2" rx="0.5" fill="#c6c6c6" opacity="0.6"/>
+      <rect x="8" y="93" width="60" height="1.5" rx="0.5" fill="#45474b"/>
+      {/* Right col image placeholder */}
+      <rect x="148" y="64" width="126" height="30" rx="3" fill="#1c2026" stroke="rgba(195,198,210,0.2)" strokeWidth="0.5"/>
+      <circle cx="211" cy="79" r="6" fill="#262a31" stroke="rgba(202,190,255,0.2)" strokeWidth="0.5"/>
+      <text x="211" y="81" fontFamily="sans-serif" fontSize="5" fill="#909096" textAnchor="middle">⌖</text>
+
+      {/* Bortle section — bento */}
+      <rect width="280" height="36" y="96" fill="#0a0e14"/>
+      <text x="140" y="103" fontFamily="serif" fontSize="6.5" fill="#dfe2eb" textAnchor="middle">The Bortle 1 Standard</text>
+      {/* Bento row 1 */}
+      <rect x="6" y="105" width="150" height="12" rx="2" fill="rgba(16,20,26,0.7)" stroke="rgba(195,198,210,0.15)" strokeWidth="0.5"/>
+      <text x="12" y="113" fontFamily="serif" fontSize="5" fill="#dfe2eb">Absolute Void</text>
+      <rect x="162" y="105" width="112" height="12" rx="2" fill="rgba(16,20,26,0.4)" stroke="rgba(195,198,210,0.15)" strokeWidth="0.5"/>
+      <text x="218" y="110" fontFamily="serif" fontSize="10" fill="#dfe2eb" textAnchor="middle" fontWeight="300">01</text>
+      <text x="218" y="115" fontFamily="sans-serif" fontSize="2.5" fill="#cabeff" textAnchor="middle" letterSpacing="0.5">BORTLE CLASS</text>
+      {/* Bento row 2 */}
+      <rect x="6" y="119" width="68" height="11" rx="2" fill="rgba(16,20,26,0.4)" stroke="rgba(195,198,210,0.15)" strokeWidth="0.5"/>
+      <text x="40" y="126" fontFamily="serif" fontSize="5" fill="#dfe2eb" textAnchor="middle">🌙 Moon Sync</text>
+      <rect x="80" y="119" width="194" height="11" rx="2" fill="rgba(16,20,26,0.4)" stroke="rgba(195,198,210,0.15)" strokeWidth="0.5"/>
+      <text x="177" y="126" fontFamily="serif" fontSize="5" fill="#dfe2eb" textAnchor="middle">Preservation Efforts</text>
+
+      {/* Accommodations */}
+      <rect width="280" height="22" y="132" fill="#10141a"/>
+      <text x="8" y="139" fontFamily="sans-serif" fontSize="3" fill="#cabeff" letterSpacing="1">REST</text>
+      <text x="8" y="146" fontFamily="serif" fontSize="6.5" fill="#dfe2eb">Luxury Dwellings</text>
+      <rect x="144" y="133" width="128" height="19" rx="3" fill="#1c2026" stroke="rgba(195,198,210,0.12)" strokeWidth="0.5"/>
+      <text x="208" y="145" fontFamily="sans-serif" fontSize="3.5" fill="#c6c6cb" textAnchor="middle">360° Dome · Cliffside Suite</text>
+
       {/* Footer */}
-      <rect width="280" height="14" y="146" fill="#0a0d12"/>
-      <text x="14" y="155" fontFamily="sans-serif" fontSize="4" fill="#c3c6d2" opacity="0.5">✦ Stellar Utah · Full Landing Page · 7 Sections</text>
+      <rect width="280" height="6" y="154" fill="#0a0e14"/>
+      <text x="8" y="158.5" fontFamily="sans-serif" fontSize="2.5" fill="#c6c6cb" opacity="0.5">Stellar Utah  ·  Dark Sky Certified  ·  High Desert Luxury</text>
     </svg>
   )
 }
