@@ -23,6 +23,21 @@ const WIDTH_OPTIONS = [
   { label: 'Narrow (960px)', value: '960px' },
 ]
 
+const SCROLL_ANIM_OPTIONS = [
+  { label: 'Fade Up (default)', value: 'fade-up' },
+  { label: 'Fade In', value: 'fade-in' },
+  { label: 'Scale In', value: 'scale-in' },
+  { label: 'None', value: 'none' },
+]
+
+const ANIM_DELAY_OPTIONS = [
+  { label: 'No delay', value: '' },
+  { label: '80ms', value: '1' },
+  { label: '160ms', value: '2' },
+  { label: '240ms', value: '3' },
+  { label: '320ms', value: '4' },
+]
+
 export default function SectionProperties({ id }: Props) {
   const section = useSection(id)
   const updateSection = useBuilderStore((s) => s.updateSection)
@@ -114,6 +129,29 @@ export default function SectionProperties({ id }: Props) {
             }}
           />
         </PropRow>
+      </PropGroup>
+
+      {/* ── Scroll-reveal animation ── */}
+      <PropGroup label="Scroll Animation">
+        <PropRow label="Effect">
+          <SelectInput
+            value={styles['--bp-anim'] ?? 'fade-up'}
+            options={SCROLL_ANIM_OPTIONS}
+            onChange={(v) => patchStyle('--bp-anim', v)}
+          />
+        </PropRow>
+        {(styles['--bp-anim'] ?? 'fade-up') !== 'none' && (
+          <PropRow label="Delay">
+            <SelectInput
+              value={styles['--bp-anim-delay'] ?? ''}
+              options={ANIM_DELAY_OPTIONS}
+              onChange={(v) => patchStyle('--bp-anim-delay', v)}
+            />
+          </PropRow>
+        )}
+        <p style={{ fontSize: '0.68rem', color: 'var(--color-text-secondary)', margin: '4px 0 0', lineHeight: 1.5 }}>
+          Applied on scroll when viewing the published page.
+        </p>
       </PropGroup>
 
       <PropGroup label="Section meta">

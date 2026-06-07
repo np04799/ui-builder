@@ -378,7 +378,12 @@ function renderSection(section: BuilderSection, fw: ReturnType<typeof frameworkM
   const sectionClasses = [customClass, section.classNames].filter(Boolean).join(' ')
   const id = section.htmlId ? ` id="${section.htmlId}"` : ''
   const rows = section.rows.map(r => renderRow(r, fw)).join('\n')
-  return `<section class="${sectionClasses}"${id} data-anim="fade-up">\n  <div class="${fw.containerClass}">\n${rows}\n  </div>\n</section>`
+  // Read scroll-reveal type from --bp-anim style var (default: fade-up)
+  const bpStyles = section.styles as Record<string, string>
+  const animType = bpStyles['--bp-anim'] ?? 'fade-up'
+  const animDelay = bpStyles['--bp-anim-delay'] ?? ''
+  const animAttr = animType === 'none' ? '' : ` data-anim="${animType}"${animDelay ? ` data-anim-delay="${animDelay}"` : ''}`
+  return `<section class="${sectionClasses}"${id}${animAttr}>\n  <div class="${fw.containerClass}">\n${rows}\n  </div>\n</section>`
 }
 
 // ─── CSS generator ────────────────────────────────────────────────────────────
@@ -616,7 +621,24 @@ const EXPORT_ANIM_CSS = `
   50%  { transform: translateY(-10px); }
   100% { transform: translateY(0px); }
 }
+@keyframes _bp_fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes _bp_pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.04); opacity: 0.85; }
+}
+@keyframes _bp_slideLeft {
+  from { opacity: 0; transform: translateX(-32px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes _bp_slideRight {
+  from { opacity: 0; transform: translateX(32px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
 [data-anim] { opacity: 0; }
+[data-anim="fade-in"].bp-visible   { animation: _bp_fadeIn  0.7s ease both; }
 [data-anim="fade-up"].bp-visible   { animation: _bp_fadeUp  0.6s cubic-bezier(0.22,1,0.36,1) both; }
 [data-anim="scale-in"].bp-visible  { animation: _bp_scaleIn 0.55s cubic-bezier(0.22,1,0.36,1) both; }
 [data-anim-delay="1"].bp-visible { animation-delay: 80ms; }
