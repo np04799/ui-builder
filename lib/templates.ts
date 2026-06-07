@@ -959,7 +959,7 @@ export const TEMPLATES: Template[] = [
               span: { desktop: 3, tablet: 8, mobile: 4 },
               styles: { display: 'flex', alignItems: 'center', justifyContent: 'flex-end' },
               elements: [
-                { content: { type: 'button', text: 'Book Your Escape', href: '#accommodations', variant: 'primary' }, styles: { fontFamily: "'Space Grotesk', sans-serif", background: 'linear-gradient(45deg, #7d5fff, #c3c6d2, #4719c9)', color: '#10141a', padding: '10px 24px', borderRadius: '4px', fontSize: '13px', fontWeight: '700', border: 'none', letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', whiteSpace: 'nowrap' } },
+                { content: { type: 'button', text: 'Book Your Escape', href: '#accommodations', variant: 'primary' }, styles: { fontFamily: "'Space Grotesk', sans-serif", background: 'linear-gradient(#10141a, #10141a) padding-box, linear-gradient(45deg, #7d5fff, #c3c6d2, #4719c9) border-box', border: '1.5px solid transparent', borderRadius: '9999px', color: '#dfe2eb', padding: '10px 24px', fontSize: '13px', fontWeight: '700', letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', whiteSpace: 'nowrap', cursor: 'pointer' } },
               ],
             },
           ],
@@ -1020,10 +1020,10 @@ export const TEMPLATES: Template[] = [
             },
             {
               span: { desktop: 6, tablet: 12, mobile: 12 },
-              styles: { position: 'relative' },
+              styles: { position: 'relative', overflow: 'visible' },
               elements: [
                 { content: { type: 'image', src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBeRyBQWsinb-9qHpmoJ3EVbZZuWX0liO_RxvHpdhtKVK4W7zlIRaNiMB2iDGNd2p3YL-BQ6eM2yjae3skF0bYXufhRrLKJxub9N4ZMT6N2AlDvSAL2Oo_WRcjCCbNUko-B8YISbahfXnNeAkMTMjzbbJlDslrXJ9umt2eRHmDr1LUfun-qNGouV6D3FWJGbO5cRiAsP-sOFY-HrymeOL1sTMgEDGqgV0fjubJtQBapqw3IxhbLVlfIyVHIxvRdYX2qM86DQnvzTvc', alt: 'Observatory dome at twilight on Utah desert ridge', objectFit: 'cover' }, styles: { width: '100%', height: '520px', borderRadius: '8px', objectFit: 'cover', border: '0.5px solid rgba(195,198,210,0.2)' }, responsive: { mobile: { height: '280px' } } },
-                { content: { type: 'paragraph', text: '★  Visibility: 98%  ·  Perfect conditions for M31 viewing tonight.' }, styles: { fontFamily: "'Space Grotesk', sans-serif", fontSize: '12px', fontWeight: '500', color: '#dfe2eb', backgroundColor: 'rgba(16,20,26,0.7)', backdropFilter: 'blur(12px)', border: '0.5px solid rgba(195,198,210,0.2)', borderRadius: '6px', padding: '12px 16px', margin: '0', lineHeight: '1.6' } },
+                { content: { type: 'paragraph', text: '★  Visibility: 98%  ·  Perfect conditions for M31 viewing tonight.' }, styles: { fontFamily: "'Space Grotesk', sans-serif", fontSize: '12px', fontWeight: '500', color: '#dfe2eb', backgroundColor: 'rgba(16,20,26,0.7)', backdropFilter: 'blur(12px)', border: '0.5px solid rgba(195,198,210,0.2)', borderRadius: '6px', padding: '12px 16px', margin: '0', lineHeight: '1.6', position: 'absolute', bottom: '-20px', left: '-20px', animation: 'float 6s ease-in-out infinite', zIndex: '10', maxWidth: '280px' } },
               ],
             },
           ],

@@ -76,6 +76,11 @@ export default function PreviewPage() {
           from { opacity: 0; transform: scale(0.96); }
           to   { opacity: 1; transform: scale(1); }
         }
+        @keyframes float {
+          0%   { transform: translateY(0px); }
+          50%  { transform: translateY(-10px); }
+          100% { transform: translateY(0px); }
+        }
         [data-preview-anim] { opacity: 0; }
         [data-preview-anim="fade-up"].bp-vis  { animation: _bp_fadeUp  0.55s cubic-bezier(0.22,1,0.36,1) both; }
         [data-preview-anim="scale-in"].bp-vis { animation: _bp_scaleIn 0.5s cubic-bezier(0.22,1,0.36,1) both; }

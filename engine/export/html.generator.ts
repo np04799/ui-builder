@@ -611,6 +611,11 @@ const EXPORT_ANIM_CSS = `
   from { opacity: 0; transform: scale(0.95); }
   to   { opacity: 1; transform: scale(1); }
 }
+@keyframes float {
+  0%   { transform: translateY(0px); }
+  50%  { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
 [data-anim] { opacity: 0; }
 [data-anim="fade-up"].bp-visible   { animation: _bp_fadeUp  0.6s cubic-bezier(0.22,1,0.36,1) both; }
 [data-anim="scale-in"].bp-visible  { animation: _bp_scaleIn 0.55s cubic-bezier(0.22,1,0.36,1) both; }
@@ -623,8 +628,15 @@ const EXPORT_ANIM_CSS = `
 a[href], button { transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease; }
 a[href]:hover, button:hover { transform: translateY(-2px); opacity: 0.9; }
 
+/* ─── Glass card hover ───────────────────────────────────────────────────────*/
+[style*="backdrop-filter"]:hover {
+  border-color: rgba(202,190,255,0.5) !important;
+  box-shadow: 0 0 30px rgba(71,25,201,0.2);
+}
+
 @media (prefers-reduced-motion: reduce) {
   [data-anim] { opacity: 1 !important; animation: none !important; }
+  [style*="animation"] { animation: none !important; }
 }
 `
 
