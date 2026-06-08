@@ -71,6 +71,7 @@ export function createDummyState(mode: BuilderMode = 'custom'): BuilderStoreStat
     clipboard: null,
     _history: [],
     _future: [],
+    isDashboardMode: false,
   }
 }
 

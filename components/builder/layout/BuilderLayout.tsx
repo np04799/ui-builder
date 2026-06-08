@@ -13,6 +13,9 @@ import Breadcrumb from '@/components/builder/layout/Breadcrumb'
 import ProjectSetupWizard from '@/components/builder/wizard/ProjectSetupWizard'
 import BrandingApplicator from '@/components/builder/layout/BrandingApplicator'
 import FrameworkLoader from '@/components/builder/layout/FrameworkLoader'
+import DashboardCanvas from '@/components/dashboard/DashboardCanvas'
+import DashboardPropertiesPanel from '@/components/dashboard/DashboardPropertiesPanel'
+import { useDashboardStore } from '@/store/dashboard.store'
 
 export default function BuilderLayout() {
   useUndoRedo()
@@ -20,8 +23,33 @@ export default function BuilderLayout() {
   const rightPanelVisible = useBuilderStore((s) => s.rightPanelVisible)
   const canvasZoom = useBuilderStore((s) => s.canvasZoom)
   const projectMeta = useBuilderStore((s) => s.projectMeta)
+  const isDashboardMode = useBuilderStore((s) => s.isDashboardMode)
 
-  // ── Load template from InspirationSection Edit button ────────────────────
+  // Dashboard keyboard shortcuts
+  useEffect(() => {
+    if (!isDashboardMode) return
+    function handler(e: KeyboardEvent) {
+      const tag = (e.target as HTMLElement)?.tagName
+      const isEditable = tag === 'INPUT' || tag === 'TEXTAREA' || (e.target as HTMLElement)?.isContentEditable
+      if (isEditable) return
+      const dash = useDashboardStore.getState()
+      const sel = dash.selectedWidgetId
+      if (!sel) return
+      if (e.key === 'Delete' || e.key === 'Backspace') {
+        e.preventDefault(); dash.removeWidget(sel)
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+        e.preventDefault(); dash.duplicateWidget(sel)
+      }
+      if (e.key === 'Escape') {
+        dash.setSelectedWidget(null)
+      }
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [isDashboardMode])
+
+  // Load template from InspirationSection Edit button
   useEffect(() => {
     const raw = localStorage.getItem(BUILDER_EDIT_KEY)
     if (!raw) return
@@ -47,10 +75,9 @@ export default function BuilderLayout() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // ── Global keyboard shortcuts ─────────────────────────────────────────────
+  // Global keyboard shortcuts
   useEffect(() => {
     function handler(e: KeyboardEvent) {
-      // Ignore when typing in inputs / contenteditable
       const tag = (e.target as HTMLElement)?.tagName
       const isEditable = tag === 'INPUT' || tag === 'TEXTAREA' ||
         (e.target as HTMLElement)?.isContentEditable
@@ -61,12 +88,10 @@ export default function BuilderLayout() {
 
       const ctrl = e.ctrlKey || e.metaKey
 
-      // Note: Ctrl+Z / Ctrl+Y handled by useUndoRedo hook
       if (ctrl && e.key === 'c') { e.preventDefault(); store.copySelected?.(); return }
       if (ctrl && e.key === 'v') { e.preventDefault(); store.pasteClipboard?.(); return }
       if (ctrl && e.key === 'd') { e.preventDefault(); if (sel && store.elements[sel]) store.duplicateElement?.(sel); return }
 
-      // Delete / Backspace — remove selected element
       if ((e.key === 'Delete' || e.key === 'Backspace') && sel) {
         e.preventDefault()
         if (store.elements[sel]) store.deleteElement(sel)
@@ -77,7 +102,6 @@ export default function BuilderLayout() {
         return
       }
 
-      // Escape — deselect
       if (e.key === 'Escape') { store.setSelectedId(null); store.setEditingId?.(null); return }
     }
 
@@ -116,37 +140,43 @@ export default function BuilderLayout() {
           style={{
             flex: 1,
             overflow: 'auto',
-            backgroundColor: 'var(--color-canvas-stage)',
+            backgroundColor: isDashboardMode ? 'var(--color-canvas)' : 'var(--color-canvas-stage)',
             minWidth: 0,
           }}
         >
-          <div
-            style={{
-              minHeight: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              padding: '32px 24px',
-              boxSizing: 'border-box',
-            }}
-          >
+          {isDashboardMode ? (
+            <DashboardCanvas />
+          ) : (
             <div
               style={{
-                transform: `scale(${canvasZoom})`,
-                transformOrigin: 'top center',
-                transition: 'transform 0.15s ease',
+                minHeight: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                padding: '32px 24px',
+                boxSizing: 'border-box',
               }}
             >
-              <ViewportWrapper />
+              <div
+                style={{
+                  transform: `scale(${canvasZoom})`,
+                  transformOrigin: 'top center',
+                  transition: 'transform 0.15s ease',
+                }}
+              >
+                <ViewportWrapper />
+              </div>
             </div>
-          </div>
+          )}
         </main>
 
-        {rightPanelVisible && <PropertiesPanel />}
+        {rightPanelVisible && (
+          isDashboardMode
+            ? <DashboardPropertiesPanel />
+            : <PropertiesPanel />
+        )}
       </div>
 
-      {/* Bottom breadcrumb */}
       <Breadcrumb />
-
       <FloatingToolbar />
     </div>
   )

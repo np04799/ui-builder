@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc *)",
+      "Bash(dir components\\\\builder /b)",
+      "Bash(dir app *)",
+      "Bash(Get-ChildItem d:\\\\ui-builder\\\\components\\\\builder -Recurse -Directory)",
+      "Bash(Select-Object FullName)",
+      "PowerShell(cd d:\\\\ui-builder; $proc = Start-Process -NoNewWindow -PassThru -FilePath \"npm\" -ArgumentList \"run\",\"dev\"; Start-Sleep -Seconds 8; try { $r = Invoke-WebRequest -Uri \"http://localhost:3000\" -TimeoutSec 5 -UseBasicParsing; Write-Host \"Server up: $\\($r.StatusCode\\)\" } catch { Write-Host \"Server not ready: $_\" }; $proc.Id)",
+      "Bash(npx playwright *)",
+      "PowerShell(New-Item -ItemType Directory -Path \"d:\\\\ui-builder\\\\app\\\\preview\" -Force)",
+      "PowerShell(cd d:\\\\ui-builder; npx tsc --noEmit 2>&1 | Where-Object { $_ -notmatch \"tests/e2e\" })",
+      "Bash(xargs ls)",
+      "Bash(npm run *)",
+      "Bash(curl -s http://localhost:3000/builder)",
+      "Bash(taskkill /PID 30184 /F)",
+      "Bash(start /B npm run dev)",
+      "Bash(curl -sv http://localhost:3000/builder)",
+      "Bash(npx next *)",
+      "Bash(npm install *)",
+      "Bash(node -e \"const c = require\\('./node_modules/chart.js/package.json'\\); console.log\\(c.version, c.license\\)\")",
+      "Bash(findstr /v \"tests/e2e\")",
+      "PowerShell(cd \"d:\\\\ui-builder\"; npx tsc --noEmit 2>&1 | Where-Object { $_ -notmatch \"tests/e2e\" })",
+      "PowerShell(npx tsc --noEmit 2>&1 | Where-Object { $_ -notmatch \"tests/e2e\" })",
+      "PowerShell(Get-ChildItem \"d:\\\\ui-builder\\\\node_modules\\\\next\\\\dist\\\\docs\\\\01-app\" -Recurse | Where-Object { $_.Name -match \"route\" } | Select-Object FullName)",
+      "PowerShell(New-Item -ItemType Directory -Force \"d:\\\\ui-builder\\\\app\\\\api\\\\upload\")",
+      "PowerShell(New-Item -ItemType Directory -Force \"d:\\\\ui-builder\\\\public\\\\uploads\")",
+      "PowerShell(npx tsc --noEmit 2>&1 | Where-Object { $_ -notmatch \"08-panel-drag\" })",
+      "Bash(node -e ' *)",
+      "Bash(node test-width.js)",
+      "Bash(Get-ChildItem -Path \"d:\\\\ui-builder\\\\components\\\\builder\\\\elements\\\\\" -ErrorAction SilentlyContinue)",
+      "Bash(Get-ChildItem -Path \"d:\\\\ui-builder\\\\components\\\\builder\\\\elements\" -Recurse -File)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(cd /d d:\\\\ui-builder)",
+      "Bash(curl -sf http://localhost:3000/api/hello)",
+      "Bash(curl -s -L http://localhost:3000/builder)"
+    ]
+  }
+}

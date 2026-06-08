@@ -676,6 +676,7 @@ function FrameworkPickerModal({ template, onClose }: ModalProps) {
         clipboard: null,
         _history: [],
         _future: [],
+        isDashboardMode: false,
       }
 
       const res = await fetch('/api/export', {
@@ -1109,6 +1110,7 @@ export default function InspirationSection() {
       clipboard: null,
       _history: [],
       _future: [],
+      isDashboardMode: false,
     }
     localStorage.setItem(INSPIRATION_PREVIEW_KEY, JSON.stringify(state))
     window.open('/preview', '_blank', 'noopener')
@@ -1156,6 +1158,7 @@ export default function InspirationSection() {
       clipboard: null,
       _history: [],
       _future: [],
+      isDashboardMode: false,
     }
     localStorage.setItem(BUILDER_EDIT_KEY, JSON.stringify(state))
     router.push('/builder')

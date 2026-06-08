@@ -57,6 +57,7 @@ const createEmptyState = (): BuilderStoreState => ({
   rightPanelVisible: true,
   canvasZoom: 1,
   clipboard: null,
+  isDashboardMode: false,
   _history: [],
   _future: [],
 })
@@ -1421,4 +1422,5 @@ export const useBuilderStore = create<BuilderStoreState & BuilderActions>()(
     getColumn: (id) => get().columns[id],
     getElement: (id) => get().elements[id],
   }))
+
 )

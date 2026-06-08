@@ -122,6 +122,9 @@ export interface BuilderStoreState {
 
   /** Copy/paste clipboard — serialized node payload, null when empty */
   clipboard: ClipboardPayload | null
+
+  /** When true, the canvas renders the KPI Dashboard instead of the Section/Row/Col builder */
+  isDashboardMode: boolean
 }
 
 export type ClipboardPayload =

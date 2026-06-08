@@ -524,16 +524,96 @@ Future support:
 
 ---
 
-# 🧠 MVP-2 (NOT INCLUDED)
+# 🧠 MVP-2 — KPI Dashboard (IN DEVELOPMENT)
 
-DO NOT IMPLEMENT:
+KPI Dashboard is now an active feature being built as a BuilderPro enhancement.
+Full specification: `docs/KPI_DASHBOARD_SPEC.md`
+Branch: `feature/kpi-dashboard`
+
+---
+
+## 🎯 KPI Dashboard Goal
+
+Extend BuilderPro with a dedicated KPI Dashboard builder that allows users to:
+- Design interactive dashboards visually using drag-and-drop
+- Load data from CSV, JSON, or API URL
+- Visualize data using charts, KPI cards, and data tables
+- Apply global and per-widget filters
+- Preview dashboards in responsive modes (Desktop / Tablet / Mobile)
+- Export dashboard as part of the project
+
+---
+
+## 📦 Chart Library
+
+**Apache ECharts** via `echarts-for-react` (Apache 2.0 — free for commercial use)
+**Grid:** `react-grid-layout` (MIT)
+**CSV Parser:** `papaparse` (MIT)
+
+---
+
+## 📦 Widget Catalogue
+
+### Chart Widgets
+- Bar Chart (vertical + horizontal, stacked)
+- Line Chart (smooth, multi-series)
+- Area Chart (gradient fill)
+- Pie Chart + Donut Chart
+- Gauge Chart
+- Scatter Chart
+- Heatmap
+
+### Display Widgets
+- KPI Metric Card (big number + trend arrow + sparkline)
+- Data Table (sort, filter, pagination)
+
+### Filter Widgets
+- Filter Bar (Dropdown, Multi-select, Date Range, Number Slider, Search)
+
+---
+
+## 🗃 Data Sources
+
+- CSV file upload
+- JSON file upload / paste
+- API URL (GET + optional headers + auto-refresh)
+- Global source (shared across widgets) or per-widget source
+
+---
+
+## 📐 Layout Engine
+
+- 12-column responsive grid (react-grid-layout)
+- Drag to move, drag corner to resize
+- Breakpoints: Desktop (12 col) / Tablet (6 col) / Mobile (1 col)
+- Widget Picker modal (Charts / Display / Filters tabs)
+
+---
+
+## 🎨 Theme & UX
+
+- Inherits active project theme (light/dark) — ECharts theme auto-switches
+- Widget quick actions: Configure / Data / Duplicate / Delete
+- Keyboard shortcuts consistent with builder (Delete, Ctrl+C/D/V/Z)
+- Empty/loading/error states per widget
+
+---
+
+## ➕ Additional Features
+
+- 3 Dashboard Templates (Sales / Marketing / Finance)
+- Auto-refresh for API sources (30s / 1min / 5min)
+- Chart export as PNG (ECharts native)
+- Full dashboard HTML export
+- Drill-down: click chart element → filter linked Data Table
+
+---
+
+## 🚫 Still Deferred (DO NOT IMPLEMENT)
 
 - AI generation
 - Image-to-layout
-- React export
-- Next.js export
-- Vue export
-- KPI dashboard generation
+- React / Next.js / Vue export
 - Collaboration
 - Marketplace
 - Version history

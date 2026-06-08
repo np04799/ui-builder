@@ -2,14 +2,16 @@
 
 import React, { useState, useRef } from 'react'
 import { useBuilderStore } from '@/store/builder.store'
+import { useDashboardStore } from '@/store/dashboard.store'
 import { TEMPLATES, materializeTemplate } from '@/lib/templates'
 import { NOIR_FASHION_TEMPLATE } from '@/lib/noir-fashion-template'
 import { DND_TYPE, encodeDragPayload } from '@/components/builder/dnd/dragTypes'
 import { defaultContentForType } from '@/lib/elementDefaults'
+import { getSalesDashboard } from '@/components/dashboard/templates/SalesDashboard'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type TabId = 'web'
+type TabId = 'web' | 'dashboard'
 
 // ─── SVG thumbnails (template cards) ─────────────────────────────────────────
 
@@ -962,10 +964,77 @@ function KpiTab() {
   )
 }
 
+// ─── Dashboard Templates Tab ──────────────────────────────────────────────────
+
+function DashboardTemplatesTab() {
+  function handleLoadSales() {
+    if (!confirm('Switch to Dashboard mode and load the Sales Dashboard template? Current canvas will remain saved.')) return
+    const tpl = getSalesDashboard()
+    useDashboardStore.getState().loadTemplate(tpl)
+    useBuilderStore.setState({ isDashboardMode: true })
+  }
+
+  return (
+    <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '12px 12px 16px' }}>
+      <p style={{ margin: '0 0 12px', fontSize: '0.75rem', color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>
+        Dashboard templates switch the canvas to Dashboard mode with pre-built widgets and sample data.
+      </p>
+
+      {/* Sales Dashboard card */}
+      <div
+        onClick={handleLoadSales}
+        style={{
+          borderRadius: 10, border: '1px solid var(--color-border)',
+          overflow: 'hidden', cursor: 'pointer', transition: 'box-shadow 150ms, border-color 150ms',
+        }}
+        onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--color-primary)'; (e.currentTarget as HTMLDivElement).style.boxShadow = '0 4px 16px rgba(79,70,229,0.15)' }}
+        onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--color-border)'; (e.currentTarget as HTMLDivElement).style.boxShadow = 'none' }}
+      >
+        {/* Thumbnail */}
+        <div style={{ height: 80, background: 'linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%)', padding: 10, display: 'flex', gap: 6, alignItems: 'flex-end' }}>
+          {/* Mini KPI cards */}
+          {['#6366f1','#f59e0b','#10b981','#3b82f6'].map((c, i) => (
+            <div key={i} style={{ flex: 1, height: 36, borderRadius: 5, backgroundColor: 'rgba(255,255,255,0.07)', border: `1px solid ${c}40`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ width: '60%', height: 4, borderRadius: 2, backgroundColor: c, opacity: 0.8 }} />
+            </div>
+          ))}
+        </div>
+        {/* Bottom bar */}
+        <div style={{ height: 20, background: 'linear-gradient(90deg, #1e1b4b 0%, #312e81 100%)', display: 'flex', alignItems: 'center', gap: 4, padding: '0 8px' }}>
+          {['#6366f1','#10b981'].map((c,i) => (
+            <div key={i} style={{ flex: i === 0 ? 3 : 2, height: 6, borderRadius: 2, backgroundColor: c, opacity: 0.6 }} />
+          ))}
+        </div>
+        <div style={{ padding: '10px 12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+            <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>Sales Dashboard</span>
+            <span style={{ fontSize: '0.65rem', fontWeight: 700, color: '#fff', backgroundColor: '#6366f1', borderRadius: 4, padding: '1px 6px' }}>NEW</span>
+          </div>
+          <p style={{ margin: 0, fontSize: '0.72rem', color: 'var(--color-text-secondary)', lineHeight: 1.45 }}>
+            KPI cards, bar + line charts, data table. 12 months of sample revenue data included.
+          </p>
+          <div style={{ marginTop: 8, display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+            {['KPI Cards','Bar Chart','Line Chart','Data Table'].map(tag => (
+              <span key={tag} style={{ fontSize: '0.6rem', padding: '2px 6px', borderRadius: 4, backgroundColor: 'rgba(99,102,241,0.1)', color: 'var(--color-primary)', fontWeight: 600 }}>{tag}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div style={{ marginTop: 14, padding: '10px 12px', borderRadius: 8, backgroundColor: 'rgba(79,70,229,0.06)', border: '1px solid rgba(79,70,229,0.15)' }}>
+        <p style={{ fontSize: '0.72rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.5 }}>
+          More dashboard templates coming soon. Start from scratch via the Pages panel → New blank dashboard.
+        </p>
+      </div>
+    </div>
+  )
+}
+
 // ─── Main panel ───────────────────────────────────────────────────────────────
 
 const PANEL_TABS: { id: TabId; label: string; badge?: string }[] = [
   { id: 'web', label: 'Web Elements' },
+  { id: 'dashboard', label: 'Dashboard', badge: 'NEW' },
 ]
 
 export default function TemplatesPanel() {
@@ -1025,7 +1094,8 @@ export default function TemplatesPanel() {
       </div>
 
       {/* Tab content */}
-      <WebTemplatesTab />
+      {activeTab === 'web' && <WebTemplatesTab />}
+      {activeTab === 'dashboard' && <DashboardTemplatesTab />}
     </div>
   )
 }
