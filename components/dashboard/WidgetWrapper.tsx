@@ -138,6 +138,7 @@ const WidgetWrapper = forwardRef<HTMLDivElement, Props>(function WidgetWrapper(
           <div
             style={{ display: 'flex', gap: 2, flexShrink: 0 }}
             onClick={(e) => e.stopPropagation()}
+            onMouseDown={(e) => e.stopPropagation()}
           >
             <ActionBtn
               icon="bi-gear"

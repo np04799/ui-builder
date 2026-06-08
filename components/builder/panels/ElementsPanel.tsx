@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { DND_TYPE, encodeDragPayload } from '@/components/builder/dnd/dragTypes'
 import { defaultContentForType } from '@/lib/elementDefaults'
 import { useBuilderStore } from '@/store/builder.store'
+import { useDashboardStore } from '@/store/dashboard.store'
+import type { DashboardWidgetType } from '@/types/dashboard.types'
 
 // ─── Web Elements groups ──────────────────────────────────────────────────────
 
@@ -595,41 +597,6 @@ const KPI_GROUPS = [
         ),
       },
       {
-        label: 'Radar Chart', type: 'chart-radar',
-        icon: (
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <polygon points="10,1.5 18.5,7 15.5,17 4.5,17 1.5,7" stroke="currentColor" strokeWidth="1.2" />
-            <polygon points="10,5 15,8.5 13,15 7,15 5,8.5" fill="currentColor" fillOpacity="0.15" stroke="currentColor" strokeWidth="1.2" />
-            <line x1="10" y1="1.5" x2="10" y2="17" stroke="currentColor" strokeWidth="0.8" opacity="0.3" />
-            <line x1="1.5" y1="7" x2="18.5" y2="7" stroke="currentColor" strokeWidth="0.8" opacity="0.3" />
-          </svg>
-        ),
-      },
-      {
-        label: 'Polar Area', type: 'chart-polar',
-        icon: (
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="1.2" />
-            <path d="M10 2v16M2 10h16M4.3 4.3l11.4 11.4M15.7 4.3L4.3 15.7" stroke="currentColor" strokeWidth="0.8" opacity="0.3" />
-            <path d="M10 10L10 2A8 8 0 0 1 17.2 6z" fill="currentColor" fillOpacity="0.3" />
-            <path d="M10 10L17.2 6A8 8 0 0 1 18 10z" fill="currentColor" fillOpacity="0.15" />
-          </svg>
-        ),
-      },
-      {
-        label: 'Scatter Plot', type: 'chart-scatter',
-        icon: (
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M2 17h16M2 2v16" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
-            <circle cx="5.5" cy="13.5" r="1.5" fill="currentColor" fillOpacity="0.6" />
-            <circle cx="8" cy="8" r="1.5" fill="currentColor" fillOpacity="0.6" />
-            <circle cx="11.5" cy="11" r="1.5" fill="currentColor" fillOpacity="0.6" />
-            <circle cx="14.5" cy="6" r="1.5" fill="currentColor" fillOpacity="0.6" />
-            <circle cx="7" cy="15" r="1.5" fill="currentColor" fillOpacity="0.6" />
-          </svg>
-        ),
-      },
-      {
         label: 'Gauge', type: 'chart-gauge',
         icon: (
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -637,6 +604,48 @@ const KPI_GROUPS = [
             <path d="M3 15a8 8 0 0 1 4.5-7.2" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" opacity="0.2" />
             <path d="M10 15l-2.5-5.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
             <circle cx="10" cy="15" r="1.5" fill="currentColor" />
+          </svg>
+        ),
+      },
+    ],
+  },
+  {
+    label: 'Display',
+    color: '#6366f1',
+    items: [
+      {
+        label: 'KPI Card', type: 'kpi-card',
+        icon: (
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="1.5" y="3" width="17" height="14" rx="2.5" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeWidth="1.4" />
+            <path d="M5 8h3M5 11h5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+            <path d="M13 7l1.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            <path d="M11.5 14l2-3.5 2 1" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+      },
+      {
+        label: 'Data Table', type: 'data-table',
+        icon: (
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="1.5" y="3" width="17" height="14" rx="1.5" stroke="currentColor" strokeWidth="1.4" />
+            <path d="M1.5 7h17M1.5 11h17" stroke="currentColor" strokeWidth="1.1" />
+            <path d="M7 3v14M13 3v14" stroke="currentColor" strokeWidth="1.1" />
+            <rect x="1.5" y="3" width="17" height="4" rx="1.5" fill="currentColor" fillOpacity="0.12" />
+          </svg>
+        ),
+      },
+    ],
+  },
+  {
+    label: 'Filters',
+    color: '#f59e0b',
+    items: [
+      {
+        label: 'Filter Bar', type: 'filter-bar',
+        icon: (
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M2 5h16M5 10h10M8 15h4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
           </svg>
         ),
       },
@@ -810,9 +819,121 @@ function GroupSection({ group, defaultOpen = false }: { group: Group; defaultOpe
   )
 }
 
+// ─── Dashboard element card ───────────────────────────────────────────────────
+
+function DashboardElementCard({ item, accentColor }: { item: ElementItem; accentColor: string }) {
+  const addWidget = useDashboardStore((s) => s.addWidget)
+
+  const handleDragStart = (e: React.DragEvent) => {
+    e.stopPropagation()
+    e.dataTransfer.effectAllowed = 'copy'
+    e.dataTransfer.setData('dashWidgetType', item.type)
+    ;(window as unknown as Record<string, unknown>).__dashDroppingType = item.type
+    // Custom ghost
+    const ghost = document.createElement('div')
+    ghost.textContent = item.label
+    Object.assign(ghost.style, {
+      position: 'fixed', top: '-999px',
+      padding: '4px 10px', borderRadius: '20px',
+      background: accentColor, color: '#fff',
+      fontSize: '11px', fontWeight: '600', pointerEvents: 'none',
+    })
+    document.body.appendChild(ghost)
+    e.dataTransfer.setDragImage(ghost, ghost.offsetWidth / 2, 14)
+    setTimeout(() => document.body.removeChild(ghost), 0)
+  }
+
+  const handleDragEnd = () => {
+    ;(window as unknown as Record<string, unknown>).__dashDroppingType = null
+  }
+
+  return (
+    <div
+      draggable
+      title={`Click or drag to add ${item.label}`}
+      onClick={() => addWidget(item.type as DashboardWidgetType)}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 7,
+        padding: '12px 6px 10px',
+        borderRadius: 10,
+        border: '1px solid var(--color-border)',
+        backgroundColor: 'var(--color-bg)',
+        cursor: 'grab',
+        userSelect: 'none',
+        minHeight: 70,
+        transition: 'all 0.15s ease',
+      }}
+      onMouseEnter={(e) => {
+        const el = e.currentTarget
+        el.style.borderColor = accentColor
+        el.style.backgroundColor = `${accentColor}0d`
+        el.style.boxShadow = `0 2px 8px ${accentColor}22`
+        el.style.transform = 'translateY(-1px)'
+        const icon = el.querySelector('.elem-icon') as HTMLElement | null
+        if (icon) icon.style.color = accentColor
+      }}
+      onMouseLeave={(e) => {
+        const el = e.currentTarget
+        el.style.borderColor = 'var(--color-border)'
+        el.style.backgroundColor = 'var(--color-bg)'
+        el.style.boxShadow = 'none'
+        el.style.transform = 'none'
+        const icon = el.querySelector('.elem-icon') as HTMLElement | null
+        if (icon) icon.style.color = 'var(--color-text-secondary)'
+      }}
+    >
+      <span className="elem-icon" style={{ color: 'var(--color-text-secondary)', display: 'flex', transition: 'color 0.15s ease', pointerEvents: 'none' }}>
+        {item.icon}
+      </span>
+      <span style={{ fontSize: '0.6375rem', color: 'var(--color-text-secondary)', fontWeight: 500, textAlign: 'center', lineHeight: 1.2, pointerEvents: 'none' }}>
+        {item.label}
+      </span>
+    </div>
+  )
+}
+
+function DashboardGroupSection({ group, defaultOpen = false }: { group: Group; defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen)
+  return (
+    <div style={{ marginBottom: 4 }}>
+      <button
+        onClick={() => setOpen((o) => !o)}
+        style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '7px 6px', background: 'none', border: 'none', cursor: 'pointer' }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+          <span style={{ width: 6, height: 6, borderRadius: 2, backgroundColor: group.color, flexShrink: 0, display: 'inline-block' }} />
+          <span style={{ fontSize: '0.6875rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--color-text-secondary)' }}>
+            {group.label}
+          </span>
+        </div>
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="var(--color-text-secondary)" strokeWidth="1.8" strokeLinecap="round"
+          style={{ flexShrink: 0, transition: 'transform 180ms', transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }}
+        >
+          <path d="M2 4l4 4 4-4" />
+        </svg>
+      </button>
+      {open && (
+        <div style={{ paddingBottom: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
+            {group.items.map((item) => (
+              <DashboardElementCard key={item.type} item={item} accentColor={group.color} />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ─── Tab panel ────────────────────────────────────────────────────────────────
 
-type TabId = 'web'
+type TabId = 'web' | 'dashboard'
 
 interface TabDef {
   id: TabId
@@ -828,7 +949,15 @@ const TABS: TabDef[] = [
     label: 'Web Elements',
     groups: WEB_GROUPS,
     tip: 'Drag any element onto the canvas, or click to add to the active column.',
-  }]
+  },
+  {
+    id: 'dashboard',
+    label: 'Dashboard',
+    badge: 'NEW',
+    groups: KPI_GROUPS,
+    tip: 'Drag any widget onto the dashboard canvas, or click to add it.',
+  },
+]
 
 // ─── Main panel ───────────────────────────────────────────────────────────────
 
@@ -951,9 +1080,13 @@ export default function ElementsPanel() {
           </div>
         )}
 
-        {filteredGroups.map((group, idx) => (
-          <GroupSection key={group.label} group={group} defaultOpen={idx === 0} />
-        ))}
+        {filteredGroups.map((group, idx) =>
+          activeTab === 'dashboard' ? (
+            <DashboardGroupSection key={group.label} group={group} defaultOpen={idx === 0} />
+          ) : (
+            <GroupSection key={group.label} group={group} defaultOpen={idx === 0} />
+          )
+        )}
 
         {/* Tip */}
         <div
