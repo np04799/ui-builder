@@ -220,15 +220,18 @@ function WidgetCard({ def }: { def: WidgetDef }) {
       <div
         style={{
           height: 54,
-          padding: '6px 8px 4px',
+          padding: '4px 6px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           borderBottom: '1px solid var(--color-border)',
           backgroundColor: hov ? 'rgba(99,102,241,0.04)' : 'transparent',
+          overflow: 'hidden',
         }}
       >
-        {def.preview}
+        <div style={{ width: '100%', height: 44, flexShrink: 0 }}>
+          {def.preview}
+        </div>
       </div>
       {/* Label */}
       <div style={{ padding: '5px 8px 6px' }}>
