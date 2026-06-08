@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { TEMPLATES, materializeTemplate } from '@/lib/templates'
+import { NOIR_FASHION_TEMPLATE } from '@/lib/noir-fashion-template'
 import type { Template } from '@/lib/templates'
 import type { BuilderMode } from '@/types/builder.types'
 import type { BuilderStoreState } from '@/types/store.types'
@@ -483,6 +484,12 @@ function PpcNoirFashionThumb() {
     </svg>
   )
 }
+
+
+// Merge NOIR template from its own file (bypasses lib/templates.ts build cache)
+const ALL_TEMPLATES = TEMPLATES.find(t => t.id === 'ppc-noir-fashion')
+  ? TEMPLATES
+  : [...TEMPLATES, NOIR_FASHION_TEMPLATE]
 
 
 const THUMB_MAP: Record<string, React.ReactNode> = {
@@ -1126,8 +1133,8 @@ export default function InspirationSection() {
   }
 
   const filtered = activeCategory === 'all'
-    ? TEMPLATES
-    : TEMPLATES.filter(t => t.category === activeCategory)
+    ? ALL_TEMPLATES
+    : ALL_TEMPLATES.filter(t => t.category === activeCategory)
 
   return (
     <>
@@ -1206,7 +1213,7 @@ export default function InspirationSection() {
                   {cat.label}
                   {cat.value !== 'all' && (
                     <span style={{ marginLeft: 5, fontSize: '0.7rem', opacity: 0.7 }}>
-                      ({TEMPLATES.filter(t => t.category === cat.value).length})
+                      ({ALL_TEMPLATES.filter(t => t.category === cat.value).length})
                     </span>
                   )}
                 </button>
