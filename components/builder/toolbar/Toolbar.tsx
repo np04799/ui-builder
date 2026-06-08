@@ -871,8 +871,14 @@ export default function Toolbar() {
             gap: 6,
           }}
           onClick={() => {
-            sessionStorage.setItem(PREVIEW_STORAGE_KEY, JSON.stringify(useBuilderStore.getState()))
-            window.open('/preview', '_blank')
+            const builderState = useBuilderStore.getState()
+            if (builderState.isDashboardMode) {
+              // Dashboard state is already in localStorage via Zustand persist
+              window.open('/dashboard-preview', '_blank')
+            } else {
+              sessionStorage.setItem(PREVIEW_STORAGE_KEY, JSON.stringify(builderState))
+              window.open('/preview', '_blank')
+            }
           }}
         >
           {/* Eye icon */}
