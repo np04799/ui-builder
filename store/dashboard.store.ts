@@ -161,10 +161,12 @@ export const useDashboardStore = create<DashboardStore>()(
 
       // ── Widget actions ──────────────────────────────────────────────────────
 
-      addWidget(type) {
+      addWidget(type, position?) {
         set((s) => {
           const widget = defaultWidget(type)
-          const layout = defaultLayout(widget.id, type, s.widgets.length)
+          const layout = position
+            ? { i: widget.id, x: position.x, y: position.y, w: position.w, h: position.h, minW: 2, minH: 2 }
+            : defaultLayout(widget.id, type, s.widgets.length)
           s.widgets.push(widget)
           // Add layout to all breakpoints
           ;(['lg', 'md', 'sm'] as const).forEach((bp) => {
@@ -175,7 +177,7 @@ export const useDashboardStore = create<DashboardStore>()(
             ;(s.gridLayouts[bp] as import('react-grid-layout').Layout[]).push(bpLayout)
           })
           s.selectedWidgetId = widget.id
-          s.activeRightTab = 'data'
+          s.activeRightTab = 'config'
         })
       },
 

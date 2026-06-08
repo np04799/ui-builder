@@ -2,8 +2,9 @@
 
 import { useState, useCallback } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
-import type { Layouts } from 'react-grid-layout'
+import type { Layouts, Layout } from 'react-grid-layout'
 import { useDashboardStore } from '@/store/dashboard.store'
+import type { DashboardWidgetType } from '@/types/dashboard.types'
 import WidgetWrapper from './WidgetWrapper'
 import WidgetPickerModal from './WidgetPickerModal'
 import DashboardWidgetRenderer from './DashboardWidgetRenderer'
@@ -13,11 +14,21 @@ import 'react-resizable/css/styles.css'
 
 const ResponsiveGrid = WidthProvider(Responsive)
 
+// Default grid size for each widget type when dropped
+const DROP_SIZE: Partial<Record<DashboardWidgetType, { w: number; h: number }>> = {
+  'kpi-card':    { w: 3, h: 3 },
+  'filter-bar':  { w: 12, h: 2 },
+  'data-table':  { w: 8, h: 5 },
+  'chart-gauge': { w: 3, h: 4 },
+}
+
 export default function DashboardCanvas() {
   const [showPicker, setShowPicker] = useState(false)
+  const [droppingType, setDroppingType] = useState<DashboardWidgetType | null>(null)
   const widgets = useDashboardStore((s) => s.widgets)
   const layouts = useDashboardStore((s) => s.gridLayouts)
   const updateLayout = useDashboardStore((s) => s.updateLayout)
+  const addWidget = useDashboardStore((s) => s.addWidget)
   const setSelected = useDashboardStore((s) => s.setSelectedWidget)
   const selectedId = useDashboardStore((s) => s.selectedWidgetId)
 
@@ -28,6 +39,31 @@ export default function DashboardCanvas() {
     [updateLayout]
   )
 
+  const handleDrop = useCallback(
+    (_layout: Layout[], item: Layout, e: Event) => {
+      const de = e as DragEvent
+      const type =
+        (de.dataTransfer?.getData('dashWidgetType') as DashboardWidgetType | undefined) ||
+        ((window as unknown as Record<string, unknown>).__dashDroppingType as DashboardWidgetType | undefined)
+      if (!type) return
+      ;(window as unknown as Record<string, unknown>).__dashDroppingType = null
+      setDroppingType(null)
+      addWidget(type, { x: item.x, y: item.y, w: item.w, h: item.h })
+    },
+    [addWidget]
+  )
+
+  const handleDragOver = useCallback(
+    (e: React.DragEvent) => {
+      const type = (window as unknown as Record<string, unknown>).__dashDroppingType as DashboardWidgetType | null
+      if (type && type !== droppingType) setDroppingType(type)
+      e.preventDefault()
+    },
+    [droppingType]
+  )
+
+  const dropSize = droppingType ? (DROP_SIZE[droppingType] ?? { w: 4, h: 4 }) : { w: 4, h: 4 }
+
   return (
     <div
       style={{
@@ -37,9 +73,11 @@ export default function DashboardCanvas() {
         padding: '12px 16px 80px',
       }}
       onClick={() => { if (selectedId) setSelected(null) }}
+      onDragOver={handleDragOver}
+      onDragLeave={() => setDroppingType(null)}
     >
       {widgets.length === 0 ? (
-        <DashboardEmptyState onAdd={() => setShowPicker(true)} />
+        <DashboardDropZone onAdd={() => setShowPicker(true)} onDrop={handleDrop} dropSize={dropSize} />
       ) : (
         <ResponsiveGrid
           className="dashboard-grid"
@@ -52,6 +90,9 @@ export default function DashboardCanvas() {
           draggableHandle=".dashboard-widget-drag-handle"
           resizeHandles={['se']}
           onLayoutChange={handleLayoutChange}
+          isDroppable
+          droppingItem={{ i: '__dropping__', w: dropSize.w, h: dropSize.h }}
+          onDrop={handleDrop}
           useCSSTransforms
         >
           {widgets.map((widget) => (
@@ -107,11 +148,30 @@ export default function DashboardCanvas() {
   )
 }
 
-// ─── Empty State ──────────────────────────────────────────────────────────────
+// ─── Drop Zone (empty state + droppable) ──────────────────────────────────────
 
-function DashboardEmptyState({ onAdd }: { onAdd: () => void }) {
+function DashboardDropZone({
+  onAdd,
+  onDrop,
+  dropSize,
+}: {
+  onAdd: () => void
+  onDrop: (l: Layout[], item: Layout, e: Event) => void
+  dropSize: { w: number; h: number }
+}) {
+  const [over, setOver] = useState(false)
+
   return (
     <div
+      onDragOver={(e) => { e.preventDefault(); setOver(true) }}
+      onDragLeave={() => setOver(false)}
+      onDrop={(e) => {
+        e.preventDefault()
+        setOver(false)
+        // Synthesise a grid item at position 0,0 with drop dimensions
+        const item: Layout = { i: '__dropping__', x: 0, y: 0, w: dropSize.w, h: dropSize.h }
+        onDrop([], item, e.nativeEvent)
+      }}
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -121,6 +181,10 @@ function DashboardEmptyState({ onAdd }: { onAdd: () => void }) {
         gap: 16,
         textAlign: 'center',
         padding: 32,
+        borderRadius: 16,
+        border: over ? '2px dashed var(--color-primary)' : '2px dashed transparent',
+        backgroundColor: over ? 'rgba(99,102,241,0.04)' : 'transparent',
+        transition: 'all 0.15s',
       }}
     >
       <div
@@ -128,23 +192,26 @@ function DashboardEmptyState({ onAdd }: { onAdd: () => void }) {
           width: 72,
           height: 72,
           borderRadius: 20,
-          backgroundColor: 'var(--color-selected)',
+          backgroundColor: over ? 'rgba(99,102,241,0.12)' : 'var(--color-selected)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          transition: 'background 0.15s',
         }}
       >
         <i className="bi bi-grid-1x2-fill" style={{ fontSize: '2rem', color: 'var(--color-primary)' }} />
       </div>
       <div>
         <h3 style={{ margin: '0 0 6px', fontSize: '1.1rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>
-          Start building your dashboard
+          {over ? 'Drop to add widget' : 'Start building your dashboard'}
         </h3>
         <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--color-text-secondary)', maxWidth: 340 }}>
-          Add charts, KPI cards, data tables and filter controls. Connect your CSV, JSON or API data.
+          {over
+            ? 'Release to place the widget on the canvas.'
+            : 'Drag a widget from the left panel, or click Add Widget below.'}
         </p>
       </div>
-      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
+      {!over && (
         <button
           onClick={onAdd}
           style={{
@@ -164,7 +231,7 @@ function DashboardEmptyState({ onAdd }: { onAdd: () => void }) {
           <i className="bi bi-plus-lg" />
           Add Widget
         </button>
-      </div>
+      )}
     </div>
   )
 }

@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import { GridIcon, LayersIcon, TemplatesIcon, SettingsIcon } from '@/components/builder/icons'
+import { useBuilderStore } from '@/store/builder.store'
+import DashboardElementsPanel from '@/components/dashboard/DashboardElementsPanel'
 import ElementsPanel from './ElementsPanel'
 import LayersPanel from './LayersPanel'
 import TemplatesPanel from './TemplatesPanel'
@@ -55,47 +57,29 @@ function PagesIcon() {
 // ─── Nav items ────────────────────────────────────────────────────────────────
 
 const NAV_ITEMS: NavItem[] = [
-  { id: 'elements', label: 'Elements', icon: <GridIcon /> },
+  { id: 'elements',   label: 'Elements',  icon: <GridIcon /> },
   { id: 'components', label: 'Components', icon: <ComponentsIcon /> },
-  { id: 'sections', label: 'Sections', icon: <SectionsIcon /> },
-  { id: 'pages', label: 'Pages', icon: <PagesIcon /> },
-  { id: 'templates', label: 'Templates', icon: <TemplatesIcon /> },
-  { id: 'layers', label: 'Layers', icon: <LayersIcon /> },
-  { id: 'settings', label: 'Settings', icon: <SettingsIcon /> },
+  { id: 'sections',  label: 'Sections',   icon: <SectionsIcon /> },
+  { id: 'pages',     label: 'Pages',      icon: <PagesIcon /> },
+  { id: 'templates', label: 'Templates',  icon: <TemplatesIcon /> },
+  { id: 'layers',    label: 'Layers',     icon: <LayersIcon /> },
+  { id: 'settings',  label: 'Settings',   icon: <SettingsIcon /> },
 ]
 
 // ─── Panel host ───────────────────────────────────────────────────────────────
 
 function PanelContent({ activePanel }: { activePanel: PanelId }) {
   switch (activePanel) {
-    case 'elements':
-      return <ElementsPanel />
-    case 'layers':
-      return <LayersPanel />
-    case 'templates':
-      return <TemplatesPanel />
-    case 'components':
-      return <ComponentsPanel />
-    case 'sections':
-      return <SectionsPanel />
-    case 'pages':
-      return <PagesPanel />
-    case 'settings':
-      return <SettingsPanel />
+    case 'elements':   return <ElementsPanel />
+    case 'layers':     return <LayersPanel />
+    case 'templates':  return <TemplatesPanel />
+    case 'components': return <ComponentsPanel />
+    case 'sections':   return <SectionsPanel />
+    case 'pages':      return <PagesPanel />
+    case 'settings':   return <SettingsPanel />
     default:
       return (
-        <div
-          style={{
-            flex: 1,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'var(--color-text-secondary)',
-            fontSize: '0.8125rem',
-            padding: 24,
-            textAlign: 'center',
-          }}
-        >
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-text-secondary)', fontSize: '0.8125rem', padding: 24, textAlign: 'center' }}>
           Coming soon
         </div>
       )
@@ -105,8 +89,51 @@ function PanelContent({ activePanel }: { activePanel: PanelId }) {
 // ─── LeftSidebar ─────────────────────────────────────────────────────────────
 
 export default function LeftSidebar() {
+  const isDashboardMode = useBuilderStore((s) => s.isDashboardMode)
   const [activePanel, setActivePanel] = useState<PanelId | null>('elements')
 
+  // ── Dashboard mode: dedicated widget palette ──────────────────────────────
+  if (isDashboardMode) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          width: 220,
+          flexShrink: 0,
+          height: '100%',
+          backgroundColor: 'var(--color-surface)',
+          borderRight: '1px solid var(--color-border)',
+          overflow: 'hidden',
+        }}
+      >
+        <div
+          style={{
+            height: 40,
+            flexShrink: 0,
+            display: 'flex',
+            alignItems: 'center',
+            padding: '0 12px',
+            borderBottom: '1px solid var(--color-border)',
+            gap: 7,
+          }}
+        >
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--color-primary)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="0.5" y="0.5" width="5.5" height="5.5" rx="1" />
+            <rect x="8" y="0.5" width="5.5" height="5.5" rx="1" />
+            <rect x="0.5" y="8" width="5.5" height="5.5" rx="1" />
+            <rect x="8" y="8" width="5.5" height="5.5" rx="1" />
+          </svg>
+          <span style={{ fontSize: '0.6875rem', fontWeight: 700, color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
+            Widgets
+          </span>
+        </div>
+        <DashboardElementsPanel />
+      </div>
+    )
+  }
+
+  // ── Normal builder mode ───────────────────────────────────────────────────
   const handleNavClick = (id: PanelId) => {
     setActivePanel((prev) => (prev === id ? null : id))
   }

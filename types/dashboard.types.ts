@@ -196,7 +196,7 @@ export interface DashboardStoreState {
 }
 
 export interface DashboardStoreActions {
-  addWidget: (type: DashboardWidgetType) => void
+  addWidget: (type: DashboardWidgetType, position?: { x: number; y: number; w: number; h: number }) => void
   removeWidget: (id: string) => void
   updateWidget: (id: string, patch: Partial<DashboardWidget>) => void
   duplicateWidget: (id: string) => void
