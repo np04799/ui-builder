@@ -492,56 +492,78 @@ function PpcNoirFashionThumb() {
   return (
     <svg viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg" style={{width:'100%',height:'100%'}}>
       <defs>
-        <linearGradient id="tp-noir-hero-grad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#1a1614" stopOpacity="0.2"/>
-          <stop offset="60%" stopColor="#0A0908" stopOpacity="0.6"/>
-          <stop offset="100%" stopColor="#0A0908" stopOpacity="0.96"/>
-        </linearGradient>
-        <linearGradient id="tp-noir-img" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#2a2420"/>
-          <stop offset="50%" stopColor="#1a1614"/>
-          <stop offset="100%" stopColor="#0e0c0a"/>
+        <linearGradient id="tp-noir-v3" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#1a1614" stopOpacity="0.1"/>
+          <stop offset="55%" stopColor="#0A0908" stopOpacity="0.55"/>
+          <stop offset="100%" stopColor="#0A0908" stopOpacity="0.95"/>
         </linearGradient>
       </defs>
-      {/* Full canvas dark bg */}
+      {/* bg */}
       <rect width="280" height="160" fill="#0A0908"/>
 
-      {/* ── Announcement bar ── */}
-      <rect width="280" height="7" fill="#C9A96E"/>
-      <text x="140" y="5" fontFamily="sans-serif" fontSize="2.8" fill="#0A0908" textAnchor="middle" fontWeight="700" letterSpacing="2">FREE SHIPPING · FREE RETURNS · SUSTAINABLY MADE</text>
+      {/* announcement bar */}
+      <rect width="280" height="6" fill="#C9A96E"/>
+      <text x="140" y="4.5" fontFamily="sans-serif" fontSize="2.5" fill="#0A0908" textAnchor="middle" fontWeight="700" letterSpacing="1.5">30% OFF SITEWIDE — USE CODE NOIR30  ·  FREE SHIPPING OVER $150</text>
 
-      {/* ── Nav ── */}
-      <rect y="7" width="280" height="14" fill="#0A0908"/>
-      <line x1="0" y1="21" x2="280" y2="21" stroke="#1E1B17" strokeWidth="0.5"/>
-      <text x="30" y="16" fontFamily="sans-serif" fontSize="3" fill="#46423D" letterSpacing="1.5">COLLECTIONS · NEW</text>
-      <text x="140" y="17" fontFamily="sans-serif" fontSize="8" fill="#F5F0E8" textAnchor="middle" fontWeight="700" letterSpacing="5">NOIR</text>
-      <text x="246" y="16" fontFamily="sans-serif" fontSize="3" fill="#46423D" letterSpacing="1.2">ACCOUNT · BAG</text>
+      {/* nav */}
+      <rect y="6" width="280" height="13" fill="#111010"/>
+      <line x1="0" y1="19" x2="280" y2="19" stroke="#222" strokeWidth="0.5"/>
+      <text x="14" y="14.5" fontFamily="sans-serif" fontSize="8" fill="#F5F0E8" fontWeight="800" letterSpacing="1">NOIR.</text>
+      <text x="100" y="14" fontFamily="sans-serif" fontSize="3" fill="#6b6660" letterSpacing="1.2">WOMEN  MEN  NEW IN  SALE</text>
+      <text x="258" y="14" fontFamily="sans-serif" fontSize="7" fill="#F5F0E8" textAnchor="end">🔍 🛒</text>
 
-      {/* ── Hero — full-bleed editorial image ── */}
-      <rect y="21" width="280" height="82" fill="url(#tp-noir-img)"/>
-      <ellipse cx="210" cy="48" rx="28" ry="40" fill="#1e1a17" opacity="0.7"/>
-      <rect x="190" y="62" width="40" height="42" fill="#1e1a17" opacity="0.6"/>
-      <rect y="21" width="280" height="82" fill="url(#tp-noir-hero-grad)"/>
-      <text x="16" y="66" fontFamily="Georgia,serif" fontSize="4" fill="#C9A96E" letterSpacing="3">NEW COLLECTION — AW 2025</text>
-      <text x="15" y="78" fontFamily="Georgia,serif" fontSize="11" fill="#F5F0E8" fontWeight="600" letterSpacing="-0.3">Redefine Your</text>
-      <text x="15" y="91" fontFamily="Georgia,serif" fontSize="11" fill="#F5F0E8" fontWeight="600" letterSpacing="-0.3">Silhouette</text>
-      <rect x="15" y="96" width="48" height="7" fill="#C9A96E"/>
-      <text x="39" y="101.5" fontFamily="sans-serif" fontSize="3" fill="#0A0908" textAnchor="middle" fontWeight="700" letterSpacing="2">SHOP NOW</text>
+      {/* hero image */}
+      <rect y="19" width="280" height="64" fill="#2a2420"/>
+      <ellipse cx="200" cy="38" rx="30" ry="42" fill="#1e1a17" opacity="0.6"/>
+      <rect x="175" y="48" width="48" height="36" fill="#1e1a17" opacity="0.5"/>
+      <rect y="19" width="280" height="64" fill="url(#tp-noir-v3)"/>
+      {/* hero text */}
+      <text x="14" y="38" fontFamily="sans-serif" fontSize="3.5" fill="#C9A96E" letterSpacing="2" fontWeight="700">NEW SEASON JUST DROPPED</text>
+      <text x="13" y="52" fontFamily="sans-serif" fontSize="14" fill="#fff" fontWeight="800" letterSpacing="-0.5">Own The Night.</text>
+      <text x="13" y="63" fontFamily="sans-serif" fontSize="5.5" fill="rgba(245,240,232,0.55)">AW 2025 Collection</text>
+      {/* hero CTAs */}
+      <rect x="13" y="67" width="38" height="10" fill="#C9A96E" rx="1"/>
+      <text x="32" y="74" fontFamily="sans-serif" fontSize="3" fill="#0A0908" textAnchor="middle" fontWeight="700" letterSpacing="1">SHOP NEW IN</text>
+      <rect x="55" y="67" width="30" height="10" fill="transparent" rx="1" stroke="rgba(245,240,232,0.4)" strokeWidth="0.7"/>
+      <text x="70" y="74" fontFamily="sans-serif" fontSize="3" fill="#F5F0E8" textAnchor="middle" fontWeight="600" letterSpacing="0.8">SHOP SALE</text>
 
-      {/* ── 3-col collection cards ── */}
-      <rect y="103" width="280" height="37" fill="#100F0D"/>
-      <text x="140" y="111" fontFamily="sans-serif" fontSize="3" fill="#C9A96E" textAnchor="middle" letterSpacing="3">SHOP BY CATEGORY</text>
-      <rect x="6" y="114" width="82" height="20" fill="#201D19"/>
-      <text x="47" y="128" fontFamily="Georgia,serif" fontSize="5" fill="#F5F0E8" textAnchor="middle">New Arrivals</text>
-      <rect x="99" y="114" width="82" height="20" fill="#1a1715"/>
-      <text x="140" y="128" fontFamily="Georgia,serif" fontSize="5" fill="#F5F0E8" textAnchor="middle">Bestsellers</text>
-      <rect x="192" y="114" width="82" height="20" fill="#1a1412"/>
-      <text x="233" y="128" fontFamily="Georgia,serif" fontSize="5" fill="#F5F0E8" textAnchor="middle">The Edit</text>
+      {/* product grid — 4 cards */}
+      <rect y="83" width="280" height="52" fill="#0D0C0B"/>
+      <text x="10" y="91" fontFamily="sans-serif" fontSize="4" fill="#F5F0E8" fontWeight="700">New Arrivals</text>
+      <text x="265" y="91" fontFamily="sans-serif" fontSize="3" fill="#C9A96E" textAnchor="end">View All →</text>
+      {/* card 1 */}
+      <rect x="8" y="94" width="58" height="30" fill="#1a1816" rx="1"/>
+      <rect x="8" y="94" width="58" height="20" fill="#252019"/>
+      <text x="37" y="121" fontFamily="sans-serif" fontSize="3" fill="#F5F0E8" textAnchor="middle">Leather Jacket</text>
+      <text x="37" y="126" fontFamily="sans-serif" fontSize="3" fill="#C9A96E" textAnchor="middle" fontWeight="700">$249</text>
+      {/* card 2 */}
+      <rect x="72" y="94" width="58" height="30" fill="#1a1816" rx="1"/>
+      <rect x="72" y="94" width="58" height="20" fill="#1e1c18"/>
+      <text x="101" y="121" fontFamily="sans-serif" fontSize="3" fill="#F5F0E8" textAnchor="middle">Ribbed Dress</text>
+      <text x="101" y="126" fontFamily="sans-serif" fontSize="3" fill="#C9A96E" textAnchor="middle" fontWeight="700">$89</text>
+      {/* card 3 */}
+      <rect x="136" y="94" width="58" height="30" fill="#1a1816" rx="1"/>
+      <rect x="136" y="94" width="58" height="20" fill="#201e1a"/>
+      <text x="165" y="121" fontFamily="sans-serif" fontSize="3" fill="#F5F0E8" textAnchor="middle">Power Blazer</text>
+      <text x="165" y="126" fontFamily="sans-serif" fontSize="3" fill="#C9A96E" textAnchor="middle" fontWeight="700">$175</text>
+      {/* card 4 */}
+      <rect x="200" y="94" width="72" height="30" fill="#1a1816" rx="1"/>
+      <rect x="200" y="94" width="72" height="20" fill="#1e1b17"/>
+      <text x="236" y="121" fontFamily="sans-serif" fontSize="3" fill="#F5F0E8" textAnchor="middle">Satin Trousers</text>
+      <text x="236" y="126" fontFamily="sans-serif" fontSize="3" fill="#C9A96E" textAnchor="middle" fontWeight="700">$119</text>
 
-      {/* ── Footer strip ── */}
-      <rect y="140" width="280" height="20" fill="#0A0908"/>
-      <line x1="0" y1="140" x2="280" y2="140" stroke="#1E1B17" strokeWidth="0.5"/>
-      <text x="140" y="152" fontFamily="Georgia,serif" fontSize="7" fill="#F5F0E8" textAnchor="middle" fontWeight="700" letterSpacing="6">NOIR</text>
+      {/* trust bar */}
+      <rect y="135" width="280" height="14" fill="#141210"/>
+      <line x1="0" y1="135" x2="280" y2="135" stroke="#1E1B17" strokeWidth="0.5"/>
+      <text x="35" y="143.5" fontFamily="sans-serif" fontSize="3" fill="#827D76" textAnchor="middle">🚚 Free Shipping</text>
+      <text x="95" y="143.5" fontFamily="sans-serif" fontSize="3" fill="#827D76" textAnchor="middle">🔄 Free Returns</text>
+      <text x="180" y="143.5" fontFamily="sans-serif" fontSize="3" fill="#827D76" textAnchor="middle">🔒 Secure Checkout</text>
+      <text x="248" y="143.5" fontFamily="sans-serif" fontSize="3" fill="#827D76" textAnchor="middle">⭐ 50K+ Reviews</text>
+
+      {/* footer */}
+      <rect y="149" width="280" height="11" fill="#080807"/>
+      <line x1="0" y1="149" x2="280" y2="149" stroke="#1E1B17" strokeWidth="0.5"/>
+      <text x="140" y="156.5" fontFamily="sans-serif" fontSize="7" fill="#F5F0E8" textAnchor="middle" fontWeight="800" letterSpacing="1">NOIR.</text>
     </svg>
   )
 }
