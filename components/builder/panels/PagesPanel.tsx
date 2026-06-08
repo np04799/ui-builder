@@ -66,7 +66,10 @@ export default function PagesPanel() {
           dataSources: snap.dataSources ?? [],
           selectedWidgetId: null,
         })
-        useBuilderStore.setState({ isDashboardMode: true })
+        useBuilderStore.setState(s => ({
+          isDashboardMode: true,
+          projectMeta: s.projectMeta ? { ...s.projectMeta, canvasLayout: 'fixed-grid' } : s.projectMeta,
+        }))
       } else {
         useBuilderStore.setState({
           sections: snap.sections,
@@ -78,6 +81,9 @@ export default function PagesPanel() {
           editingId: null,
           isDashboardMode: false,
         })
+        useBuilderStore.setState(s => ({
+          projectMeta: s.projectMeta ? { ...s.projectMeta, canvasLayout: 'flex-flow' } : s.projectMeta,
+        }))
       }
     } catch { alert('Failed to load page') }
   }
@@ -85,7 +91,10 @@ export default function PagesPanel() {
   function handleNewDashboard() {
     if (!confirm('Switch to a blank Dashboard? Save current work as a page first if needed.')) return
     useDashboardStore.getState().reset()
-    useBuilderStore.setState({ isDashboardMode: true })
+    useBuilderStore.setState(s => ({
+      isDashboardMode: true,
+      projectMeta: s.projectMeta ? { ...s.projectMeta, canvasLayout: 'fixed-grid' } : s.projectMeta,
+    }))
   }
 
   function handleDelete(id: string) {
