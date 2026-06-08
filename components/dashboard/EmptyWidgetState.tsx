@@ -13,6 +13,8 @@ const ICONS: Record<DashboardWidgetType, string> = {
   'kpi-card': 'bi-lightning-charge-fill',
   'data-table': 'bi-table',
   'filter-bar': 'bi-funnel-fill',
+  'text-heading': 'bi-type-h1',
+  'dash-image': 'bi-image',
 }
 
 interface Props {

@@ -29,6 +29,45 @@ export default function DashboardWidgetRenderer({ widget }: Props) {
     return <FilterBarWidget widget={widget} />
   }
 
+  // Heading widget — static text block, no data needed
+  if (widget.type === 'text-heading') {
+    return (
+      <div style={{ padding: '8px 12px', height: '100%', display: 'flex', alignItems: 'center' }}>
+        <span style={{
+          fontSize: (widget.style as Record<string, unknown>)?.fontSize as string ?? '1.5rem',
+          fontWeight: 700,
+          color: 'var(--color-text-primary)',
+        }}>
+          {widget.title}
+        </span>
+      </div>
+    )
+  }
+
+  // Image widget — URL-backed image or placeholder
+  if (widget.type === 'dash-image') {
+    const src = (widget.style as Record<string, unknown>)?.imageUrl as string | undefined
+    if (!src) {
+      return (
+        <div style={{
+          height: '100%', display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center', gap: 8,
+          color: 'var(--color-text-secondary)',
+        }}>
+          <i className="bi bi-image" style={{ fontSize: '2.5rem' }} />
+          <span style={{ fontSize: '0.8rem' }}>Configure image URL in settings</span>
+        </div>
+      )
+    }
+    return (
+      <img
+        src={src}
+        alt={widget.title}
+        style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
+      />
+    )
+  }
+
   // No data at all (preview rows also absent) — show connect prompt
   if (!hasRows) {
     return <EmptyWidgetState widgetId={widget.id} type={widget.type} />

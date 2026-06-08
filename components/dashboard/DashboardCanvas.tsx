@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import type { Layouts } from 'react-grid-layout'
 import { useDashboardStore } from '@/store/dashboard.store'
@@ -17,6 +17,7 @@ const ResponsiveGrid = WidthProvider(Responsive)
 export default function DashboardCanvas() {
   const [showPicker, setShowPicker] = useState(false)
   const [isDragOver, setIsDragOver] = useState(false)
+  const [expandedWidgetId, setExpandedWidgetId] = useState<string | null>(null)
   const widgets = useDashboardStore((s) => s.widgets)
   const layouts = useDashboardStore((s) => s.gridLayouts)
   const updateLayout = useDashboardStore((s) => s.updateLayout)
@@ -45,6 +46,16 @@ export default function DashboardCanvas() {
     },
     [addWidget]
   )
+
+  // Listen for expand events from WidgetWrapper action button
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const id = (e as CustomEvent<{ id: string }>).detail?.id
+      if (id) setExpandedWidgetId(id)
+    }
+    window.addEventListener('dashboard:expand-widget', handler)
+    return () => window.removeEventListener('dashboard:expand-widget', handler)
+  }, [])
 
   const handleCanvasDragOver = useCallback((e: React.DragEvent) => {
     // Only activate if dragging a widget from the panel
@@ -136,6 +147,55 @@ export default function DashboardCanvas() {
       )}
 
       {showPicker && <WidgetPickerModal onClose={() => setShowPicker(false)} />}
+
+      {/* Expand / Fullscreen modal */}
+      {expandedWidgetId && (() => {
+        const w = widgets.find((x) => x.id === expandedWidgetId)
+        if (!w) return null
+        return (
+          <div
+            onClick={() => setExpandedWidgetId(null)}
+            style={{
+              position: 'fixed', inset: 0, zIndex: 9999,
+              background: 'rgba(0,0,0,0.6)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}
+          >
+            <div
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                width: '80vw', height: '75vh',
+                background: 'var(--color-surface)',
+                borderRadius: 12,
+                display: 'flex', flexDirection: 'column',
+                overflow: 'hidden',
+                boxShadow: '0 20px 60px rgba(0,0,0,0.4)',
+              }}
+            >
+              <div style={{
+                padding: '12px 16px', borderBottom: '1px solid var(--color-border)',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              }}>
+                <span style={{ fontWeight: 600, fontSize: '1rem', color: 'var(--color-text-primary)' }}>
+                  {w.title}
+                </span>
+                <button
+                  onClick={() => setExpandedWidgetId(null)}
+                  style={{
+                    background: 'none', border: 'none', cursor: 'pointer',
+                    color: 'var(--color-text-secondary)', fontSize: '1.25rem', lineHeight: 1,
+                  }}
+                >
+                  <i className="bi bi-x-lg" />
+                </button>
+              </div>
+              <div style={{ flex: 1, overflow: 'auto', padding: 16 }}>
+                <DashboardWidgetRenderer widget={w} />
+              </div>
+            </div>
+          </div>
+        )
+      })()}
     </div>
   )
 }
@@ -150,7 +210,6 @@ function DashboardDropZone({
   isDragOver: boolean
 }) {
   const over = isDragOver
-
   return (
     <div
       style={{
@@ -158,29 +217,25 @@ function DashboardDropZone({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        minHeight: 'calc(100vh - 120px)',
         gap: 16,
-        textAlign: 'center',
-        padding: 32,
-        borderRadius: 16,
-        border: over ? '2px dashed var(--color-primary)' : '2px dashed transparent',
+        minHeight: 420,
+        borderRadius: 12,
+        border: `2px dashed ${over ? 'var(--color-primary)' : 'var(--color-border)'}`,
         backgroundColor: over ? 'rgba(99,102,241,0.04)' : 'transparent',
-        transition: 'all 0.15s',
+        transition: 'border-color 0.15s, background-color 0.15s',
+        padding: 32,
+        textAlign: 'center',
       }}
     >
       <div
         style={{
-          width: 72,
-          height: 72,
-          borderRadius: 20,
-          backgroundColor: over ? 'rgba(99,102,241,0.12)' : 'var(--color-selected)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          width: 56, height: 56, borderRadius: 14,
+          background: over ? 'var(--color-primary)' : 'var(--color-selected)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
           transition: 'background 0.15s',
         }}
       >
-        <i className="bi bi-grid-1x2-fill" style={{ fontSize: '2rem', color: 'var(--color-primary)' }} />
+        <i className="bi bi-grid-1x2-fill" style={{ fontSize: '2rem', color: over ? '#fff' : 'var(--color-primary)' }} />
       </div>
       <div>
         <h3 style={{ margin: '0 0 6px', fontSize: '1.1rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>
@@ -196,17 +251,25 @@ function DashboardDropZone({
         <button
           onClick={onAdd}
           style={{
-            padding: '10px 22px',
+            padding: '8px 20px',
             borderRadius: 8,
             border: 'none',
-            backgroundColor: 'var(--color-primary)',
+            background: 'var(--color-primary)',
             color: '#fff',
-            fontWeight: 600,
             fontSize: '0.875rem',
+            fontWeight: 600,
             cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 7,
+            display: 'flex', alignItems: 'center', gap: 6,
+            boxShadow: '0 4px 16px rgba(99,102,241,0.4)',
+            transition: 'transform 0.1s, box-shadow 0.1s',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'scale(1.04)'
+            e.currentTarget.style.boxShadow = '0 6px 20px rgba(99,102,241,0.5)'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'scale(1)'
+            e.currentTarget.style.boxShadow = '0 4px 16px rgba(99,102,241,0.4)'
           }}
         >
           <i className="bi bi-plus-lg" />

@@ -100,6 +100,12 @@ function defaultWidget(type: DashboardWidgetType): DashboardWidget {
       base.tableConfig = { pageSize: 10, striped: true, density: 'normal', showColumnFilters: true }
       base._previewRows = PREVIEW_MONTHLY
       break
+    case 'text-heading':
+      base.style = { ...base.style, showTitle: false }
+      break
+    case 'dash-image':
+      base.style = { ...base.style, showTitle: false }
+      break
   }
 
   return base
@@ -116,6 +122,8 @@ function labelFor(type: DashboardWidgetType): string {
     'kpi-card': 'KPI Card',
     'data-table': 'Data Table',
     'filter-bar': 'Filters',
+    'text-heading': 'Heading',
+    'dash-image': 'Image',
   }
   return map[type] ?? type
 }
@@ -135,6 +143,8 @@ function defaultLayout(
     'filter-bar': { w: 12, h: 2 },
     'data-table': { w: 8, h: 5 },
     'chart-gauge': { w: 3, h: 4 },
+    'text-heading': { w: 6, h: 2 },
+    'dash-image': { w: 4, h: 4 },
   }
   const { w = 4, h = 4 } = sizes[type] ?? {}
 

@@ -17,6 +17,8 @@ export type DashboardWidgetType =
   | 'kpi-card'
   | 'data-table'
   | 'filter-bar'
+  | 'text-heading'
+  | 'dash-image'
 
 // ─── Data Source ──────────────────────────────────────────────────────────────
 
@@ -229,6 +231,4 @@ export interface DashboardTemplate {
   sampleDataSource: DashboardDataSource
 }
 
-// ─── Grid helpers ─────────────────────────────────────────────────────────────
-
-export { type Layout, type Layouts }
+// ─── Grid helpers ──────────────────────────────────────────────────────�

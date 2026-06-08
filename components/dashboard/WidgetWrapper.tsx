@@ -140,6 +140,19 @@ const WidgetWrapper = forwardRef<HTMLDivElement, Props>(function WidgetWrapper(
             onClick={(e) => e.stopPropagation()}
           >
             <ActionBtn
+              icon="bi-funnel"
+              title="Filters"
+              onClick={() => { setSelected(widget.id); setTab('filters') }}
+            />
+            <ActionBtn
+              icon="bi-arrows-fullscreen"
+              title="Expand"
+              onClick={() => {
+                const ev = new CustomEvent('dashboard:expand-widget', { detail: { id: widget.id } })
+                window.dispatchEvent(ev)
+              }}
+            />
+            <ActionBtn
               icon="bi-gear"
               title="Configure"
               onClick={() => { setSelected(widget.id); setTab('config') }}
@@ -216,14 +229,12 @@ function ActionBtn({
             : 'var(--color-primary)'
           : 'var(--color-text-secondary)',
         cursor: 'pointer',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: '0.75rem',
-        transition: 'background 0.1s, color 0.1s',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        transition: 'background-color 0.12s, color 0.12s',
+        flexShrink: 0,
       }}
     >
-      <i className={`bi ${icon}`} />
+      <i className={`bi ${icon}`} style={{ fontSize: '0.8rem', lineHeight: 1 }} />
     </button>
   )
 }

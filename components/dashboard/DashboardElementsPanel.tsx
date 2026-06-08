@@ -146,6 +146,26 @@ function FilterPreview() {
   )
 }
 
+function HeadingPreview() {
+  return (
+    <svg viewBox="0 0 60 34" width="100%" height="42">
+      <text x="4" y="18" fontSize="11" fontWeight="700" fill={C} fontFamily="system-ui">Aa</text>
+      <rect x="22" y="12" width="34" height="4" rx="2" fill="var(--color-border)" />
+      <rect x="22" y="19" width="24" height="3" rx="1.5" fill="var(--color-border)" opacity="0.6" />
+    </svg>
+  )
+}
+
+function ImagePreview() {
+  return (
+    <svg viewBox="0 0 60 34" width="100%" height="42">
+      <rect x="4" y="4" width="52" height="26" rx="4" fill="var(--color-border)" opacity="0.4" />
+      <path d="M4 24 L16 14 L26 21 L36 12 L56 24" fill="none" stroke={C} strokeWidth="1.5" strokeLinejoin="round" />
+      <circle cx="42" cy="11" r="3" fill={C2} />
+    </svg>
+  )
+}
+
 // ─── Widget groups ────────────────────────────────────────────────────────────
 
 const CHART_WIDGETS: WidgetDef[] = [
@@ -164,6 +184,11 @@ const DISPLAY_WIDGETS: WidgetDef[] = [
 
 const FILTER_WIDGETS: WidgetDef[] = [
   { type: 'filter-bar', label: 'Filter Bar', desc: 'Global filters', preview: <FilterPreview /> },
+]
+
+const CONTENT_WIDGETS: WidgetDef[] = [
+  { type: 'text-heading', label: 'Heading', desc: 'Title or label text', preview: <HeadingPreview /> },
+  { type: 'dash-image',   label: 'Image',   desc: 'Logo or banner image', preview: <ImagePreview /> },
 ]
 
 // ─── Drag ghost image ─────────────────────────────────────────────────────────
@@ -278,7 +303,8 @@ function Section({ title, widgets }: { title: string; widgets: WidgetDef[] }) {
 
 // ─── Panel ────────────────────────────────────────────────────────────────────
 
-export default function DashboardElementsPanel() {
+export default function DashboardElementsPanel()
+{
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
       {/* Hint */}
@@ -289,20 +315,18 @@ export default function DashboardElementsPanel() {
         borderBottom: '1px solid var(--color-border)',
         display: 'flex',
         alignItems: 'center',
-        gap: 5,
-        flexShrink: 0,
+        gap: 6,
       }}>
-        <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-          <path d="M5.5 1v4.5H1m9 0H5.5v4.5" />
-        </svg>
-        Drag any widget onto the canvas
+        <i className="bi bi-grip-vertical" />
+        Drag widgets onto the canvas
       </div>
 
-      {/* Scrollable list */}
+      {/* Widget groups */}
       <div style={{ flex: 1, overflowY: 'auto', paddingTop: 4 }}>
         <Section title="Charts" widgets={CHART_WIDGETS} />
         <Section title="Display" widgets={DISPLAY_WIDGETS} />
         <Section title="Filters" widgets={FILTER_WIDGETS} />
+        <Section title="Content" widgets={CONTENT_WIDGETS} />
       </div>
     </div>
   )
