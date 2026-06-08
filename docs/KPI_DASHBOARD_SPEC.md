@@ -244,3 +244,35 @@ interface DashboardStore {
 ---
 
 *Spec v1.0 — BuilderPro KPI Dashboard*
+
+---
+
+## 11. Post-Sprint Updates (2026-06-08)
+
+### New Widget Types
+
+| Type | Label | Description | Data needed? |
+|------|-------|-------------|--------------|
+| `text-heading` | Heading | Bold title/label text block | No |
+| `dash-image` | Image | URL-backed image or logo | No (`imageUrl` in widget.style) |
+
+Both appear in a **Content** section in `DashboardElementsPanel`.
+
+### Widget Action Buttons
+
+Every widget header now shows (on hover/select): **Filter**, **Expand**, Configure, Data, Duplicate, Delete.
+
+- **Filter** (`bi-funnel`) — opens "filters" tab in right panel
+- **Expand** (`bi-arrows-fullscreen`) — opens widget in a fullscreen overlay modal for closer inspection
+
+### Dashboard Preview
+
+- Toolbar **Preview** button routes to `/dashboard-preview` in dashboard mode
+- Reads from `localStorage` (`bp-dashboard-store` Zustand persist key)
+- Renders read-only grid with widget count in header bar
+
+### Canvas Layout Setting
+
+- `BuilderProjectMeta.canvasLayout: 'flex-flow' | 'fixed-grid'`
+- Selectable in Settings panel and onboarding wizard
+- Auto-syncs with page type (dashboard → fixed-grid, web → flex-flow)

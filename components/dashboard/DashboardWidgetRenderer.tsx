@@ -15,6 +15,10 @@ interface Props {
 
 export default function DashboardWidgetRenderer({ widget }: Props) {
   const getWidgetData = useDashboardStore((s) => s.getWidgetData)
+  // Subscribe to globalFilters so this component re-renders when filters change.
+  // getWidgetData calls get() internally so it always returns filtered rows,
+  // but without this subscription the component never re-renders after a filter update.
+  useDashboardStore((s) => s.globalFilters)
   const liveRows = getWidgetData(widget.id)
 
   // Use live data if available, fall back to built-in preview rows

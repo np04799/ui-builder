@@ -209,3 +209,57 @@ dashboardStore:
 ## Preview Architecture
 
 `/preview` page reads state from `sessionStorage` (set by Toolbar preview button via `JSON.stringify(useBuilderStore.getState())`). No Zustand store available. Framework CSS and branding CSS vars are applied via `useEffect` from the serialized `state.mode` and `state.projectMeta.branding`.
+---
+
+## Dashboard Widget Types (as of 2026-06-08)
+
+```typescript
+export type DashboardWidgetType =
+  | 'chart-bar' | 'chart-line' | 'chart-area'
+  | 'chart-pie' | 'chart-donut' | 'chart-gauge'
+  | 'kpi-card' | 'data-table' | 'filter-bar'
+  | 'text-heading'   // Static heading / label — no data required
+  | 'dash-image'     // URL-backed image / logo — no data required
+```
+
+**Content widgets** (`text-heading`, `dash-image`) bypass the empty-state / data-binding flow and render directly.
+
+---
+
+## Dashboard Preview Page
+
+`/app/dashboard-preview/page.tsx` — read-only preview of the current dashboard.
+
+- Reads `bp-dashboard-store` from `localStorage` (Zustand persist wrapper: `{ state: {...} }`)
+- Renders `ResponsiveGrid` with `isDraggable={false}` `isResizable={false}`
+- Toolbar preview button routes to `/dashboard-preview` when `isDashboardMode` is true, `/preview` otherwise
+
+---
+
+## Canvas Layout Mode
+
+`BuilderProjectMeta.canvasLayout?: 'flex-flow' | 'fixed-grid'`
+
+- Surfaced in **Settings panel → Canvas** and in the onboarding wizard **Step 4**
+- Auto-synced by `PagesPanel`: dashboard pages → `fixed-grid`, web pages → `flex-flow`
+- `setCanvasLayout(layout)` action in `builder.store.ts`
+- Informational for web canvas; structural for dashboard canvas (react-grid-layout)
+
+---
+
+## Widget Action Buttons
+
+`WidgetWrapper.tsx` shows action buttons on hover/select. Order (left→right):
+
+| Icon | Action |
+|------|--------|
+| `bi-funnel` | Opens "filters" tab in right panel |
+| `bi-arrows-fullscreen` | Dispatches `dashboard:expand-widget` custom event → fullscreen modal in DashboardCanvas |
+| `bi-gear` | Opens "config" tab |
+| `bi-database` | Opens "data" tab |
+| `bi-copy` | Duplicate widget |
+| `bi-trash` | Delete widget |
+
+Each button has `onMouseDown={e.stopPropagation()}` to prevent RGL drag stealing.
+
+**Expand modal:** `DashboardCanvas` listens for `dashboard:expand-widget` and renders a `position:fixed` overlay (80vw × 75vh) with a full `DashboardWidgetRenderer` inside.

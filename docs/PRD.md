@@ -222,15 +222,72 @@ Avoid:
 # 4. Export & Download
 
 Users must be able to:
-- Export HTML
-- Export CSS
-- Download ZIP package
+- Export HTML + CSS (all modes)
+- Download ZIP package (all modes)
+- Export as React components (Bootstrap / MUI / Tailwind modes — Premium)
+- Export as Vue components (Bootstrap / MUI / Tailwind modes — Premium)
+- Export as Angular components (Bootstrap / MUI / Tailwind modes — Premium)
+
+Custom mode:
+- HTML/CSS ZIP only. No component generation offered.
 
 Export requirements:
 - Clean code
 - Responsive structure
 - Semantic HTML
 - Organized CSS
+- Fully scaffolded project (package.json, config files, README)
+- Auto-detected stable dependency versions at time of export
+
+## 4a. Component Generation (React / Vue / Angular)
+
+When user selects React, Vue, or Angular as export target:
+- Each Section becomes a separate named component
+- User can rename components before generating
+- User can choose TypeScript or JavaScript output
+- Full starter project is generated (not component files only)
+- package.json includes all required dependencies with locked stable versions
+- README.md included with exact install and run commands
+
+## 4b. Framework Version Management
+
+When a project is created:
+- Builder auto-detects latest stable version of the selected UI framework
+- Version is stored in project metadata
+- Version is displayed in the project settings panel and export modal
+- On export, locked version is written into package.json
+
+Version detection rules:
+- Always use latest stable (not beta, not RC)
+- Lock to exact version at time of export (no ^ or ~ ranges)
+- If framework releases a new stable version, builder must surface an "update available" indicator on the project
+
+## 4c. Export Modal UX Flow
+
+Step 1: Choose output format
+  [ HTML/CSS ]  [ React ]  [ Vue ]  [ Angular ]
+
+Step 2 (React/Vue/Angular only):
+  "Generate reusable components?"
+  → Yes: each Section = one named component
+  → No: single-file output
+
+Step 3 (if Yes):
+  [ TypeScript ]  [ JavaScript ]
+  + Component rename panel (optional)
+
+Step 4:
+  Preview code (syntax-highlighted) → Download ZIP
+
+## 4d. Extra Export Features
+
+Beyond README, every export includes or offers:
+- **Code Preview** — syntax-highlighted preview of generated code before download
+- **Open in StackBlitz** — one-click button to open project in browser without any local setup
+- **Design Tokens file** — `tokens.ts` / `variables.css` with all colors, spacing, radii used
+- **Component naming** — rename any Section component before generating
+- **Export history** — project dashboard shows last 3 exports (framework, output type, date)
+- **Section-level export** — "Export just this section" from the section context menu
 
 ---
 
@@ -613,11 +670,13 @@ Extend BuilderPro with a dedicated KPI Dashboard builder that allows users to:
 
 - AI generation
 - Image-to-layout
-- React / Next.js / Vue export
+- Next.js export
 - Collaboration
 - Marketplace
 - Version history
 - Team editing
+
+Note: React, Vue, and Angular exports are now IN SCOPE (see Export & Download section above). Next.js export remains deferred.
 
 ---
 
@@ -627,7 +686,8 @@ Deliver a stable builder that allows users to:
 - Build responsive websites visually
 - Customize UI completely
 - Preview across devices
-- Download clean code
+- Download clean code (HTML/CSS) for free
+- Export React / Vue / Angular scaffolded projects (Premium)
 - Use framework-specific modes
 - Create modern responsive layouts quickly
 ---
