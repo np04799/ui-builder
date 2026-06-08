@@ -68,21 +68,21 @@ export const NOIR_FASHION_TEMPLATE: Template = {
         { styles: { gap: '16px', alignItems: 'stretch' }, columns: [
           { span: { desktop: 4, tablet: 4, mobile: 12 }, styles: { backgroundColor: '#161412' },
             elements: [
-              { content: { type: 'image', src: '', alt: 'Fashion product placeholder', objectFit: 'cover' }, styles: { backgroundColor: '#201D19', height: '260px', width: '100%' } },
+              { content: { type: 'image', src: 'https://picsum.photos/seed/noir-new/600/520', alt: 'New Arrivals', objectFit: 'cover' }, styles: { height: '260px', width: '100%' } },
               { content: { type: 'heading', level: 'h3', text: 'NEW ARRIVALS' }, styles: { fontFamily: "'Inter',sans-serif", fontSize: '13px', fontWeight: '700', color: '#F5F0E8', letterSpacing: '0.2em', margin: '20px 20px 6px' } },
               { content: { type: 'paragraph', text: '140 Pieces' }, styles: { fontFamily: "'Inter',sans-serif", fontSize: '11px', color: '#827D76', margin: '0 20px 6px' } },
             ],
           },
           { span: { desktop: 4, tablet: 4, mobile: 12 }, styles: { backgroundColor: '#161412' },
             elements: [
-              { content: { type: 'image', src: '', alt: 'Fashion product placeholder', objectFit: 'cover' }, styles: { backgroundColor: '#2A2621', height: '260px', width: '100%' } },
+              { content: { type: 'image', src: 'https://picsum.photos/seed/noir-best/600/520', alt: 'Bestsellers', objectFit: 'cover' }, styles: { height: '260px', width: '100%' } },
               { content: { type: 'heading', level: 'h3', text: 'BESTSELLERS' }, styles: { fontFamily: "'Inter',sans-serif", fontSize: '13px', fontWeight: '700', color: '#F5F0E8', letterSpacing: '0.2em', margin: '20px 20px 6px' } },
               { content: { type: 'paragraph', text: '68 Pieces' }, styles: { fontFamily: "'Inter',sans-serif", fontSize: '11px', color: '#827D76', margin: '0 20px 6px' } },
             ],
           },
           { span: { desktop: 4, tablet: 4, mobile: 12 }, styles: { backgroundColor: '#1A1210' },
             elements: [
-              { content: { type: 'image', src: '', alt: 'Fashion product placeholder', objectFit: 'cover' }, styles: { backgroundColor: '#241B18', height: '260px', width: '100%' } },
+              { content: { type: 'image', src: 'https://picsum.photos/seed/noir-sale/600/520', alt: 'Sale', objectFit: 'cover' }, styles: { height: '260px', width: '100%' } },
               { content: { type: 'heading', level: 'h3', text: 'SALE UP TO 50%' }, styles: { fontFamily: "'Inter',sans-serif", fontSize: '13px', fontWeight: '700', color: '#F5F0E8', letterSpacing: '0.2em', margin: '20px 20px 6px' } },
               { content: { type: 'paragraph', text: 'Limited Time' }, styles: { fontFamily: "'Inter',sans-serif", fontSize: '11px', color: '#C9A96E', margin: '0 20px 6px' } },
             ],
@@ -118,22 +118,22 @@ export const NOIR_FASHION_TEMPLATE: Template = {
         { styles: { marginBottom: '28px' }, columns: [{ span: { desktop: 12, tablet: 12, mobile: 12 }, elements: [{ content: { type: 'paragraph', text: 'TRENDING NOW' }, styles: { fontFamily: "'Inter',sans-serif", fontSize: '10px', color: '#46423D', letterSpacing: '0.4em', margin: '0' } }] }] },
         { styles: { gap: '12px' }, columns: [
           { span: { desktop: 3, tablet: 6, mobile: 6 }, elements: [
-            { content: { type: 'image', src: '', alt: 'Fashion product placeholder', objectFit: 'cover' }, styles: { backgroundColor: '#201D19', height: '320px', width: '100%' } },
+            { content: { type: 'image', src: 'https://picsum.photos/seed/noir-slip/400/640', alt: 'Silk Slip Dress', objectFit: 'cover' }, styles: { height: '320px', width: '100%' } },
             { content: { type: 'heading', level: 'h4', text: 'Silk Slip Dress' }, styles: { fontFamily: "'Inter',sans-serif", fontSize: '13px', fontWeight: '400', color: '#F5F0E8', margin: '12px 0 4px 0' } },
             { content: { type: 'paragraph', text: '$420' }, styles: { fontFamily: "'Inter',sans-serif", fontSize: '13px', color: '#827D76', margin: '0' } },
           ]},
           { span: { desktop: 3, tablet: 6, mobile: 6 }, elements: [
-            { content: { type: 'image', src: '', alt: 'Fashion product placeholder', objectFit: 'cover' }, styles: { backgroundColor: '#2A2621', height: '320px', width: '100%' } },
+            { content: { type: 'image', src: 'https://picsum.photos/seed/noir-blazer/400/640', alt: 'Tailored Blazer', objectFit: 'cover' }, styles: { height: '320px', width: '100%' } },
             { content: { type: 'heading', level: 'h4', text: 'Tailored Blazer' }, styles: { fontFamily: "'Inter',sans-serif", fontSize: '13px', fontWeight: '400', color: '#F5F0E8', margin: '12px 0 4px 0' } },
             { content: { type: 'paragraph', text: '$890' }, styles: { fontFamily: "'Inter',sans-serif", fontSize: '13px', color: '#827D76', margin: '0' } },
           ]},
           { span: { desktop: 3, tablet: 6, mobile: 6 }, elements: [
-            { content: { type: 'image', src: '', alt: 'Fashion product placeholder', objectFit: 'cover' }, styles: { backgroundColor: '#161412', height: '320px', width: '100%' } },
+            { content: { type: 'image', src: 'https://picsum.photos/seed/noir-leather/400/640', alt: 'Leather Trousers', objectFit: 'cover' }, styles: { height: '320px', width: '100%' } },
             { content: { type: 'heading', level: 'h4', text: 'Leather Trousers' }, styles: { fontFamily: "'Inter',sans-serif", fontSize: '13px', fontWeight: '400', color: '#F5F0E8', margin: '12px 0 4px 0' } },
             { content: { type: 'paragraph', text: '$640' }, styles: { fontFamily: "'Inter',sans-serif", fontSize: '13px', color: '#827D76', margin: '0' } },
           ]},
           { span: { desktop: 3, tablet: 6, mobile: 6 }, elements: [
-            { content: { type: 'image', src: '', alt: 'Fashion product placeholder', objectFit: 'cover' }, styles: { backgroundColor: '#201D19', height: '320px', width: '100%' } },
+            { content: { type: 'image', src: 'https://picsum.photos/seed/noir-cash/400/640', alt: 'Cashmere Turtleneck', objectFit: 'cover' }, styles: { height: '320px', width: '100%' } },
             { content: { type: 'heading', level: 'h4', text: 'Cashmere Turtleneck' }, styles: { fontFamily: "'Inter',sans-serif", fontSize: '13px', fontWeight: '400', color: '#F5F0E8', margin: '12px 0 4px 0' } },
             { content: { type: 'paragraph', text: '$310' }, styles: { fontFamily: "'Inter',sans-serif", fontSize: '13px', color: '#827D76', margin: '0' } },
           ]},
