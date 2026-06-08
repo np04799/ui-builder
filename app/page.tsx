@@ -1,3 +1,4 @@
+// v2 — NOIR fashion template
 import Link from 'next/link'
 import MarketingHeader from '@/components/marketing/MarketingHeader'
 import InspirationSection from '@/components/marketing/InspirationSection'
