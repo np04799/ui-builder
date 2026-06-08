@@ -23,7 +23,7 @@ function BarPreview() {
   const data = [42, 58, 47, 75, 63, 55]
   const max = 75
   return (
-    <svg viewBox="0 0 60 34" style={{ width: '100%', height: '100%' }}>
+    <svg viewBox="0 0 60 34" width="100%" height="42">
       {data.map((v, i) => {
         const h = (v / max) * 28
         return (
@@ -46,7 +46,7 @@ function BarPreview() {
 function LinePreview() {
   const pts = '2,26 12,19 22,22 32,11 42,15 58,8'
   return (
-    <svg viewBox="0 0 60 34" style={{ width: '100%', height: '100%' }}>
+    <svg viewBox="0 0 60 34" width="100%" height="42">
       <polyline points={pts} fill="none" stroke={C} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       {pts.split(' ').map((p, i) => {
         const [x, y] = p.split(',')
@@ -58,7 +58,7 @@ function LinePreview() {
 
 function AreaPreview() {
   return (
-    <svg viewBox="0 0 60 34" style={{ width: '100%', height: '100%' }}>
+    <svg viewBox="0 0 60 34" width="100%" height="42">
       <defs>
         <linearGradient id="ag" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor={C} stopOpacity="0.4" />
@@ -73,7 +73,7 @@ function AreaPreview() {
 
 function PiePreview() {
   return (
-    <svg viewBox="0 0 34 34" style={{ width: '100%', height: '100%' }}>
+    <svg viewBox="0 0 34 34" width="42" height="42">
       <circle cx="17" cy="17" r="14" fill="var(--color-border)" />
       <path d="M17 17 L17 3 A14 14 0 0 1 31 17 Z" fill={C} />
       <path d="M17 17 L31 17 A14 14 0 0 1 17 31 Z" fill={C2} />
@@ -85,7 +85,7 @@ function PiePreview() {
 
 function DonutPreview() {
   return (
-    <svg viewBox="0 0 34 34" style={{ width: '100%', height: '100%' }}>
+    <svg viewBox="0 0 34 34" width="42" height="42">
       <circle cx="17" cy="17" r="14" fill="var(--color-border)" />
       <path d="M17 17 L17 3 A14 14 0 0 1 31 17 Z" fill={C} />
       <path d="M17 17 L31 17 A14 14 0 0 1 17 31 Z" fill={C2} />
@@ -98,7 +98,7 @@ function DonutPreview() {
 
 function GaugePreview() {
   return (
-    <svg viewBox="0 0 44 28" style={{ width: '100%', height: '100%' }}>
+    <svg viewBox="0 0 44 28" width="100%" height="42">
       <path d="M4 24 A18 18 0 0 1 40 24" fill="none" stroke="var(--color-border)" strokeWidth="5" strokeLinecap="round" />
       <path d="M4 24 A18 18 0 0 1 30 7" fill="none" stroke={C} strokeWidth="5" strokeLinecap="round" />
       <line x1="22" y1="24" x2="30" y2="10" stroke="var(--color-text-primary)" strokeWidth="1.5" strokeLinecap="round" />
@@ -109,7 +109,7 @@ function GaugePreview() {
 
 function KPIPreview() {
   return (
-    <svg viewBox="0 0 60 34" style={{ width: '100%', height: '100%' }}>
+    <svg viewBox="0 0 60 34" width="100%" height="42">
       <text x="6" y="22" fontSize="16" fontWeight="700" fill={C} fontFamily="system-ui">6.8K</text>
       <polyline points="38,22 44,16 50,19 56,12" fill="none" stroke={C3} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       <polygon points="54,12 58,12 58,16" fill={C3} />
@@ -120,7 +120,7 @@ function KPIPreview() {
 function TablePreview() {
   const rows = [0, 1, 2]
   return (
-    <svg viewBox="0 0 60 34" style={{ width: '100%', height: '100%' }}>
+    <svg viewBox="0 0 60 34" width="100%" height="42">
       <rect x="1" y="1" width="58" height="8" rx="1.5" fill={C} opacity="0.8" />
       {rows.map((r) => (
         <g key={r}>
@@ -135,7 +135,7 @@ function TablePreview() {
 
 function FilterPreview() {
   return (
-    <svg viewBox="0 0 60 34" style={{ width: '100%', height: '100%' }}>
+    <svg viewBox="0 0 60 34" width="100%" height="42">
       <rect x="1" y="10" width="26" height="14" rx="4" fill="var(--color-bg)" stroke="var(--color-border)" strokeWidth="1" />
       <text x="6" y="21" fontSize="7" fill="var(--color-text-secondary)" fontFamily="system-ui">Category</text>
       <path d="M23 16 L26 19 L29 16" fill="none" stroke="var(--color-text-secondary)" strokeWidth="1.2" strokeLinecap="round" />
@@ -220,18 +220,15 @@ function WidgetCard({ def }: { def: WidgetDef }) {
       <div
         style={{
           height: 54,
-          padding: '4px 6px',
+          padding: '6px 8px 4px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           borderBottom: '1px solid var(--color-border)',
           backgroundColor: hov ? 'rgba(99,102,241,0.04)' : 'transparent',
-          overflow: 'hidden',
         }}
       >
-        <div style={{ width: '100%', height: 44, flexShrink: 0 }}>
-          {def.preview}
-        </div>
+        {def.preview}
       </div>
       {/* Label */}
       <div style={{ padding: '5px 8px 6px' }}>
