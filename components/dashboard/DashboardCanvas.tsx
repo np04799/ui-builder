@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
-import type { Layouts, Layout } from 'react-grid-layout'
+import type { Layouts } from 'react-grid-layout'
 import { useDashboardStore } from '@/store/dashboard.store'
 import type { DashboardWidgetType } from '@/types/dashboard.types'
 import WidgetWrapper from './WidgetWrapper'
@@ -14,17 +14,9 @@ import 'react-resizable/css/styles.css'
 
 const ResponsiveGrid = WidthProvider(Responsive)
 
-// Default grid size for each widget type when dropped
-const DROP_SIZE: Partial<Record<DashboardWidgetType, { w: number; h: number }>> = {
-  'kpi-card':    { w: 3, h: 3 },
-  'filter-bar':  { w: 12, h: 2 },
-  'data-table':  { w: 8, h: 5 },
-  'chart-gauge': { w: 3, h: 4 },
-}
-
 export default function DashboardCanvas() {
   const [showPicker, setShowPicker] = useState(false)
-  const [droppingType, setDroppingType] = useState<DashboardWidgetType | null>(null)
+  const [isDragOver, setIsDragOver] = useState(false)
   const widgets = useDashboardStore((s) => s.widgets)
   const layouts = useDashboardStore((s) => s.gridLayouts)
   const updateLayout = useDashboardStore((s) => s.updateLayout)
@@ -39,30 +31,29 @@ export default function DashboardCanvas() {
     [updateLayout]
   )
 
-  const handleDrop = useCallback(
-    (_layout: Layout[], item: Layout, e: Event) => {
-      const de = e as DragEvent
+  // Handle drops from the DashboardElementsPanel — works for any number of drops
+  const handleCanvasDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault()
+      setIsDragOver(false)
       const type =
-        (de.dataTransfer?.getData('dashWidgetType') as DashboardWidgetType | undefined) ||
+        (e.dataTransfer.getData('dashWidgetType') as DashboardWidgetType | undefined) ||
         ((window as unknown as Record<string, unknown>).__dashDroppingType as DashboardWidgetType | undefined)
       if (!type) return
       ;(window as unknown as Record<string, unknown>).__dashDroppingType = null
-      setDroppingType(null)
-      addWidget(type, { x: item.x, y: item.y, w: item.w, h: item.h })
+      addWidget(type)
     },
     [addWidget]
   )
 
-  const handleDragOver = useCallback(
-    (e: React.DragEvent) => {
-      const type = (window as unknown as Record<string, unknown>).__dashDroppingType as DashboardWidgetType | null
-      if (type && type !== droppingType) setDroppingType(type)
+  const handleCanvasDragOver = useCallback((e: React.DragEvent) => {
+    // Only activate if dragging a widget from the panel
+    if ((window as unknown as Record<string, unknown>).__dashDroppingType) {
       e.preventDefault()
-    },
-    [droppingType]
-  )
-
-  const dropSize = droppingType ? (DROP_SIZE[droppingType] ?? { w: 4, h: 4 }) : { w: 4, h: 4 }
+      e.dataTransfer.dropEffect = 'copy'
+      setIsDragOver(true)
+    }
+  }, [])
 
   return (
     <div
@@ -71,13 +62,17 @@ export default function DashboardCanvas() {
         minHeight: '100%',
         backgroundColor: 'var(--color-canvas)',
         padding: '12px 16px 80px',
+        outline: isDragOver ? '2px dashed var(--color-primary)' : 'none',
+        outlineOffset: '-4px',
+        transition: 'outline 0.1s',
       }}
       onClick={() => { if (selectedId) setSelected(null) }}
-      onDragOver={handleDragOver}
-      onDragLeave={() => setDroppingType(null)}
+      onDragOver={handleCanvasDragOver}
+      onDragLeave={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setIsDragOver(false) }}
+      onDrop={handleCanvasDrop}
     >
       {widgets.length === 0 ? (
-        <DashboardDropZone onAdd={() => setShowPicker(true)} onDrop={handleDrop} dropSize={dropSize} />
+        <DashboardDropZone onAdd={() => setShowPicker(true)} isDragOver={isDragOver} />
       ) : (
         <ResponsiveGrid
           className="dashboard-grid"
@@ -90,9 +85,6 @@ export default function DashboardCanvas() {
           draggableHandle=".dashboard-widget-drag-handle"
           resizeHandles={['se']}
           onLayoutChange={handleLayoutChange}
-          isDroppable
-          droppingItem={{ i: '__dropping__', w: dropSize.w, h: dropSize.h }}
-          onDrop={handleDrop}
           useCSSTransforms
         >
           {widgets.map((widget) => (
@@ -152,26 +144,15 @@ export default function DashboardCanvas() {
 
 function DashboardDropZone({
   onAdd,
-  onDrop,
-  dropSize,
+  isDragOver,
 }: {
   onAdd: () => void
-  onDrop: (l: Layout[], item: Layout, e: Event) => void
-  dropSize: { w: number; h: number }
+  isDragOver: boolean
 }) {
-  const [over, setOver] = useState(false)
+  const over = isDragOver
 
   return (
     <div
-      onDragOver={(e) => { e.preventDefault(); setOver(true) }}
-      onDragLeave={() => setOver(false)}
-      onDrop={(e) => {
-        e.preventDefault()
-        setOver(false)
-        // Synthesise a grid item at position 0,0 with drop dimensions
-        const item: Layout = { i: '__dropping__', x: 0, y: 0, w: dropSize.w, h: dropSize.h }
-        onDrop([], item, e.nativeEvent)
-      }}
       style={{
         display: 'flex',
         flexDirection: 'column',
