@@ -138,7 +138,6 @@ const WidgetWrapper = forwardRef<HTMLDivElement, Props>(function WidgetWrapper(
           <div
             style={{ display: 'flex', gap: 2, flexShrink: 0 }}
             onClick={(e) => e.stopPropagation()}
-            onMouseDown={(e) => e.stopPropagation()}
           >
             <ActionBtn
               icon="bi-gear"
@@ -198,6 +197,7 @@ function ActionBtn({
     <button
       title={title}
       onClick={onClick}
+      onMouseDown={(e) => e.stopPropagation()}
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
       style={{
