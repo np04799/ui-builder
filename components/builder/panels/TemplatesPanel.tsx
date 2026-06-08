@@ -3,6 +3,7 @@
 import React, { useState, useRef } from 'react'
 import { useBuilderStore } from '@/store/builder.store'
 import { TEMPLATES, materializeTemplate } from '@/lib/templates'
+import { NOIR_FASHION_TEMPLATE } from '@/lib/noir-fashion-template'
 import { DND_TYPE, encodeDragPayload } from '@/components/builder/dnd/dragTypes'
 import { defaultContentForType } from '@/lib/elementDefaults'
 
@@ -762,12 +763,16 @@ function WebTemplatesTab() {
   const [tooltip, setTooltip] = useState<{ tpl: (typeof TEMPLATES)[0]; rect: DOMRect } | null>(null)
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const filtered = activeCategory === 'all'
+  const ALL_TEMPLATES = TEMPLATES.find(t => t.id === 'ppc-noir-fashion')
     ? TEMPLATES
-    : TEMPLATES.filter((t) => t.category === activeCategory)
+    : [...TEMPLATES, NOIR_FASHION_TEMPLATE]
+
+  const filtered = activeCategory === 'all'
+    ? ALL_TEMPLATES
+    : ALL_TEMPLATES.filter((t) => t.category === activeCategory)
 
   function handleInsert(templateId: string) {
-    const tpl = TEMPLATES.find((t) => t.id === templateId)
+    const tpl = ALL_TEMPLATES.find((t) => t.id === templateId)
     if (!tpl) return
     setInserting(templateId)
     insertTemplate(materializeTemplate(tpl.section ?? tpl.sections?.[0]!))
