@@ -140,6 +140,8 @@ export default function SettingsPanel() {
   const setMode = useBuilderStore((s) => s.setMode)
   const setPlatform = useBuilderStore((s) => s.setPlatform)
   const setCanvasWidth = useBuilderStore((s) => s.setCanvasWidth)
+  const canvasLayout = useBuilderStore((s) => s.projectMeta?.canvasLayout ?? 'flex-flow')
+  const setCanvasLayout = useBuilderStore((s) => s.setCanvasLayout)
   const resetCanvas = useBuilderStore((s) => s.resetCanvas)
 
   const logoInputRef = useRef<HTMLInputElement>(null)
@@ -418,6 +420,34 @@ export default function SettingsPanel() {
         {/* ── Canvas ─────────────────────────────────────────────────── */}
         <div style={{ marginBottom: 24 }}>
           <p style={SECTION_LABEL}>Canvas</p>
+
+          {/* Layout mode */}
+          <label style={FIELD_LABEL}>Layout Mode</label>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, marginBottom: 16 }}>
+            {([
+              { value: 'flex-flow',  label: 'Flex / Flow',  desc: 'Elements stack & reflow', icon: '≡' },
+              { value: 'fixed-grid', label: 'Fixed Grid',   desc: 'Snap-to-grid, free drag', icon: '⊞' },
+            ] as const).map(({ value, label, desc, icon }) => {
+              const active = canvasLayout === value
+              return (
+                <button
+                  key={value}
+                  onClick={() => setCanvasLayout(value)}
+                  style={{
+                    padding: '10px', borderRadius: 8, cursor: 'pointer',
+                    textAlign: 'left', transition: 'all 120ms',
+                    border: `1.5px solid ${active ? 'var(--color-primary)' : 'var(--color-border)'}`,
+                    backgroundColor: active ? 'var(--color-selected)' : 'var(--color-bg)',
+                  }}
+                >
+                  <div style={{ fontSize: '1.1rem', marginBottom: 4 }}>{icon}</div>
+                  <div style={{ fontSize: '0.775rem', fontWeight: 600, color: active ? 'var(--color-primary)' : 'var(--color-text-primary)' }}>{label}</div>
+                  <div style={{ fontSize: '0.65rem', color: 'var(--color-text-secondary)', marginTop: 2, lineHeight: 1.3 }}>{desc}</div>
+                </button>
+              )
+            })}
+          </div>
+
           <label style={FIELD_LABEL}>Width</label>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, marginBottom: 10 }}>

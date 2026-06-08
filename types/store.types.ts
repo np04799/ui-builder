@@ -60,6 +60,8 @@ export interface BuilderProjectMeta {
   logoDataUrl?: string
   branding?: ProjectBranding
   platform?: OutputPlatform
+  /** Canvas layout mode — flex-flow (document flow) or fixed-grid (snap grid) */
+  canvasLayout?: 'flex-flow' | 'fixed-grid'
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

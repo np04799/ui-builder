@@ -8,6 +8,7 @@ export interface WizardFormState {
   fontFamily: string
   mode: BuilderMode
   platform: OutputPlatform
+  canvasLayout: 'flex-flow' | 'fixed-grid'
 }
 
 export const WIZARD_DEFAULTS: WizardFormState = {
@@ -17,4 +18,5 @@ export const WIZARD_DEFAULTS: WizardFormState = {
   fontFamily: 'Inter',
   mode: 'custom',
   platform: 'react',
+  canvasLayout: 'flex-flow',
 }

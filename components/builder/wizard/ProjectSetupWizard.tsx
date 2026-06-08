@@ -31,7 +31,7 @@ export default function ProjectSetupWizard() {
   function back() { setStep((s) => Math.max(s - 1, 1)) }
 
   function handleConfirm() {
-    initProject(form.projectName, form.mode)
+    initProject(form.projectName, form.mode, form.canvasLayout)
     setBranding({ primaryColor: form.primaryColor, fontFamily: form.fontFamily })
     if (form.logoDataUrl) setLogo(form.logoDataUrl)
     setPlatform(form.platform)

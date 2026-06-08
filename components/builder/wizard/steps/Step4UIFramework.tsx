@@ -18,6 +18,11 @@ const FRAMEWORKS: { mode: BuilderMode; label: string; desc: string; icon: string
   { mode: 'custom', label: 'Custom', desc: 'No framework — pure CSS & style props', icon: '✦' },
 ]
 
+const LAYOUT_OPTIONS: { value: 'flex-flow' | 'fixed-grid'; label: string; desc: string; icon: string }[] = [
+  { value: 'flex-flow',   label: 'Flex / Flow',  desc: 'Elements stack & reflow naturally like a document', icon: '≡' },
+  { value: 'fixed-grid',  label: 'Fixed Grid',   desc: 'Snap-to-grid, drag & resize anywhere on canvas',   icon: '⊞' },
+]
+
 export default function Step4UIFramework({ form, onChange, onNext, onBack, onSkip }: Props) {
   return (
     <div style={{ padding: '8px 24px 24px' }}>
@@ -95,6 +100,48 @@ export default function Step4UIFramework({ form, onChange, onNext, onBack, onSki
             </button>
           )
         })}
+      </div>
+
+      {/* ── Canvas Layout ── */}
+      <div style={{ marginTop: 24 }}>
+        <p style={{ margin: '0 0 10px', fontSize: '0.875rem', fontWeight: 600, color: 'var(--color-text)' }}>
+          Canvas Layout
+        </p>
+        <p style={{ margin: '0 0 12px', fontSize: '0.8125rem', color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>
+          How elements are arranged on the canvas.
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          {LAYOUT_OPTIONS.map(({ value, label, desc, icon }) => {
+            const selected = form.canvasLayout === value
+            return (
+              <button
+                key={value}
+                onClick={() => onChange({ canvasLayout: value })}
+                style={{
+                  padding: '14px 12px',
+                  borderRadius: 10,
+                  border: `2px solid ${selected ? 'var(--color-primary)' : 'var(--color-border)'}`,
+                  backgroundColor: selected ? 'color-mix(in srgb, var(--color-primary) 6%, transparent)' : 'var(--color-bg)',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  position: 'relative',
+                  transition: 'all 150ms',
+                }}
+                onMouseEnter={(e) => { if (!selected) e.currentTarget.style.borderColor = 'var(--color-primary)' }}
+                onMouseLeave={(e) => { if (!selected) e.currentTarget.style.borderColor = 'var(--color-border)' }}
+              >
+                {selected && (
+                  <div style={{ position: 'absolute', top: 8, right: 8, width: 18, height: 18, borderRadius: '50%', backgroundColor: 'var(--color-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1.5 5l3 3 4-4" /></svg>
+                  </div>
+                )}
+                <div style={{ fontSize: '1.25rem', marginBottom: 8 }}>{icon}</div>
+                <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--color-text)', marginBottom: 3 }}>{label}</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)', lineHeight: 1.4 }}>{desc}</div>
+              </button>
+            )
+          })}
+        </div>
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 24 }}>

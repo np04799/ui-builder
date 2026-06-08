@@ -85,7 +85,8 @@ interface BuilderActions {
 
   // ── Project ──────────────────────────────────────────────────────────────
   /** Initialize a new project, resetting all layout state */
-  initProject: (name: string, mode: BuilderMode) => void
+  initProject: (name: string, mode: BuilderMode, canvasLayout?: 'flex-flow' | 'fixed-grid') => void
+  setCanvasLayout: (layout: 'flex-flow' | 'fixed-grid') => void
   setMode: (mode: BuilderMode) => void
   setBranding: (branding: ProjectBranding) => void
   setLogo: (logoDataUrl: string) => void
@@ -298,7 +299,7 @@ export const useBuilderStore = create<BuilderStoreState & BuilderActions>()(
 
     // ── Project ──────────────────────────────────────────────────────────────
 
-    initProject(name, mode) {
+    initProject(name, mode, canvasLayout: 'flex-flow' | 'fixed-grid' = 'flex-flow') {
       set((state) => {
         Object.assign(state, createEmptyState())
         state.mode = mode
@@ -306,6 +307,7 @@ export const useBuilderStore = create<BuilderStoreState & BuilderActions>()(
           id: crypto.randomUUID(),
           name,
           createdAt: new Date().toISOString(),
+          canvasLayout,
         }
       })
     },
@@ -920,6 +922,12 @@ export const useBuilderStore = create<BuilderStoreState & BuilderActions>()(
 
     setCanvasWidth(width) {
       set((state) => { state.canvasWidth = width })
+    },
+
+    setCanvasLayout(layout) {
+      set((state) => {
+        if (state.projectMeta) state.projectMeta.canvasLayout = layout
+      })
     },
 
     setProjectName(name) {
