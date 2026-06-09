@@ -20,6 +20,7 @@ interface ExportBody {
   componentNames?: string[]
   lang?: Lang
   frameworkVersion?: string
+  sectionId?: string
 }
 
 export async function POST(req: NextRequest) {
@@ -29,9 +30,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing state or format' }, { status: 400 })
     }
 
-    const project = buildProject(body.state)
+    let project = buildProject(body.state)
     if (!project) {
       return NextResponse.json({ error: 'No project initialized' }, { status: 422 })
+    }
+
+    // Section-level export: filter to single section
+    if (body.sectionId) {
+      const matched = project.sections.filter((s) => s.id === body.sectionId)
+      if (matched.length > 0) project = { ...project, sections: matched }
     }
 
     const filename = project.name.replace(/[^a-z0-9]/gi, '-').toLowerCase() || 'export'

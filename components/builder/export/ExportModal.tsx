@@ -279,9 +279,10 @@ interface Step1Props {
   onClose: () => void
   sectionCount: number
   projectMeta: { name?: string } | null
+  sectionName?: string
 }
 
-function Step1({ platform, mode, frameworkVersion, selectedFormat, onFormatChange, onNext, onClose, sectionCount, projectMeta }: Step1Props) {
+function Step1({ platform, mode, frameworkVersion, selectedFormat, onFormatChange, onNext, onClose, sectionCount, projectMeta, sectionName }: Step1Props) {
   const isCustom = mode === 'custom'
   const isHtmlPlatform = platform === 'html'
   const showComponentOption = !isHtmlPlatform
@@ -293,9 +294,11 @@ function Step1({ platform, mode, frameworkVersion, selectedFormat, onFormatChang
     <>
       <div style={S.header}>
         <div>
-          <h2 style={{ margin: 0, fontSize: '1.125rem', fontWeight: 700, color: 'var(--color-text)' }}>Export Project</h2>
+          <h2 style={{ margin: 0, fontSize: '1.125rem', fontWeight: 700, color: 'var(--color-text)' }}>
+            {sectionName ? `Export Section` : 'Export Project'}
+          </h2>
           <p style={{ margin: '4px 0 0', fontSize: '0.8125rem', color: 'var(--color-text-secondary)' }}>
-            Choose what to export
+            {sectionName ? <><strong>{sectionName}</strong> — single section</> : 'Choose what to export'}
           </p>
         </div>
         <button style={S.closeBtn} onClick={onClose}>
@@ -532,11 +535,12 @@ interface Step3Props {
   componentNames: string[]
   format: ExportFormat
   frameworkVersion: string
+  sectionId?: string
   onBack: () => void
   onClose: () => void
 }
 
-function Step3({ platform, mode, lang, componentNames, format, frameworkVersion, onBack, onClose }: Step3Props) {
+function Step3({ platform, mode, lang, componentNames, format, frameworkVersion, sectionId, onBack, onClose }: Step3Props) {
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -552,7 +556,7 @@ function Step3({ platform, mode, lang, componentNames, format, frameworkVersion,
     fetch('/api/export', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ state, format: 'filemap', target: platform, componentNames, lang, frameworkVersion }),
+      body: JSON.stringify({ state, format: 'filemap', target: platform, componentNames, lang, frameworkVersion, ...(sectionId ? { sectionId } : {}) }),
     })
       .then((r) => r.ok ? r.json() : Promise.reject())
       .then((data: { files: Record<string, string> }) => setFileMap(data.files))
@@ -593,8 +597,8 @@ function Step3({ platform, mode, lang, componentNames, format, frameworkVersion,
     try {
       const state = useBuilderStore.getState()
       const body = format === 'component-zip'
-        ? { state, format, target: platform as ComponentTarget, componentNames, lang, frameworkVersion }
-        : { state, format }
+        ? { state, format, target: platform as ComponentTarget, componentNames, lang, frameworkVersion, ...(sectionId ? { sectionId } : {}) }
+        : { state, format, ...(sectionId ? { sectionId } : {}) }
 
       const res = await fetch('/api/export', {
         method: 'POST',
@@ -652,7 +656,7 @@ function Step3({ platform, mode, lang, componentNames, format, frameworkVersion,
       const res = await fetch('/api/export', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ state, format: 'filemap', target: platform, componentNames, lang, frameworkVersion }),
+        body: JSON.stringify({ state, format: 'filemap', target: platform, componentNames, lang, frameworkVersion, ...(sectionId ? { sectionId } : {}) }),
       })
       if (!res.ok) {
         const msg = await res.json().catch(() => ({ error: 'Failed to generate files' }))
@@ -808,23 +812,34 @@ function Step3({ platform, mode, lang, componentNames, format, frameworkVersion,
 
 interface ExportModalProps {
   onClose: () => void
+  sectionId?: string
+  sectionName?: string
 }
 
-export function ExportModal({ onClose }: ExportModalProps) {
+export function ExportModal({ onClose, sectionId, sectionName }: ExportModalProps) {
   const projectMeta = useBuilderStore((s) => s.projectMeta)
   const mode = useBuilderStore((s) => s.mode)
   const sectionOrder = useBuilderStore((s) => s.sectionOrder)
 
   const platform = projectMeta?.platform ?? 'html'
   const frameworkVersion = projectMeta?.frameworkVersion ?? ''
-  const sectionCount = sectionOrder.length
+  const sectionCount = sectionId ? 1 : sectionOrder.length
 
   const [step, setStep] = useState(0)
   const [format, setFormat] = useState<ExportFormat>('zip')
   const [lang, setLang] = useState<Lang>('typescript')
-  const [componentNames, setComponentNames] = useState<string[]>(
-    sectionOrder.map((_, i) => toComponentName(i))
-  )
+  const [componentNames, setComponentNames] = useState<string[]>(() => {
+    if (sectionId && sectionName) {
+      // Sanitize section name to PascalCase
+      const pascal = sectionName
+        .replace(/[^a-zA-Z0-9 ]/g, '')
+        .split(' ')
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join('') || 'Section'
+      return [pascal]
+    }
+    return sectionOrder.map((_, i) => toComponentName(i))
+  })
 
   const overlayRef = useRef<HTMLDivElement>(null)
 
@@ -874,6 +889,7 @@ export function ExportModal({ onClose }: ExportModalProps) {
             onClose={onClose}
             sectionCount={sectionCount}
             projectMeta={projectMeta}
+            sectionName={sectionName}
           />
         )}
         {step === 1 && format === 'component-zip' && (
@@ -895,6 +911,7 @@ export function ExportModal({ onClose }: ExportModalProps) {
             componentNames={componentNames}
             format={format}
             frameworkVersion={frameworkVersion}
+            sectionId={sectionId}
             onBack={() => setStep(format === 'component-zip' ? 1 : 0)}
             onClose={onClose}
           />
