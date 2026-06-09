@@ -17,8 +17,8 @@ import { useState, useRef, useEffect } from 'react'
 import { useBuilderStore } from '@/store/builder.store'
 import type { BuilderMode } from '@/types/builder.types'
 
-// TODO: wire to auth
-const isPremium = false
+// TODO: wire to auth — set to false before going live
+const isPremium = true
 
 type Lang = 'typescript' | 'javascript'
 type ComponentTarget = 'react' | 'vue' | 'angular'
@@ -176,6 +176,98 @@ function StepDots({ current, total }: { current: number; total: number }) {
 
 // ─── Step 1: Format ───────────────────────────────────────────────────────────
 
+
+// -- Recent Exports -----------------------------------------------------------
+
+interface ExportEntry {
+  id: string
+  projectName: string
+  format: string
+  platform: string
+  lang: string
+  filename: string
+  exportedAt: string
+}
+
+function relativeTime(iso: string): string {
+  const diff = Date.now() - new Date(iso).getTime()
+  const mins = Math.floor(diff / 60_000)
+  if (mins < 1) return 'just now'
+  if (mins < 60) return `${mins}m ago`
+  const hrs = Math.floor(mins / 60)
+  if (hrs < 24) return `${hrs}h ago`
+  const days = Math.floor(hrs / 24)
+  if (days < 7) return `${days}d ago`
+  return new Date(iso).toLocaleDateString()
+}
+
+const FORMAT_BADGE: Record<string, { label: string; bg: string; color: string }> = {
+  html:           { label: 'HTML',      bg: '#dbeafe', color: '#1e40af' },
+  zip:            { label: 'ZIP',       bg: '#f3e8ff', color: '#7e22ce' },
+  'component-zip':{ label: 'Component', bg: '#fef3c7', color: '#92400e' },
+}
+
+function RecentExports({ projectName }: { projectName: string }) {
+  const [entries, setEntries] = useState<ExportEntry[]>([])
+
+  useEffect(() => {
+    try {
+      const all: ExportEntry[] = JSON.parse(localStorage.getItem('bp_export_history') ?? '[]')
+      setEntries(all.filter((e) => e.projectName === projectName).slice(0, 3))
+    } catch {
+      // ignore
+    }
+  }, [projectName])
+
+  if (entries.length === 0) return null
+
+  return (
+    <div style={{ marginTop: 20 }}>
+      <div style={S.label}>Recent Exports</div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        {entries.map((e) => {
+          const badge = FORMAT_BADGE[e.format] ?? { label: e.format, bg: '#f1f5f9', color: '#475569' }
+          return (
+            <div
+              key={e.id}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 10,
+                padding: '8px 12px', borderRadius: 8,
+                border: '1px solid var(--color-border)',
+                backgroundColor: 'var(--color-bg)',
+              }}
+            >
+              <span
+                style={{
+                  padding: '2px 7px', borderRadius: 4,
+                  backgroundColor: badge.bg, color: badge.color,
+                  fontSize: '0.625rem', fontWeight: 700, flexShrink: 0,
+                  textTransform: 'uppercase',
+                }}
+              >
+                {badge.label}
+              </span>
+              <span
+                style={{
+                  flex: 1, fontSize: '0.75rem', color: 'var(--color-text)',
+                  overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                  fontFamily: 'monospace',
+                }}
+                title={e.filename}
+              >
+                {e.filename}
+              </span>
+              <span style={{ fontSize: '0.6875rem', color: 'var(--color-text-secondary)', flexShrink: 0 }}>
+                {relativeTime(e.exportedAt)}
+              </span>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 interface Step1Props {
   platform: string
   mode: BuilderMode
@@ -185,9 +277,10 @@ interface Step1Props {
   onNext: () => void
   onClose: () => void
   sectionCount: number
+  projectMeta: { name?: string } | null
 }
 
-function Step1({ platform, mode, frameworkVersion, selectedFormat, onFormatChange, onNext, onClose, sectionCount }: Step1Props) {
+function Step1({ platform, mode, frameworkVersion, selectedFormat, onFormatChange, onNext, onClose, sectionCount, projectMeta }: Step1Props) {
   const isCustom = mode === 'custom'
   const isHtmlPlatform = platform === 'html'
   const showComponentOption = !isHtmlPlatform
@@ -314,6 +407,8 @@ function Step1({ platform, mode, frameworkVersion, selectedFormat, onFormatChang
           {sectionCount} section{sectionCount !== 1 ? 's' : ''} will be exported
           {selectedFormat === 'component-zip' && ` as ${sectionCount} component${sectionCount !== 1 ? 's' : ''}`}.
         </div>
+
+        <RecentExports projectName={projectMeta?.name ?? 'Untitled'} />
       </div>
 
       <div style={S.footer}>
@@ -691,6 +786,7 @@ export function ExportModal({ onClose }: ExportModalProps) {
             onNext={handleStep1Next}
             onClose={onClose}
             sectionCount={sectionCount}
+            projectMeta={projectMeta}
           />
         )}
         {step === 1 && format === 'component-zip' && (
