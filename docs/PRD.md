@@ -680,6 +680,144 @@ Note: React, Vue, and Angular exports are now IN SCOPE (see Export & Download se
 
 ---
 
+# 🎁 Export Enhancement Features — MVP Scope
+
+These features are part of MVP and must ship alongside component export.
+Their purpose: drive retention, attract developers, and make BuilderPro stand out from generic exporters.
+
+---
+
+## Feature 1 — Live Code Preview
+
+Users can preview the generated code before downloading.
+
+Requirements:
+- Syntax-highlighted code panel inside the export modal
+- Tabbed view: primary component file, App file, package.json
+- Scrollable, 300px tall
+- "Copy" button per tab (copies full file content to clipboard)
+- Updates live when user changes component names or language toggle
+- Available for all output formats (HTML and component)
+
+Free / Premium: Free (HTML preview) + Premium (React/Vue/Angular preview, shown after format unlock)
+
+---
+
+## Feature 2 — Auto-generated README
+
+Every export ZIP includes a `README.md` with complete project documentation.
+
+Required README contents:
+1. Project name (from BuilderPro project title)
+2. Framework and exact version used
+3. Prerequisites (Node.js version, npm version)
+4. Install command: `npm install`
+5. Dev server command: `npm run dev`
+6. Build command: `npm run build`
+7. Folder structure diagram
+8. Component list (one line per component with brief description)
+9. Design tokens section (primary color, font, key spacing)
+10. "Built with BuilderPro" attribution + link
+
+Free / Premium: Included in all exports (free and premium)
+
+---
+
+## Feature 3 — Component Naming
+
+Users can rename Section components before export.
+
+Requirements:
+- Export modal shows editable name field for each Section
+- Default names: "SectionOne", "SectionTwo", etc.
+- Validation: PascalCase enforced for React/Vue; kebab-case auto-applied for Angular
+- Invalid characters stripped in real time
+- Component name used as filename and as the function/class name in generated code
+- Preview panel updates live when name changes
+
+Free / Premium: Premium (appears in Step 3 of component generation flow)
+
+---
+
+## Feature 4 — TypeScript / JavaScript Toggle
+
+Users choose output language before generating component code.
+
+Requirements:
+- Toggle appears in Step 3 of the export modal
+- Default: TypeScript
+- Affects: file extensions (.tsx vs .jsx, .ts vs .js), tsconfig.json inclusion, type annotations in generated code
+- Angular always outputs TypeScript (no JS option — Angular requirement)
+- Toggle persists per project (remembered across export sessions)
+
+Free / Premium: Premium (part of component generation flow)
+
+---
+
+## Feature 5 — Design Tokens File
+
+Every export includes a design tokens file containing all design values used in the project.
+
+Requirements:
+- `tokens.ts` for React and Vue (TypeScript named exports)
+- `tokens.scss` for Angular (SCSS variables)
+- `tokens.css` for HTML/CSS export (CSS custom properties)
+- Contents: primary color, secondary, accent, danger, font family, font sizes, spacing scale, border radii, breakpoints
+- Values pulled from live project state (what the user actually set, not defaults)
+- Tokens file always included — not optional
+
+Free / Premium: Included in all exports (free and premium)
+
+---
+
+## Feature 6 — Open in StackBlitz
+
+One-click button to open the generated project in StackBlitz without any local setup.
+
+Requirements:
+- Button appears next to Download ZIP in Step 4 of the export modal
+- Uses StackBlitz SDK (`@stackblitz/sdk`) — `sdk.openProject()` with generated file map
+- React and Vue: full project opens in StackBlitz with live dev server
+- Angular: links to `https://stackblitz.com/fork/angular` with an instructional note
+- StackBlitz button must never block the Download button — both available simultaneously
+- If StackBlitz API is unavailable: hide button gracefully, show no error
+
+Free / Premium: Premium (only visible after component format is unlocked)
+
+---
+
+## Feature 7 — Section-Level Export
+
+Users can export a single Section instead of the full page.
+
+Requirements:
+- "Export this section" option in Section context menu (right-click or ⋮ menu on canvas)
+- Triggers the same export modal but scoped to one Section
+- Generated ZIP: one component file + minimal App wrapper + README
+- Useful for developers who want to drop one component into an existing project
+- Available for all output targets (HTML block, React component, Vue SFC, Angular component)
+- Component name defaults to the Section name in the Layers panel
+
+Free / Premium: HTML section export = Free. Component section export = Premium.
+
+---
+
+## Feature 8 — Export History
+
+Project dashboard shows the last 3 exports per project.
+
+Requirements:
+- Stored in localStorage (key: `builderpro_export_history_[projectId]`)
+- Max 3 entries per project, FIFO (oldest dropped when 4th added)
+- Each entry stores: output type, framework mode, language (TS/JS), date/time, project name
+- Displayed as a compact list in the project dashboard card
+- "Re-download" button on each entry regenerates the same export on click
+- Export history does not require login (localStorage only in MVP)
+
+Free / Premium: Available to all users (tracks HTML exports for free users, all exports for premium)
+
+---
+
 # 🎯 Final MVP Goal
 
 Deliver a stable builder that allows users to:
