@@ -9,6 +9,7 @@ import Step2LogoUpload from './steps/Step2LogoUpload'
 import Step3Branding from './steps/Step3Branding'
 import Step4UIFramework from './steps/Step4UIFramework'
 import Step5Platform from './steps/Step5Platform'
+import { resolveFrameworkVersion } from '@/lib/versionRegistry'
 import Step6Summary from './steps/Step6Summary'
 
 const STEP_LABELS = ['Name', 'Logo', 'Branding', 'Framework', 'Platform', 'Summary']
