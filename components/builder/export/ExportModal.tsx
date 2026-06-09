@@ -15,6 +15,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { useBuilderStore } from '@/store/builder.store'
+import { CodePreview } from '@/components/builder/export/CodePreview'
 import type { BuilderMode } from '@/types/builder.types'
 
 // TODO: wire to auth — set to false before going live
@@ -539,6 +540,26 @@ function Step3({ platform, mode, lang, componentNames, format, frameworkVersion,
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [fileMap, setFileMap] = useState<Record<string, string> | null>(null)
+  const [previewLoading, setPreviewLoading] = useState(false)
+
+  // Fetch file map for code preview (component-zip only)
+  useEffect(() => {
+    if (format !== 'component-zip') return
+    setPreviewLoading(true)
+    setFileMap(null)
+    const state = useBuilderStore.getState()
+    fetch('/api/export', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ state, format: 'filemap', target: platform, componentNames, lang, frameworkVersion }),
+    })
+      .then((r) => r.ok ? r.json() : Promise.reject())
+      .then((data: { files: Record<string, string> }) => setFileMap(data.files))
+      .catch(() => {}) // preview failure is silent — download still works
+      .finally(() => setPreviewLoading(false))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [format, platform, lang, frameworkVersion])
 
   const ext = lang === 'typescript'
     ? (platform === 'react' ? 'tsx' : 'vue' in {'vue':1} ? 'vue' : 'ts')
@@ -713,6 +734,16 @@ function Step3({ platform, mode, lang, componentNames, format, frameworkVersion,
             )}
           </div>
         </div>
+
+        {/* Code preview — component-zip only */}
+        {format === 'component-zip' && (
+          <CodePreview
+            fileMap={fileMap}
+            loading={previewLoading}
+            platform={platform}
+            lang={lang}
+          />
+        )}
 
         {error && (
           <div style={{ marginTop: 12, padding: '8px 12px', backgroundColor: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 8, fontSize: '0.8125rem', color: '#991b1b' }}>
