@@ -9,6 +9,7 @@ import { PREVIEW_STORAGE_KEY } from '@/app/preview/page'
 import { useThemeStore } from '@/store/theme.store'
 import { useAuthStore } from '@/store/auth.store'
 import { signOut, isConfigured } from '@/lib/firebase'
+import { ExportModal } from '@/components/builder/export/ExportModal'
 
 // ─── SVG icons ────────────────────────────────────────────────────────────────
 function PanelLeftIcon() {
@@ -376,55 +377,15 @@ function ThemeToggle() {
 }
 
 function ExportButton() {
-  const [open, setOpen] = useState(false)
-  const [loading, setLoading] = useState<string | null>(null)
-  const ref = useRef<HTMLDivElement>(null)
+  const [modalOpen, setModalOpen] = useState(false)
+  const sectionOrder = useBuilderStore((s) => s.sectionOrder)
 
-  useEffect(() => {
-    if (!open) return
-    function handleClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
-    }
-    document.addEventListener('mousedown', handleClick)
-    return () => document.removeEventListener('mousedown', handleClick)
-  }, [open])
-
-  async function handleExport(format: 'html' | 'css' | 'zip') {
-    const state = useBuilderStore.getState()
-    // Guard: nothing to export
-    if (!state.sectionOrder || state.sectionOrder.length === 0) {
+  function handleClick() {
+    if (!sectionOrder || sectionOrder.length === 0) {
       alert('Nothing to export — add some sections to the canvas first.')
       return
     }
-    setLoading(format)
-    setOpen(false)
-    try {
-      const res = await fetch('/api/export', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ state, format }),
-      })
-      if (!res.ok) {
-        const msg = await res.text().catch(() => 'Unknown error')
-        throw new Error(msg)
-      }
-      const blob = await res.blob()
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      const project = state.projectMeta
-      const name = (project?.name ?? 'export').replace(/[^a-z0-9]/gi, '-').toLowerCase()
-      a.download = format === 'zip' ? `${name}.zip` : format === 'html' ? `${name}.html` : `${name}.css`
-      document.body.appendChild(a)
-      a.click()
-      document.body.removeChild(a)
-      URL.revokeObjectURL(url)
-    } catch (err) {
-      console.error('[export]', err)
-      alert(`Export failed: ${err instanceof Error ? err.message : 'Please try again.'}`)
-    } finally {
-      setLoading(null)
-    }
+    setModalOpen(true)
   }
 
   const ICON_BTN_BASE: React.CSSProperties = {
@@ -441,85 +402,19 @@ function ExportButton() {
     display: 'flex',
     alignItems: 'center',
     gap: 5,
-    position: 'relative',
   }
 
   return (
-    <div ref={ref} style={{ position: 'relative', flexShrink: 0 }}>
-      <button
-        style={ICON_BTN_BASE}
-        onClick={() => setOpen(v => !v)}
-        disabled={loading !== null}
-        title="Export project"
-      >
-        {loading ? (
-          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" style={{ animation: 'spin 0.8s linear infinite' }}>
-            <path d="M6.5 1.5A5 5 0 1 1 1.5 6.5" />
-          </svg>
-        ) : (
-          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M6.5 1v7M4 6l2.5 2.5L9 6" />
-            <path d="M1.5 9.5v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1" />
-          </svg>
-        )}
-        Export
-        <svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
-          <path d="M2 3.5l2.5 2.5 2.5-2.5" />
+    <>
+      <button style={ICON_BTN_BASE} onClick={handleClick} title="Export project">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M6.5 1v7M4 6l2.5 2.5L9 6" />
+          <path d="M1.5 9.5v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1" />
         </svg>
+        Export
       </button>
-
-      {open && (
-        <div style={{
-          position: 'absolute',
-          top: 'calc(100% + 6px)',
-          right: 0,
-          zIndex: 1000,
-          backgroundColor: 'var(--color-surface)',
-          border: '1px solid var(--color-border)',
-          borderRadius: 8,
-          boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
-          minWidth: 170,
-          overflow: 'hidden',
-        }}>
-          <div style={{ padding: '6px 0' }}>
-            {[
-              { format: 'html' as const, label: 'HTML file', desc: 'index.html', icon: '</>' },
-              { format: 'css' as const, label: 'CSS file', desc: 'styles.css', icon: '#' },
-              { format: 'zip' as const, label: 'ZIP package', desc: 'html + css + assets', icon: '⬛' },
-            ].map(({ format, label, desc, icon }) => (
-              <button
-                key={format}
-                onClick={() => handleExport(format)}
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 10,
-                  padding: '8px 14px',
-                  border: 'none',
-                  backgroundColor: 'transparent',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  color: 'var(--color-text-primary)',
-                }}
-                onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--color-selected, rgba(99,102,241,0.08))')}
-                onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}
-              >
-                <span style={{ width: 28, height: 28, borderRadius: 6, border: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--color-primary)', flexShrink: 0 }}>
-                  {icon}
-                </span>
-                <span>
-                  <div style={{ fontSize: '0.8125rem', fontWeight: 500 }}>{label}</div>
-                  <div style={{ fontSize: '0.6875rem', color: 'var(--color-text-secondary)' }}>{desc}</div>
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-    </div>
+      {modalOpen && <ExportModal onClose={() => setModalOpen(false)} />}
+    </>
   )
 }
 

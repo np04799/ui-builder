@@ -676,4 +676,6 @@ export interface BuilderProject {
   sections: BuilderSection[]
   createdAt: string
   updatedAt: string
+  /** Locked stable framework version at project creation (from versionRegistry) */
+  frameworkVersion?: string
 }

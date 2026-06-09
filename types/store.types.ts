@@ -62,6 +62,12 @@ export interface BuilderProjectMeta {
   platform?: OutputPlatform
   /** Canvas layout mode — flex-flow (document flow) or fixed-grid (snap grid) */
   canvasLayout?: 'flex-flow' | 'fixed-grid'
+  /**
+   * Locked stable version of the UI framework at project-creation time.
+   * Written into package.json at export. e.g. "5.3.3" for Bootstrap.
+   * Resolved by lib/versionRegistry.ts during project init.
+   */
+  frameworkVersion?: string
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

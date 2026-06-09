@@ -85,7 +85,7 @@ interface BuilderActions {
 
   // ── Project ──────────────────────────────────────────────────────────────
   /** Initialize a new project, resetting all layout state */
-  initProject: (name: string, mode: BuilderMode, canvasLayout?: 'flex-flow' | 'fixed-grid') => void
+  initProject: (name: string, mode: BuilderMode, canvasLayout?: 'flex-flow' | 'fixed-grid', frameworkVersion?: string) => void
   setCanvasLayout: (layout: 'flex-flow' | 'fixed-grid') => void
   setMode: (mode: BuilderMode) => void
   setBranding: (branding: ProjectBranding) => void
@@ -299,7 +299,7 @@ export const useBuilderStore = create<BuilderStoreState & BuilderActions>()(
 
     // ── Project ──────────────────────────────────────────────────────────────
 
-    initProject(name, mode, canvasLayout: 'flex-flow' | 'fixed-grid' = 'flex-flow') {
+    initProject(name, mode, canvasLayout: 'flex-flow' | 'fixed-grid' = 'flex-flow', frameworkVersion?: string) {
       set((state) => {
         Object.assign(state, createEmptyState())
         state.mode = mode
@@ -308,6 +308,7 @@ export const useBuilderStore = create<BuilderStoreState & BuilderActions>()(
           name,
           createdAt: new Date().toISOString(),
           canvasLayout,
+          ...(frameworkVersion ? { frameworkVersion } : {}),
         }
       })
     },

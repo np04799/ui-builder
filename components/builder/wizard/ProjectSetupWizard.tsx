@@ -30,8 +30,10 @@ export default function ProjectSetupWizard() {
   function next() { setStep((s) => Math.min(s + 1, TOTAL_STEPS)) }
   function back() { setStep((s) => Math.max(s - 1, 1)) }
 
-  function handleConfirm() {
-    initProject(form.projectName, form.mode, form.canvasLayout)
+  async function handleConfirm() {
+    // Resolve and lock the framework version at project-creation time
+    const frameworkVersion = await resolveFrameworkVersion(form.mode)
+    initProject(form.projectName, form.mode, form.canvasLayout, frameworkVersion)
     setBranding({ primaryColor: form.primaryColor, fontFamily: form.fontFamily })
     if (form.logoDataUrl) setLogo(form.logoDataUrl)
     setPlatform(form.platform)

@@ -24,15 +24,34 @@ const LAYOUT_OPTIONS: { value: 'flex-flow' | 'fixed-grid'; label: string; desc: 
 ]
 
 export default function Step4UIFramework({ form, onChange, onNext, onBack, onSkip }: Props) {
+  // Warn when Custom mode is selected but user already picked a non-HTML platform in Step 5
+  const showCustomPlatformWarning =
+    form.mode === 'custom' && !!form.platform && form.platform !== 'html'
+
   return (
     <div style={{ padding: '8px 24px 24px' }}>
       <h2 style={{ margin: '0 0 6px', fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-text)' }}>
         UI Framework
       </h2>
-      <p style={{ margin: '0 0 20px', fontSize: '0.875rem', color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>
+      <p style={{ margin: '0 0 16px', fontSize: '0.875rem', color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>
         Choose the CSS framework for your project output.
       </p>
 
+
+      {/* Custom + non-HTML platform warning */}
+      {showCustomPlatformWarning && (
+        <div style={{
+          display: 'flex', gap: 10, padding: '10px 14px', borderRadius: 8, marginBottom: 16,
+          backgroundColor: '#fefce8', border: '1px solid #fde047',
+        }}>
+          <span style={{ fontSize: '1rem', flexShrink: 0 }}>warning</span>
+          <p style={{ margin: 0, fontSize: '0.8125rem', color: '#713f12', lineHeight: 1.5 }}>
+            <strong>Custom mode + {form.platform} platform detected.</strong> Component generation
+            (React, Vue, Angular) is not available for Custom mode. Only HTML/CSS export will be
+            offered. To export components, choose Bootstrap, MUI, or Tailwind instead.
+          </p>
+        </div>
+      )}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
         {FRAMEWORKS.map(({ mode, label, desc, icon }) => {
           const selected = form.mode === mode
@@ -110,7 +129,22 @@ export default function Step4UIFramework({ form, onChange, onNext, onBack, onSki
         <p style={{ margin: '0 0 12px', fontSize: '0.8125rem', color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>
           How elements are arranged on the canvas.
         </p>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+  
+      {/* Custom + non-HTML platform warning */}
+      {showCustomPlatformWarning && (
+        <div style={{
+          display: 'flex', gap: 10, padding: '10px 14px', borderRadius: 8, marginBottom: 16,
+          backgroundColor: '#fefce8', border: '1px solid #fde047',
+        }}>
+          <span style={{ fontSize: '1rem', flexShrink: 0 }}>warning</span>
+          <p style={{ margin: 0, fontSize: '0.8125rem', color: '#713f12', lineHeight: 1.5 }}>
+            <strong>Custom mode + {form.platform} platform detected.</strong> Component generation
+            (React, Vue, Angular) is not available for Custom mode. Only HTML/CSS export will be
+            offered. To export components, choose Bootstrap, MUI, or Tailwind instead.
+          </p>
+        </div>
+      )}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
           {LAYOUT_OPTIONS.map(({ value, label, desc, icon }) => {
             const selected = form.canvasLayout === value
             return (
