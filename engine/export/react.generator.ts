@@ -312,7 +312,7 @@ ReactDOM.createRoot(document.getElementById('root')${lang === 'typescript' ? '!'
 
 // ─── index.html ──────────────────────────────────────────────────────────────
 
-function generateIndexHtml(projectName: string): string {
+function generateIndexHtml(projectName: string, lang: Lang): string {
   return `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -479,7 +479,7 @@ export function generateReactProject(params: ReactGeneratorParams): FileMap {
   files[tokensFile.filename] = tokensFile.content
 
   // ── index.html ──
-  files['index.html'] = generateIndexHtml(projectName)
+  files['index.html'] = generateIndexHtml(projectName, lang)
 
   // ── Vite config ──
   files[`vite.config.${lang === 'typescript' ? 'ts' : 'js'}`] = generateViteConfig(lang)
