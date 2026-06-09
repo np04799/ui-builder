@@ -10,7 +10,7 @@ import type { Lang } from '@/engine/export/react.generator'
 
 export const runtime = 'nodejs'
 
-type ExportFormat = 'html' | 'css' | 'zip' | 'component-zip'
+type ExportFormat = 'html' | 'css' | 'zip' | 'component-zip' | 'filemap'
 type ComponentTarget = 'react' | 'vue' | 'angular'
 
 interface ExportBody {
@@ -135,6 +135,40 @@ export async function POST(req: NextRequest) {
           'Content-Length': String(buffer.byteLength),
         },
       })
+    }
+
+    if (body.format === 'filemap') {
+      const {
+        target,
+        componentNames = project.sections.map((_, i) => `Section${i + 1}`),
+        lang = 'typescript',
+        frameworkVersion = project.frameworkVersion ?? '',
+      } = body
+
+      if (!target) {
+        return NextResponse.json({ error: 'Missing target for filemap' }, { status: 400 })
+      }
+
+      if (project.mode === 'custom') {
+        return NextResponse.json(
+          { error: 'Component export is not available for Custom mode.' },
+          { status: 422 },
+        )
+      }
+
+      let fileMap: Record<string, string>
+
+      if (target === 'react') {
+        fileMap = generateReactProject({ project, componentNames, lang, frameworkVersion, branding: body.state.projectMeta?.branding })
+      } else if (target === 'vue') {
+        fileMap = generateVueProject({ project, componentNames, lang, frameworkVersion, branding: body.state.projectMeta?.branding })
+      } else if (target === 'angular') {
+        fileMap = generateAngularProject({ project, componentNames, frameworkVersion, branding: body.state.projectMeta?.branding })
+      } else {
+        return NextResponse.json({ error: 'Invalid target' }, { status: 400 })
+      }
+
+      return NextResponse.json({ files: fileMap })
     }
 
     return NextResponse.json({ error: 'Invalid format' }, { status: 400 })

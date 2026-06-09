@@ -617,6 +617,46 @@ function Step3({ platform, mode, lang, componentNames, format, frameworkVersion,
     }
   }
 
+  async function handleOpenStackBlitz() {
+    if (platform === 'angular') {
+      window.open('https://stackblitz.com/fork/angular', '_blank', 'noopener')
+      return
+    }
+    if (format !== 'component-zip') return
+
+    setLoading(true)
+    setError(null)
+    try {
+      const state = useBuilderStore.getState()
+      const res = await fetch('/api/export', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ state, format: 'filemap', target: platform, componentNames, lang, frameworkVersion }),
+      })
+      if (!res.ok) {
+        const msg = await res.json().catch(() => ({ error: 'Failed to generate files' }))
+        throw new Error(msg.error ?? 'Failed to generate files')
+      }
+      const { files } = (await res.json()) as { files: Record<string, string> }
+      const sdk = (await import('@stackblitz/sdk')).default
+      const name = (state.projectMeta?.name ?? 'BuilderPro Export').replace(/[^a-z0-9 ]/gi, ' ').trim()
+      const openFile = platform === 'vue' ? 'src/App.vue' : 'src/App.tsx'
+      sdk.openProject(
+        {
+          title: name,
+          description: 'Built with BuilderPro',
+          template: 'node',
+          files,
+        },
+        { newWindow: true, openFile },
+      )
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'StackBlitz open failed')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <>
       <div style={S.header}>
@@ -693,6 +733,22 @@ function Step3({ platform, mode, lang, componentNames, format, frameworkVersion,
       <div style={S.footer}>
         {format === 'component-zip' && <button style={S.secondaryBtn} onClick={onBack} disabled={loading}>← Back</button>}
         <button style={S.secondaryBtn} onClick={onClose} disabled={loading}>Close</button>
+        {format === 'component-zip' && (
+          <button
+            title={platform === 'angular' ? 'Opens Angular starter on StackBlitz — copy your components in manually' : 'Open in StackBlitz IDE'}
+            style={{
+              height: 34, padding: '0 14px', borderRadius: 7, border: '1.5px solid #7c3aed',
+              backgroundColor: 'transparent', color: '#7c3aed',
+              fontSize: '0.8125rem', fontWeight: 600, cursor: loading ? 'wait' : 'pointer',
+              display: 'flex', alignItems: 'center', gap: 5, opacity: loading ? 0.6 : 1,
+            }}
+            onClick={handleOpenStackBlitz}
+            disabled={loading}
+          >
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="#7c3aed"><polygon points="6.5,0 0,7 5,7 5.5,12 12,5 7,5"/></svg>
+            StackBlitz
+          </button>
+        )}
         <button
           style={{
             ...S.primaryBtn,
